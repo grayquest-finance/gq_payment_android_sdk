@@ -1,10 +1,12 @@
 package com.grayquest.android.payment.sdk;
 
+import org.json.JSONObject;
+
 public interface GQPaymentSDKListener {
 
-    void onSuccess(String message);
+    void onSuccess(JSONObject message);
 
-    void onFailed(String message);
+    void onFailed(JSONObject message);
 
-    void onCancel(String message);
+    void onCancel(JSONObject message);
 }
