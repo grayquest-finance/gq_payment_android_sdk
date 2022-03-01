@@ -9,8 +9,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class API_Client {
 
-    public static final String BASE_URL = "https://cust-api.graydev.tech/";// Test
-//    public static final String BASE_URL = "https://cust-api.grayquest.com/";// Live
+    public static final String BASE_URL = "https://erp-api.graydev.tech/";// Test
+    public static final String WEB_LOAD_URL = "https://erp-sdk.graydev.tech/";// Test
+//    public static final String BASE_URL = "https://erp-api.grayquest.com/";// Live
+//public static final String WEB_LOAD_URL = "https://erp-sdk.graydev.com/";// Live
 
     public static Retrofit getRetrofit() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
