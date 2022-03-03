@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,7 +37,7 @@ public class GQPaymentSDK {
 
     public static void initiate(Context context1, JSONObject config, JSONObject options) {
 
-        String client_id = null, client_secret_key = null, gq_api_key, student_id, env,
+        String client_id = null, client_secret_key = null, gq_api_key = null, student_id, env,
                 customer_number, fee_amount, payable_amount, theme_color;
         boolean fee_editable;
         boolean isInValid = false;
@@ -120,17 +122,21 @@ public class GQPaymentSDK {
             } else {
 
                 if (!config.getString("customer_number").isEmpty()) {
-                    Log.e(TAG, "CustomerNumber: " + options.getString("customer_number"));
-//                if (gqPaymentSDKListener!=null){
-//                    gqPaymentSDKListener.onCancel("Close SDK");
-//                }
+                    Log.e(TAG, "CustomerNumber: " + config.getString("customer_number"));
+
+                    String base = client_id+":"+client_secret_key;
+                    String abase = "Basic "+ Base64.encodeToString(base.getBytes(), Base64.NO_WRAP);
+
                     showProgress();
-                    createCustomer(config.getString("customer_number"));
+                    createCustomer(config.getString("customer_number"), gq_api_key, abase);
                 } else {
                     setUser("new");
 
                     Intent intent = new Intent(context, WebActivity.class);
-                    intent.putExtra("options", String.valueOf(optionsJSON));
+                    if (options!=null) {
+                        Log.e(TAG, "Optional: " + options.toString());
+                        intent.putExtra("options", options.toString());
+                    }
                     intent.putExtra("config", String.valueOf(configJSON));
                     intent.putExtra("customer_id", getCustomer_id());
                     intent.putExtra("customer_code", getCustomer_code());
@@ -166,12 +172,15 @@ public class GQPaymentSDK {
 //            progress.dismiss();
     }
 
-    private static void createCustomer(String customer_mobile) {
+    private static void createCustomer(String customer_mobile, String gq_api_key, String abase) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("customer_mobile", customer_mobile);
 
+        Log.e(TAG, "ABASE: "+abase.trim());
+        Log.e(TAG, "GQAPIKEY: "+gq_api_key);
+
         ApiInterface apiInterface = API_Client.getRetrofit().create(ApiInterface.class);
-        Call<PaymentSDk_Contributor> create = apiInterface.createCustomer(jsonObject);
+        Call<PaymentSDk_Contributor> create = apiInterface.createCustomer(gq_api_key, abase, jsonObject);
 
         create.enqueue(new Callback<PaymentSDk_Contributor>() {
             @Override
@@ -201,7 +210,9 @@ public class GQPaymentSDK {
 //                            bundle.putString("options", jsonObject);
 
                             Intent intent = new Intent(context, WebActivity.class);
-                            intent.putExtra("options", String.valueOf(optionsJSON));
+                            if (optionsJSON!=null) {
+                                intent.putExtra("options", optionsJSON.toString());
+                            }
                             intent.putExtra("config", String.valueOf(configJSON));
                             intent.putExtra("customer_id", getCustomer_id());
                             intent.putExtra("customer_code", getCustomer_code());
@@ -210,6 +221,7 @@ public class GQPaymentSDK {
                         }
                     } else if (response.errorBody() != null) {
                         /*Error Response*/
+                        hideProgress();
                         String result = response.errorBody().string();
 
                         Log.e(TAG, "Result: " + result);
