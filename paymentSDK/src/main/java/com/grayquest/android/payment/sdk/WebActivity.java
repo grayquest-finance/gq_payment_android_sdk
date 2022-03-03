@@ -38,7 +38,7 @@ public class WebActivity extends AppCompatActivity {
 
         if (getIntent()!=null){
             try {
-                if (getIntent().getStringExtra("options")!=null){
+                if (getIntent().hasExtra("options") && getIntent().getStringExtra("options")!=null){
                     jsonOp = getIntent().getStringExtra("options");
                     optionsJSON = new JSONObject(jsonOp);
                     Log.e(TAG, "OptionsJSON: "+optionsJSON.toString());
@@ -76,9 +76,7 @@ public class WebActivity extends AppCompatActivity {
 
             String base = clientId+":"+secretKey;
 
-            byte[] data = new byte[0];
-            data = base.getBytes(StandardCharsets.UTF_8);
-            abase = Base64.encodeToString(data, Base64.DEFAULT);
+            abase = Base64.encodeToString(base.getBytes(), Base64.NO_WRAP);
 
             Log.e(TAG, "gapik: "+gapik);
             Log.e(TAG, "abase: "+abase);
@@ -93,9 +91,12 @@ public class WebActivity extends AppCompatActivity {
             Log.e(TAG, "pc: "+pc);
             Log.e(TAG, "s: "+s);
             Log.e(TAG, "user: "+user);
-            Log.e(TAG, "optional: "+optionsJSON.toString());
-
-            loadURL = API_Client.WEB_LOAD_URL+"instant-eligibility?gapik="+gapik+"&abase="+abase+"&sid="+sid+"&m="+m+"&famt="+famt+"&pamt="+pamt+"&env="+env+"&fedit="+fedit+"&cid="+cid+"&ccode="+ccode+"&pc="+pc+"&s="+s+"&user="+user+"&optional="+optionsJSON.toString();
+            if (optionsJSON!=null && optionsJSON.length()!=0) {
+                Log.e(TAG, "optional: " + optionsJSON.toString());
+                loadURL = API_Client.WEB_LOAD_URL+"instant-eligibility?gapik="+gapik+"&abase="+abase+"&sid="+sid+"&m="+m+"&famt="+famt+"&pamt="+pamt+"&env="+env+"&fedit="+fedit+"&cid="+cid+"&ccode="+ccode+"&pc="+pc+"&s="+s+"&user="+user+"&optional="+optionsJSON.toString();
+            }else {
+                loadURL = API_Client.WEB_LOAD_URL+"instant-eligibility?gapik="+gapik+"&abase="+abase+"&sid="+sid+"&m="+m+"&famt="+famt+"&pamt="+pamt+"&env="+env+"&fedit="+fedit+"&cid="+cid+"&ccode="+ccode+"&pc="+pc+"&s="+s+"&user="+user;
+            }
             Log.e(TAG, "LoadURL: "+loadURL);
         }
 
@@ -132,14 +133,14 @@ public class WebActivity extends AppCompatActivity {
         Log.e(TAG, "Success: "+jsonObject.toString());
 //        webSdk.clearCache(true);
         GQPaymentSDK.successSDK(jsonObject);
-        WebActivity.this.finish();
+//        WebActivity.this.finish();
     }
 
     public void sdkFailed(JSONObject jsonObject){
         Log.e(TAG, "Failed: "+jsonObject.toString());
 //        webSdk.clearCache(true);
         GQPaymentSDK.failedSDK(jsonObject);
-        WebActivity.this.finish();
+//        WebActivity.this.finish();
     }
 
     public void sdkCancel(JSONObject jsonObject){
