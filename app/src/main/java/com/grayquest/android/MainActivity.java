@@ -239,61 +239,61 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
             if (!optional.equals("")) {
                 prefill = new JSONObject(optional);
             } else {
-                prefill = new JSONObject();
-                JSONObject student = new JSONObject();
-                student.put("student_first_name", "");
-                student.put("student_last_name", "");
-                student.put("student_type", "");
-
-                JSONObject customer = new JSONObject();
-                customer.put("customer_first_name", "");
-                customer.put("customer_last_name", "");
-                customer.put("customer_dob", "");
-                customer.put("customer_gender", "");
-                customer.put("customer_email", "");
-                customer.put("customer_marital_status", "");
-
-                JSONObject kyc = new JSONObject();
-                kyc.put("pan_number", "");
-
-                JSONObject residential = new JSONObject();
-                residential.put("residential_addr_line_1", "");
-                residential.put("residential_addr_line_2", "");
-                residential.put("residential_type", "");
-                residential.put("residential_period", "");
-                residential.put("residential_pincode", "");
-                residential.put("residential_city", "");
-                residential.put("residential_state", "");
-
-                JSONObject employment = new JSONObject();
-                employment.put("income_type", "");
-                employment.put("employer_name", "");
-                employment.put("work_experience", "");
-                employment.put("net_monthly_salary", "");
-                employment.put("income_type", "");
-                employment.put("business_name", "");
-                employment.put("business_turnover", "");
-                employment.put("business_annual_income", "");
-                employment.put("business_category", "");
-                employment.put("business_type", "");
-                employment.put("business_description", "");
-                employment.put("business_employee_count", "");
-                employment.put("years_of_current_business", "");
-                employment.put("same_as_residence_address", "");
-                employment.put("addr_line_1", "");
-                employment.put("addr_line_2", "");
-                employment.put("city", "");
-                employment.put("state", "");
-
-                JSONObject note = new JSONObject();
-                note.put("notes", "");
-
-                prefill.put("student_details", student);
-                prefill.put("customer_details", customer);
-                prefill.put("kyc_details", kyc);
-                prefill.put("residential_details", residential);
-                prefill.put("employment_details", employment);
-                prefill.put("notes", note);
+//                prefill = new JSONObject();
+//                JSONObject student = new JSONObject();
+//                student.put("student_first_name", "");
+//                student.put("student_last_name", "");
+//                student.put("student_type", "");
+//
+//                JSONObject customer = new JSONObject();
+//                customer.put("customer_first_name", "");
+//                customer.put("customer_last_name", "");
+//                customer.put("customer_dob", "");
+//                customer.put("customer_gender", "");
+//                customer.put("customer_email", "");
+//                customer.put("customer_marital_status", "");
+//
+//                JSONObject kyc = new JSONObject();
+//                kyc.put("pan_number", "");
+//
+//                JSONObject residential = new JSONObject();
+//                residential.put("residential_addr_line_1", "");
+//                residential.put("residential_addr_line_2", "");
+//                residential.put("residential_type", "");
+//                residential.put("residential_period", "");
+//                residential.put("residential_pincode", "");
+//                residential.put("residential_city", "");
+//                residential.put("residential_state", "");
+//
+//                JSONObject employment = new JSONObject();
+//                employment.put("income_type", "");
+//                employment.put("employer_name", "");
+//                employment.put("work_experience", "");
+//                employment.put("net_monthly_salary", "");
+//                employment.put("income_type", "");
+//                employment.put("business_name", "");
+//                employment.put("business_turnover", "");
+//                employment.put("business_annual_income", "");
+//                employment.put("business_category", "");
+//                employment.put("business_type", "");
+//                employment.put("business_description", "");
+//                employment.put("business_employee_count", "");
+//                employment.put("years_of_current_business", "");
+//                employment.put("same_as_residence_address", "");
+//                employment.put("addr_line_1", "");
+//                employment.put("addr_line_2", "");
+//                employment.put("city", "");
+//                employment.put("state", "");
+//
+//                JSONObject note = new JSONObject();
+//                note.put("notes", "");
+//
+//                prefill.put("student_details", student);
+//                prefill.put("customer_details", customer);
+//                prefill.put("kyc_details", kyc);
+//                prefill.put("residential_details", residential);
+//                prefill.put("employment_details", employment);
+//                prefill.put("notes", note);
             }
         } catch (JSONException e) {
             e.printStackTrace();
