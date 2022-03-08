@@ -103,6 +103,8 @@ public class WebActivity extends AppCompatActivity {
 //        GQPaymentSDK.showProgress();
         webSdk.getSettings().setJavaScriptEnabled(true);
         webSdk.getSettings().setDomStorageEnabled(true);
+//        webSdk.getSettings().setSupportMultipleWindows(true);
+        webSdk.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webSdk.setWebViewClient(new WebViewClient(){
             public void onPageFinished(WebView view, String url) {
                 // do your stuff here

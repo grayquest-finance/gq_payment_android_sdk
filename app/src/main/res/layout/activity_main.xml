@@ -179,8 +179,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/input_field_background"
-                android:padding="10dp"
                 android:hint="#5667ff"
+                android:padding="10dp"
                 android:textSize="16sp" />
 
             <LinearLayout
@@ -206,6 +206,16 @@
                     android:text="Prefill"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/btn_remove_prefill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="Remove"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
