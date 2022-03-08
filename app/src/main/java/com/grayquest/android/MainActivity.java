@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
     SwitchCompat edtFeeEditable;
     RadioButton radioTest, radioLive;
     String clientId, secretKey, GQApi, studentId, env, customerNumber, feeAmount, payableAmount, themeColour, optional = "";
-    TextView btnOptionPrefill;
+    TextView btnOptionPrefill, btnRemovePrefill;
     boolean feeEditable;
 
     Button btn_open, btnPrefill;
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         edtOptional = (EditText) findViewById(R.id.edt_optional);
 
         btnOptionPrefill = (TextView) findViewById(R.id.btn_option_prefill);
+        btnRemovePrefill = (TextView) findViewById(R.id.btn_remove_prefill);
 
         edtFeeEditable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -95,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         btnOptionPrefill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnOptionPrefill.setVisibility(View.GONE);
+                btnRemovePrefill.setVisibility(View.VISIBLE);
                 JSONObject prefill = null;
                 try {
                     if (!optional.equals("")) {
@@ -192,6 +195,16 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
 //                edtFeeEditable.setChecked(true);
 //                radioTest.setChecked(true);
 //                radioLive.setChecked(false);
+            }
+        });
+
+        btnRemovePrefill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                btnRemovePrefill.setVisibility(View.GONE);
+                btnOptionPrefill.setVisibility(View.VISIBLE);
+                edtOptional.setText("");
+                optional = "";
             }
         });
     }
