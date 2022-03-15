@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
     EditText edtClientId, edtSecretKey, edtGQApi, edtStudentID, edtCustomerNumber, edtFeeAmount, edtPayableAmount, edtTheme, edtOptional;
     SwitchCompat edtFeeEditable;
     RadioButton radioTest, radioLive;
-    String clientId, secretKey, GQApi, studentId, env, customerNumber, feeAmount, payableAmount, themeColour, optional = "";
+    String clientId, secretKey, GQApi, studentId, env, customerNumber, feeAmount, payableAmount, themeColour, logo_url, fee_helper_text, optional = "";
     TextView btnOptionPrefill, btnRemovePrefill;
     boolean feeEditable;
 
@@ -232,16 +232,25 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         JSONObject config = new JSONObject();
 
         try {
-            config.put("client_id", clientId);
-            config.put("client_secret_key", secretKey);
-            config.put("gq_api_key", GQApi);
+            JSONObject auth = new JSONObject();
+
+            auth.put("client_id", clientId);
+            auth.put("client_secret_key", secretKey);
+            auth.put("gq_api_key", GQApi);
+
+            JSONObject customisation = new JSONObject();
+            customisation.put("fee_helper_text", "fee_helper_text");
+            customisation.put("logo_url", logo_url);
+            customisation.put("theme_color", themeColour);
+
+            config.put("auth", auth);
             config.put("student_id", studentId);
             config.put("fee_editable", feeEditable);//default true
             config.put("env", env);// eny = "test" for testing
-            config.put("customer_number", customerNumber);// eny = "test" for testing
-            config.put("fee_amount", feeAmount);// eny = "test" for testing
-            config.put("payable_amount", payableAmount);// eny = "test" for testing
-            config.put("theme_color", themeColour);// eny = "test" for testing
+            config.put("customer_number", customerNumber);
+            config.put("fee_amount", feeAmount);
+            config.put("payable_amount", payableAmount);
+            config.put("customisation", customisation);
 
         } catch (JSONException e) {
             e.printStackTrace();

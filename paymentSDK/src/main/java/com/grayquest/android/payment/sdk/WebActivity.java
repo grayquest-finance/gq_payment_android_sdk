@@ -24,8 +24,8 @@ public class WebActivity extends AppCompatActivity {
 
     private static final String TAG = WebActivity.class.getSimpleName();
     WebView webSdk;
-    String jsonOp, jsonCon;
-    JSONObject optionsJSON, configJSON;
+    String jsonOp, jsonCon, jsonAuth, jsonCustomization;
+    JSONObject optionsJSON, configJSON, authJSON, customizationJSON;
 
     //    String url = "https://erp-sdk.graydev.tech/instant-eligibility?gapik=YOUR_GQ_API_KEY_HERE&abase=YOUR_BASE64_ENCODED_AUTH_HERE&cid=23960&ccode=YOUR_UUID_PARAMETER_HERE&sid=Studnet_51w121&pc=734858&fedit=true&famt=&pamt=&s=erp&user=existing";
 //    String url = "https://erp-sdk.graydev.tech/instant-eligibility?m=7794653261&gapik=YOUR_GQ_API_KEY_HERE&abase=YOUR_BASE64_ENCODED_AUTH_HERE&cid=23960&ccode=YOUR_UUID_PARAMETER_HERE&sid=Studnet_51w121&pc=734858&fedit=true&famt=&pamt=&s=erp&user=existing";
@@ -51,7 +51,13 @@ public class WebActivity extends AppCompatActivity {
                 }
                 jsonCon = getIntent().getStringExtra("config");
                 configJSON = new JSONObject(jsonCon);
+
+                jsonAuth = configJSON.getString("auth");
+                jsonCustomization = configJSON.getString("customization");
+                authJSON = new JSONObject(jsonAuth);
+                customizationJSON = new JSONObject(jsonCustomization);
                 Log.e(TAG, "ConfigJSON: " + configJSON.toString());
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -66,16 +72,16 @@ public class WebActivity extends AppCompatActivity {
             Log.e(TAG, "CustomerCode: " + ccode);
 
             try {
-                clientId = configJSON.getString("client_id");
-                secretKey = configJSON.getString("client_secret_key");
-                gapik = configJSON.getString("gq_api_key");
+                clientId = authJSON.getString("client_id");
+                secretKey = authJSON.getString("client_secret_key");
+                gapik = authJSON.getString("gq_api_key");
                 sid = configJSON.getString("student_id");
                 m = configJSON.getString("customer_number");
                 famt = configJSON.getString("fee_amount");
                 pamt = configJSON.getString("payable_amount");
                 env = configJSON.getString("env");
                 fedit = configJSON.getBoolean("fee_editable");
-                pc = configJSON.getString("theme_color");
+                pc = customizationJSON.getString("theme_color");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -178,14 +184,25 @@ public class WebActivity extends AppCompatActivity {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Log.e(TAG, "ChangeUrl: " + url);
+            if (url.startsWith("tel:")) {
+                Intent tel = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                startActivity(tel);
+                return true;
+            } else if (url.contains("mailto:")) {
+                view.getContext().startActivity(
+                        new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                return true;
 
-            Toast.makeText(WebActivity.this, url, Toast.LENGTH_SHORT).show();
+            } else {
 
-            Intent intent = new Intent(WebActivity.this, WebActivity_Sec.class);
-            intent.putExtra("urlload", url);
-            startActivity(intent);
+                Toast.makeText(WebActivity.this, url, Toast.LENGTH_SHORT).show();
 
-            return true;
+                Intent intent = new Intent(WebActivity.this, WebActivity_Sec.class);
+                intent.putExtra("urlload", url);
+                startActivity(intent);
+
+                return true;
+            }
         }
     }
 
