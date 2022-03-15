@@ -30,6 +30,8 @@ public class GQPaymentSDK {
     private static Context context;
     private static JSONObject optionsJSON;
     private static JSONObject configJSON;
+    private static JSONObject authJSON;
+    private static JSONObject customizationJSON;
 
     private static final String TAG = GQPaymentSDK.class.getSimpleName();
 
@@ -48,26 +50,35 @@ public class GQPaymentSDK {
         GQPaymentSDK.optionsJSON = options;
         GQPaymentSDK.configJSON = config;
 
+        try {
+            String jsonAuth = config.getString("auth");
+            String jsonCustomization = config.getString("customization");
+            GQPaymentSDK.authJSON = new JSONObject(jsonAuth);
+            GQPaymentSDK.customizationJSON = new JSONObject(jsonCustomization);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         Log.e(TAG, "Config: " + config.toString());
 
         try {
 
-            if (config.has("client_id") && !config.getString("client_id").isEmpty()) {
-                client_id = config.getString("client_id");
+            if (authJSON.has("client_id") && !authJSON.getString("client_id").isEmpty()) {
+                client_id = authJSON.getString("client_id");
                 Log.e(TAG, "client_id: " + client_id);
             } else {
                 errorMessage.append("Client Id required");
                 isInValid = true;
             }
-            if (config.has("client_secret_key") && !config.getString("client_secret_key").isEmpty()) {
-                client_secret_key = config.getString("client_secret_key");
+            if (authJSON.has("client_secret_key") && !authJSON.getString("client_secret_key").isEmpty()) {
+                client_secret_key = authJSON.getString("client_secret_key");
                 Log.e(TAG, "client_secret_key: " + client_secret_key);
             } else {
                 errorMessage.append(", Client secret key required");
                 isInValid = true;
             }
-            if (config.has("gq_api_key") && !config.getString("gq_api_key").isEmpty()) {
-                gq_api_key = config.getString("gq_api_key");
+            if (authJSON.has("gq_api_key") && !authJSON.getString("gq_api_key").isEmpty()) {
+                gq_api_key = authJSON.getString("gq_api_key");
                 Log.e(TAG, "gq_api_key: " + gq_api_key);
             } else {
                 errorMessage.append(", GQ Api Key required");
@@ -112,7 +123,7 @@ public class GQPaymentSDK {
                 Log.e(TAG, "payable_amount: " + payable_amount);
             }
 
-            theme_color = config.getString("theme_color");
+            theme_color = customizationJSON.getString("theme_color");
             Log.e(TAG, "theme_color: " + theme_color);
 
             if (isInValid) {
