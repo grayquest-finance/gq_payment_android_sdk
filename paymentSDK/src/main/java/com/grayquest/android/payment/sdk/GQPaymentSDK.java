@@ -52,33 +52,27 @@ public class GQPaymentSDK {
 
         try {
             String jsonAuth = config.getString("auth");
-            String jsonCustomization = config.getString("customization");
             GQPaymentSDK.authJSON = new JSONObject(jsonAuth);
-            GQPaymentSDK.customizationJSON = new JSONObject(jsonCustomization);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+            Log.e(TAG, "Auth: " + jsonAuth.toString());
 
-        Log.e(TAG, "Config: " + config.toString());
+            Log.e(TAG, "Config: " + config.toString());
 
-        try {
-
-            if (authJSON.has("client_id") && !authJSON.getString("client_id").isEmpty()) {
-                client_id = authJSON.getString("client_id");
+            if (GQPaymentSDK.authJSON.has("client_id") && !GQPaymentSDK.authJSON.getString("client_id").isEmpty()) {
+                client_id = GQPaymentSDK.authJSON.getString("client_id");
                 Log.e(TAG, "client_id: " + client_id);
             } else {
                 errorMessage.append("Client Id required");
                 isInValid = true;
             }
-            if (authJSON.has("client_secret_key") && !authJSON.getString("client_secret_key").isEmpty()) {
-                client_secret_key = authJSON.getString("client_secret_key");
+            if (GQPaymentSDK.authJSON.has("client_secret_key") && !GQPaymentSDK.authJSON.getString("client_secret_key").isEmpty()) {
+                client_secret_key = GQPaymentSDK.authJSON.getString("client_secret_key");
                 Log.e(TAG, "client_secret_key: " + client_secret_key);
             } else {
                 errorMessage.append(", Client secret key required");
                 isInValid = true;
             }
-            if (authJSON.has("gq_api_key") && !authJSON.getString("gq_api_key").isEmpty()) {
-                gq_api_key = authJSON.getString("gq_api_key");
+            if (GQPaymentSDK.authJSON.has("gq_api_key") && !GQPaymentSDK.authJSON.getString("gq_api_key").isEmpty()) {
+                gq_api_key = GQPaymentSDK.authJSON.getString("gq_api_key");
                 Log.e(TAG, "gq_api_key: " + gq_api_key);
             } else {
                 errorMessage.append(", GQ Api Key required");
@@ -123,8 +117,13 @@ public class GQPaymentSDK {
                 Log.e(TAG, "payable_amount: " + payable_amount);
             }
 
-            theme_color = customizationJSON.getString("theme_color");
-            Log.e(TAG, "theme_color: " + theme_color);
+            if (config.has("customization")) {
+                Log.e(TAG, "Customization: " + config.getString("customization"));
+                String jsonCustomization = config.getString("customization");
+                GQPaymentSDK.customizationJSON = new JSONObject(jsonCustomization);
+            }else {
+                Log.e(TAG, "No Customization");
+            }
 
             if (isInValid) {
                 JSONObject jsonObject = new JSONObject();
@@ -135,8 +134,8 @@ public class GQPaymentSDK {
                 if (!config.getString("customer_number").isEmpty()) {
                     Log.e(TAG, "CustomerNumber: " + config.getString("customer_number"));
 
-                    String base = client_id+":"+client_secret_key;
-                    String abase = "Basic "+ Base64.encodeToString(base.getBytes(), Base64.NO_WRAP);
+                    String base = client_id + ":" + client_secret_key;
+                    String abase = "Basic " + Base64.encodeToString(base.getBytes(), Base64.NO_WRAP);
 
                     showProgress();
                     createCustomer(config.getString("customer_number"), gq_api_key, abase);
@@ -144,7 +143,7 @@ public class GQPaymentSDK {
                     setUser("new");
 
                     Intent intent = new Intent(context, WebActivity.class);
-                    if (options!=null) {
+                    if (options != null) {
                         Log.e(TAG, "Optional: " + options.toString());
                         intent.putExtra("options", options.toString());
                     }
@@ -187,8 +186,8 @@ public class GQPaymentSDK {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("customer_mobile", customer_mobile);
 
-        Log.e(TAG, "ABASE: "+abase.trim());
-        Log.e(TAG, "GQAPIKEY: "+gq_api_key);
+        Log.e(TAG, "ABASE: " + abase.trim());
+        Log.e(TAG, "GQAPIKEY: " + gq_api_key);
 
         ApiInterface apiInterface = API_Client.getRetrofit().create(ApiInterface.class);
         Call<PaymentSDk_Contributor> create = apiInterface.createCustomer(gq_api_key, abase, jsonObject);
@@ -221,7 +220,7 @@ public class GQPaymentSDK {
 //                            bundle.putString("options", jsonObject);
 
                             Intent intent = new Intent(context, WebActivity.class);
-                            if (optionsJSON!=null) {
+                            if (optionsJSON != null) {
                                 intent.putExtra("options", optionsJSON.toString());
                             }
                             intent.putExtra("config", String.valueOf(configJSON));

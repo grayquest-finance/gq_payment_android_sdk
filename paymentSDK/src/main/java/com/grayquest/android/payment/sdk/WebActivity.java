@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Base64;
@@ -53,25 +54,18 @@ public class WebActivity extends AppCompatActivity {
                 configJSON = new JSONObject(jsonCon);
 
                 jsonAuth = configJSON.getString("auth");
-                jsonCustomization = configJSON.getString("customization");
                 authJSON = new JSONObject(jsonAuth);
-                customizationJSON = new JSONObject(jsonCustomization);
                 Log.e(TAG, "ConfigJSON: " + configJSON.toString());
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+                cid = getIntent().getIntExtra("customer_id", 0);
+                ccode = getIntent().getStringExtra("customer_code");
+                user = getIntent().getStringExtra("user");
 
-            cid = getIntent().getIntExtra("customer_id", 0);
-            ccode = getIntent().getStringExtra("customer_code");
-            user = getIntent().getStringExtra("user");
+                Log.e(TAG, "Options: " + jsonOp);
+                Log.e(TAG, "Config: " + jsonCon);
+                Log.e(TAG, "CustomerId: " + cid);
+                Log.e(TAG, "CustomerCode: " + ccode);
 
-            Log.e(TAG, "Options: " + jsonOp);
-            Log.e(TAG, "Config: " + jsonCon);
-            Log.e(TAG, "CustomerId: " + cid);
-            Log.e(TAG, "CustomerCode: " + ccode);
-
-            try {
                 clientId = authJSON.getString("client_id");
                 secretKey = authJSON.getString("client_secret_key");
                 gapik = authJSON.getString("gq_api_key");
@@ -81,7 +75,17 @@ public class WebActivity extends AppCompatActivity {
                 pamt = configJSON.getString("payable_amount");
                 env = configJSON.getString("env");
                 fedit = configJSON.getBoolean("fee_editable");
-                pc = customizationJSON.getString("theme_color");
+
+                if (configJSON.has("customization")) {
+                    jsonCustomization = configJSON.getString("customization");
+                    customizationJSON = new JSONObject(jsonCustomization);
+                    Log.e(TAG, "Customization: " + customizationJSON);
+                    if (customizationJSON.has("theme_color")) {
+                        pc = customizationJSON.getString("theme_color");
+                    }else {
+                        pc = "";
+                    }
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -115,7 +119,7 @@ public class WebActivity extends AppCompatActivity {
 //        GQPaymentSDK.showProgress();
         webSdk.getSettings().setJavaScriptEnabled(true);
         webSdk.getSettings().setDomStorageEnabled(true);
-//        webSdk.getSettings().setSupportMultipleWindows(true);
+        webSdk.getSettings().setSupportMultipleWindows(true);
         webSdk.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 
 //        webSdk.setWebViewClient(new WebViewClient(){
@@ -133,11 +137,12 @@ public class WebActivity extends AppCompatActivity {
         webSdk.getSettings().setAllowFileAccessFromFileURLs(true);
         webSdk.getSettings().setAllowUniversalAccessFromFileURLs(true);
         webSdk.getSettings().setSupportZoom(true);
+
 //        webSdk.setWebViewClient(new WebViewClient());
         webSdk.setClickable(true);
         webSdk.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
-        webSdk.setWebViewClient(new MyWebViewClient());
-//        webSdk.setWebChromeClient(new MyWebChromeclient());
+//        webSdk.setWebViewClient(new MyWebViewClient());
+        webSdk.setWebChromeClient(new MyWebChromeClient());
 //        webSdk.setWebChromeClient(new WebChromeClient());
 
         webSdk.addJavascriptInterface(new GQPaymentSDKInterface(WebActivity.this), "Gqsdk");
@@ -206,7 +211,7 @@ public class WebActivity extends AppCompatActivity {
         }
     }
 
-    class MyWebChromeclient extends WebChromeClient {
+    class MyWebChromeClient extends WebChromeClient {
 
 
         @Override
@@ -235,10 +240,28 @@ public class WebActivity extends AppCompatActivity {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     Log.e(TAG, "ChangeUrl: " + url);
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                    browserIntent.setData(Uri.parse(url));
-                    startActivity(browserIntent);
-                    return true;
+                    if (url.startsWith("tel:")) {
+                        Intent tel = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                        startActivity(tel);
+                        return true;
+                    } else if (url.contains("mailto:")) {
+                        view.getContext().startActivity(
+                                new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                        return true;
+
+                    } else if (url.contains("cashfree")) {
+//                        Toast.makeText(WebActivity.this, url, Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(WebActivity.this, WebActivity_Sec.class);
+                        intent.putExtra("urlload", url);
+                        startActivity(intent);
+                        return true;
+                    } else {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                        browserIntent.setData(Uri.parse(url));
+                        startActivity(browserIntent);
+                        return true;
+                    }
                 }
             });
 
