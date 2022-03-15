@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
             config.put("customer_number", customerNumber);
             config.put("fee_amount", feeAmount);
             config.put("payable_amount", payableAmount);
-            config.put("customisation", customisation);
+            config.put("customization", customisation);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -315,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
 //                prefill.put("kyc_details", kyc);
 //                prefill.put("residential_details", residential);
 //                prefill.put("employment_details", employment);
-//                prefill.put("notes", note);
+//                prefill.put("notes", notes);
             }
         } catch (JSONException e) {
             e.printStackTrace();
