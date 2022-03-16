@@ -74,4 +74,20 @@ public class GQPaymentSDKInterface {
         }
 //        GQPaymentSDK.cancelSDK(data);
     }
+
+    @JavascriptInterface
+    public void sendADOptions(String data){
+        Log.e(TAG, "Data: "+data);
+
+        if (data!=null){
+            JSONObject dataObject = null;
+            try {
+                 dataObject = new JSONObject(data);
+
+                ((WebActivity)mContext).ADOptions(data);
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+        }
+    }
 }
