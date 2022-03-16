@@ -1,7 +1,13 @@
 package com.grayquest.android.payment.sdk;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,10 +16,15 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+
+import com.razorpay.Checkout;
+import com.razorpay.PaymentData;
+import com.razorpay.PaymentResultWithDataListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +32,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
-public class WebActivity extends AppCompatActivity {
+public class WebActivity extends AppCompatActivity implements PaymentResultWithDataListener {
 
     private static final String TAG = WebActivity.class.getSimpleName();
     WebView webSdk;
@@ -32,9 +43,11 @@ public class WebActivity extends AppCompatActivity {
 //    String url = "https://erp-sdk.graydev.tech/instant-eligibility?m=7794653261&gapik=9db4fc333d8bcf7fee98804105d9fc0c85199d77&abase=MzU0NTk4ZmQtNTc1YS00YzFmLWE2ZTMtZTA4ZmM1ZWEwNmQzOjJlYjM0OTczMjU5NGZlNzc3YmUwNzlmYjNjN2U1NTcxOTRmNTVhMTQ=&cid=23960&ccode=e4589ac0-46ee-42de-9eb4-b0094e1a0b0b&sid=Studnet_51w121&pc=734858&fedit=true&famt=&pamt=&s=erp&user=existing";
     String loadURL;
     String clientId, secretKey;
-    String gapik, abase, sid, m, famt, pamt, env, ccode, pc, s = "asdk", user;
+    String gapik, abase, sid, m, famt, pamt, env, ccode, pc, s = "asdk", user, callback_url;
     int cid;
-    boolean fedit;
+    boolean fedit, redirect;
+
+    ActivityResultLauncher<Intent> paymentLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +55,8 @@ public class WebActivity extends AppCompatActivity {
         setContentView(R.layout.activity_web);
 
         webSdk = (WebView) findViewById(R.id.web_sdk);
+
+        Checkout.preload(getApplicationContext());
 
         if (getIntent() != null) {
             try {
@@ -150,6 +165,16 @@ public class WebActivity extends AppCompatActivity {
         webSdk.loadUrl(loadURL);
 //        Log.e(TAG, "URL: "+"https://erp-sdk.graydev.tech/instant-eligibility?optional="+jsonObject.toString());
         Log.e(TAG, "URL: " + loadURL);
+
+        paymentLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+
+                    Log.e(TAG, "PaymentData: "+result.getData().getStringExtra("payment_data"));
+                }
+            }
+        });
     }
 
 //    @Override
@@ -183,6 +208,128 @@ public class WebActivity extends AppCompatActivity {
 //        webSdk.clearCache(true);
         GQPaymentSDK.cancelSDK(jsonObject);
         WebActivity.this.finish();
+    }
+
+    public void ADOptions(String jsonObject){
+        Log.e(TAG, "ADOptions: "+jsonObject);
+//        Intent intent = new Intent(WebActivity.this, ADPayment.class);
+//        intent.putExtra("options_json", jsonObject);
+//        paymentLauncher.launch(intent);
+
+        JSONObject ADOptionsObject = null;
+        try {
+            ADOptionsObject = new JSONObject(jsonObject);
+
+            Log.e(TAG, "key: "+ADOptionsObject.getString("key"));
+            Log.e(TAG, "notes: "+ADOptionsObject.getString("notes"));
+            Log.e(TAG, "order_id: "+ADOptionsObject.getString("order_id"));
+            Log.e(TAG, "recurring: "+ADOptionsObject.getString("recurring"));
+            if (ADOptionsObject.has("redirect")) {
+                redirect = ADOptionsObject.getBoolean("redirect");
+                Log.e(TAG, "redirect: " + ADOptionsObject.getBoolean("redirect"));
+            }
+
+            callback_url = ADOptionsObject.getString("callback_url");
+            Log.e(TAG, "customer_id: "+ADOptionsObject.getString("customer_id"));
+            Log.e(TAG, "callback_url: "+ADOptionsObject.getString("callback_url"));
+
+
+
+            startPayment(ADOptionsObject.getString("key"), ADOptionsObject.getString("notes"),
+                    ADOptionsObject.getString("order_id"), ADOptionsObject.getInt("recurring"),
+                    redirect, ADOptionsObject.getString("customer_id"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void startPayment(String key, String notes, String order_id, int recurring, boolean redirect, String customer_id) {
+        /**
+         * Instantiate Checkout
+         */
+        Checkout checkout = new Checkout();
+        checkout.setKeyID(key);
+        /**
+         * Set your logo here
+         */
+//        checkout.setImage(R.drawable.logo);
+
+        /**
+         * Reference to current activity
+         */
+        final Activity activity = this;
+
+        /**
+         * Pass your payment options to the Razorpay Checkout as a JSONObject
+         */
+        try {
+            JSONObject options = new JSONObject();
+
+//            options.put("name", "Merchant Name");
+//            options.put("description", "Reference No. #123456");
+//            options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.png");
+            options.put("order_id", order_id);//from response of step 3.
+
+            JSONObject notesObject = new JSONObject(notes);
+            Log.e(TAG, "NotesObject: "+notesObject.toString());
+
+            options.put("notes", notesObject);//from response of step 3.
+            if (recurring==1) {
+                options.put("recurring", true);//from response of step 3.
+            }else {
+                options.put("recurring", false);//from response of step 3.
+            }
+            options.put("redirect", redirect);
+            options.put("customer_id", customer_id);
+//            options.put("theme.color", "#3399cc");
+//            options.put("currency", "INR");
+//            options.put("amount", "50000");//pass amount in currency subunits
+//            options.put("prefill.email", "gaurav.kumar@example.com");
+//            options.put("prefill.contact","9988776655");
+//            JSONObject retryObj = new JSONObject();
+//            retryObj.put("enabled", true);
+//            retryObj.put("max_count", 2);
+//            options.put("retry", retryObj);
+
+            checkout.open(activity, options);
+
+        } catch(Exception e) {
+            Log.e(TAG, "Error in starting Razorpay Checkout", e);
+        }
+    }
+
+    @Override
+    public void onPaymentSuccess(String s, PaymentData paymentData) {
+        Log.e(TAG, "PaymentSuccess: "+s.toString());
+        Log.e(TAG, "PaymentSuccess: "+paymentData.getData().toString());
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(paymentData.getData().toString());
+            jsonObject.put("callback_url", callback_url);
+            Log.e(TAG, "JSONObject: "+jsonObject.toString());
+            webSdk.evaluateJavascript("javascript:sendADPaymentResponse("+jsonObject+");", null);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//        Intent intent = new Intent();
+//        intent.putExtra("payment_data", paymentData.getData().toString());
+//        setResult(RESULT_OK, intent);
+//        finish();
+    }
+
+    @Override
+    public void onPaymentError(int i, String s, PaymentData paymentData) {
+        Log.e(TAG, "PaymentError: "+s.toString());
+        Log.e(TAG, "PaymentError: "+paymentData.getData().toString());
+        webSdk.evaluateJavascript("javascript:sendADPaymentResponse('"+callback_url+","+paymentData.getData().toString()+"');", null);
+//        Intent intent = new Intent();
+//        intent.putExtra("payment_data", paymentData.getData().toString());
+//        setResult(RESULT_OK, intent);
+//        finish();
+    }
+
+    public void getADPaymentResponse(String data){
+        Log.e(TAG, "ResponseData: "+data);
     }
 
     class MyWebViewClient extends WebViewClient {
