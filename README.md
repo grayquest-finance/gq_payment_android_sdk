@@ -223,3 +223,95 @@ Texts
 |1|theme_color|Add/Override custom theme color of the SDK/Popup|No|
 |||**Note:** 6 digit hex color code is required.||
 |||ex.#2C3E50||
+
+Note: If data for a specific field is not available then you should not send the variable or key.
+
+
+	JSONObject config = new JSONObject();
+
+        try {
+            JSONObject auth = new JSONObject();
+            auth.put("client_id", <client_id>);
+            auth.put("client_secret_key", <client_secret_key>);
+            auth.put("gq_api_key", <gq_api_key>);
+            config.put("auth", auth);
+
+ 	      JSONObject customization = new JSONObject();
+            customization.put("fee_helper_text", <fee_helper_text>);
+            customization.put("logo_url", <logo_url>);
+            customization.put("theme_color", <theme_color>);
+            config.put("customization", customization);
+
+            config.put("student_id", <student_id>);
+            config.put("fee_editable", <fee_editable>);
+            config.put("env", <env>);
+            config.put("customer_number", <customer_number>);
+            config.put("fee_amount", <fee_amount>);
+            config.put("payable_amount", <payable_amount>);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+	JSONObject prefill = new JSONObject();
+
+	try {
+
+	JSONObject student = new JSONObject();
+	    student.put("student_first_name", <student_first_name>);
+	    student.put("student_last_name", <student_last_name>);
+	    student.put("student_type", <student_type>);
+
+	    JSONObject customer = new JSONObject();
+	    customer.put("customer_first_name", <customer_first_name>);
+	    customer.put("customer_last_name", <customer_last_name>);
+	    customer.put("customer_dob", <customer_dob>);
+	    customer.put("customer_gender", <customer_gender>);
+	    customer.put("customer_email", <customer_email>);
+	    customer.put("customer_marital_status", <customer_marital_status>);
+
+	    JSONObject kyc = new JSONObject();
+	    kyc.put("pan_number", <pan_number>);
+
+	    JSONObject residential = new JSONObject();
+	    residential.put("residential_addr_line_1", <residential_addr_line_1>);
+	    residential.put("residential_addr_line_2", <residential_addr_line_2>);
+	    residential.put("residential_type", <residential_type>);
+	    residential.put("residential_period", <residential_period>);
+	    residential.put("residential_pincode", <residential_pincode>);
+	    residential.put("residential_city", <residential_city>);
+	    residential.put("residential_state", <residential_state>);
+
+	    JSONObject employment = new JSONObject();
+	    employment.put("income_type", <income_type>);
+	    employment.put("employer_name", <employer_name>);
+	    employment.put("work_experience", <work_experience>);
+	    employment.put("net_monthly_salary", <net_monthly_salary>);
+	    employment.put("income_type", <income_type>);
+	    employment.put("business_name", <business_name>);
+	    employment.put("business_turnover", <business_turnover>);
+	    employment.put("business_annual_income", <business_annual_income>);
+	    employment.put("business_category", <business_category>);
+	    employment.put("business_type", <business_type>);
+	    employment.put("business_description", <business_description>);
+	    employment.put("business_employee_count", <business_employee_count>);
+	    employment.put("years_of_current_business", <years_of_current_business>);
+	    employment.put("same_as_residence_address", <same_as_residence_address>);
+	    employment.put("addr_line_1", <addr_line_1>);
+	    employment.put("addr_line_2", <addr_line_2>);
+	    employment.put("city", <city>);
+	    employment.put("state", <state>);
+
+	    JSONObject notes = new JSONObject();
+	    notes.put("key", <value>);
+
+	    prefill.put("student_details", student_details);
+	    prefill.put("customer_details", customer_details);
+	    prefill.put("kyc_details", kyc_details);
+	    prefill.put("residential_details", residential_details);
+	    prefill.put("employment_details", employment_details);
+	    prefill.put("notes", notes);	
+
+	} catch (JSONException e) {
+	    e.printStackTrace();
+	}
