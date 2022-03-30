@@ -133,7 +133,7 @@ public class GQPaymentSDK {
                 gqPaymentSDKListener.onFailed(jsonObject);
             } else {
 
-                if (!config.has("customer_number") && config.getString("customer_number").isEmpty()) {
+                if (config.has("customer_number") && config.getString("customer_number").isEmpty()) {
                     Log.e(TAG, "CustomerNumber: " + config.getString("customer_number"));
 
                     String base = client_id + ":" + client_secret_key;
