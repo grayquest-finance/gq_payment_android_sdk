@@ -113,8 +113,10 @@ public class GQPaymentSDK {
                     isInValid = true;
                 }
             } else {
-                payable_amount = config.getString("payable_amount");
-                Log.e(TAG, "payable_amount: " + payable_amount);
+                if(config.has("payable_amount")) {
+                    payable_amount = config.getString("payable_amount");
+                    Log.e(TAG, "payable_amount: " + payable_amount);
+                }
             }
 
             if (config.has("customization")) {
