@@ -85,9 +85,21 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                 secretKey = authJSON.getString("client_secret_key");
                 gapik = authJSON.getString("gq_api_key");
                 sid = configJSON.getString("student_id");
-                m = configJSON.getString("customer_number");
-                famt = configJSON.getString("fee_amount");
-                pamt = configJSON.getString("payable_amount");
+                if (configJSON.has("customer_number")) {
+                    m = configJSON.getString("customer_number");
+                }else {
+                    m="";
+                }
+                if (configJSON.has("fee_amount")) {
+                    famt = configJSON.getString("fee_amount");
+                }else {
+                    famt = "";
+                }
+                if (configJSON.has("payable_amount")) {
+                    pamt = configJSON.getString("payable_amount");
+                }else {
+                    pamt = "";
+                }
                 env = configJSON.getString("env");
                 fedit = configJSON.getBoolean("fee_editable");
 

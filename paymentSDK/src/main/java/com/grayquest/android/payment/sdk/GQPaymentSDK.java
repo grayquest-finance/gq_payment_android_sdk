@@ -100,12 +100,12 @@ public class GQPaymentSDK {
                 isInValid = true;
             }
 
-            customer_number = config.getString("customer_number");
-            Log.e(TAG, "customer_number: " + customer_number);
-            fee_amount = config.getString("fee_amount");
-            Log.e(TAG, "fee_amount: " + fee_amount);
-            if (!fee_amount.isEmpty()) {
-                if (!config.getString("payable_amount").isEmpty()) {
+//            customer_number = config.getString("customer_number");
+//            Log.e(TAG, "customer_number: " + customer_number);
+            if (config.has("fee_amount") && !config.getString("fee_amount").isEmpty()) {
+                fee_amount = config.getString("fee_amount");
+                Log.e(TAG, "fee_amount: " + fee_amount);
+                if (config.has("payable_amount")&&!config.getString("payable_amount").isEmpty()) {
                     payable_amount = config.getString("payable_amount");
                     Log.e(TAG, "payable_amount: " + payable_amount);
                 } else {
@@ -113,8 +113,10 @@ public class GQPaymentSDK {
                     isInValid = true;
                 }
             } else {
-                payable_amount = config.getString("payable_amount");
-                Log.e(TAG, "payable_amount: " + payable_amount);
+                if(config.has("payable_amount")) {
+                    payable_amount = config.getString("payable_amount");
+                    Log.e(TAG, "payable_amount: " + payable_amount);
+                }
             }
 
             if (config.has("customization")) {
@@ -131,7 +133,7 @@ public class GQPaymentSDK {
                 gqPaymentSDKListener.onFailed(jsonObject);
             } else {
 
-                if (!config.getString("customer_number").isEmpty()) {
+                if (config.has("customer_number") && !config.getString("customer_number").isEmpty()) {
                     Log.e(TAG, "CustomerNumber: " + config.getString("customer_number"));
 
                     String base = client_id + ":" + client_secret_key;
