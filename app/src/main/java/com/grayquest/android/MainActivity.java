@@ -247,9 +247,9 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
             config.put("student_id", studentId);
             config.put("fee_editable", feeEditable);//default true
             config.put("env", env);// eny = "test" for testing
-//            config.put("customer_number", customerNumber);
-//            config.put("fee_amount", feeAmount);
-//            config.put("payable_amount", payableAmount);
+            config.put("customer_number", customerNumber);
+            config.put("fee_amount", feeAmount);
+            config.put("payable_amount", payableAmount);
             config.put("customization", customisation);
 
         } catch (JSONException e) {
