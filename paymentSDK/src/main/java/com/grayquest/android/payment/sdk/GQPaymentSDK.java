@@ -53,48 +53,48 @@ public class GQPaymentSDK {
         try {
             String jsonAuth = config.getString("auth");
             GQPaymentSDK.authJSON = new JSONObject(jsonAuth);
-            Log.e(TAG, "Auth: " + jsonAuth.toString());
+//            Log.e(TAG, "Auth: " + jsonAuth.toString());
 
-            Log.e(TAG, "Config: " + config.toString());
+//            Log.e(TAG, "Config: " + config.toString());
 
             if (GQPaymentSDK.authJSON.has("client_id") && !GQPaymentSDK.authJSON.getString("client_id").isEmpty()) {
                 client_id = GQPaymentSDK.authJSON.getString("client_id");
-                Log.e(TAG, "client_id: " + client_id);
+//                Log.e(TAG, "client_id: " + client_id);
             } else {
                 errorMessage.append("Client Id required");
                 isInValid = true;
             }
             if (GQPaymentSDK.authJSON.has("client_secret_key") && !GQPaymentSDK.authJSON.getString("client_secret_key").isEmpty()) {
                 client_secret_key = GQPaymentSDK.authJSON.getString("client_secret_key");
-                Log.e(TAG, "client_secret_key: " + client_secret_key);
+//                Log.e(TAG, "client_secret_key: " + client_secret_key);
             } else {
                 errorMessage.append(", Client secret key required");
                 isInValid = true;
             }
             if (GQPaymentSDK.authJSON.has("gq_api_key") && !GQPaymentSDK.authJSON.getString("gq_api_key").isEmpty()) {
                 gq_api_key = GQPaymentSDK.authJSON.getString("gq_api_key");
-                Log.e(TAG, "gq_api_key: " + gq_api_key);
+//                Log.e(TAG, "gq_api_key: " + gq_api_key);
             } else {
                 errorMessage.append(", GQ Api Key required");
                 isInValid = true;
             }
             if (config.has("student_id") && !config.getString("student_id").isEmpty()) {
                 student_id = config.getString("student_id");
-                Log.e(TAG, "student_id: " + student_id);
+//                Log.e(TAG, "student_id: " + student_id);
             } else {
                 errorMessage.append(", Student Id required");
                 isInValid = true;
             }
             if (config.has("fee_editable")) {
                 fee_editable = config.getBoolean("fee_editable");
-                Log.e(TAG, "fee_editable: " + fee_editable);
+//                Log.e(TAG, "fee_editable: " + fee_editable);
             } else {
                 errorMessage.append(", Fee Editable required");
                 isInValid = true;
             }
             if (config.has("env") && !config.getString("env").isEmpty()) {
                 env = config.getString("env");
-                Log.e(TAG, "env: " + env);
+//                Log.e(TAG, "env: " + env);
             } else {
                 errorMessage.append(", Environment required");
                 isInValid = true;
@@ -104,10 +104,10 @@ public class GQPaymentSDK {
 //            Log.e(TAG, "customer_number: " + customer_number);
             if (config.has("fee_amount") && !config.getString("fee_amount").isEmpty()) {
                 fee_amount = config.getString("fee_amount");
-                Log.e(TAG, "fee_amount: " + fee_amount);
+//                Log.e(TAG, "fee_amount: " + fee_amount);
                 if (config.has("payable_amount")&&!config.getString("payable_amount").isEmpty()) {
                     payable_amount = config.getString("payable_amount");
-                    Log.e(TAG, "payable_amount: " + payable_amount);
+//                    Log.e(TAG, "payable_amount: " + payable_amount);
                 } else {
                     errorMessage.append(", Payable Amount required");
                     isInValid = true;
@@ -115,16 +115,16 @@ public class GQPaymentSDK {
             } else {
                 if(config.has("payable_amount")) {
                     payable_amount = config.getString("payable_amount");
-                    Log.e(TAG, "payable_amount: " + payable_amount);
+//                    Log.e(TAG, "payable_amount: " + payable_amount);
                 }
             }
 
             if (config.has("customization")) {
-                Log.e(TAG, "Customization: " + config.getString("customization"));
+//                Log.e(TAG, "Customization: " + config.getString("customization"));
                 String jsonCustomization = config.getString("customization");
                 GQPaymentSDK.customizationJSON = new JSONObject(jsonCustomization);
             }else {
-                Log.e(TAG, "No Customization");
+//                Log.e(TAG, "No Customization");
             }
 
             if (isInValid) {
@@ -134,7 +134,7 @@ public class GQPaymentSDK {
             } else {
 
                 if (config.has("customer_number") && !config.getString("customer_number").isEmpty()) {
-                    Log.e(TAG, "CustomerNumber: " + config.getString("customer_number"));
+//                    Log.e(TAG, "CustomerNumber: " + config.getString("customer_number"));
 
                     String base = client_id + ":" + client_secret_key;
                     String abase = "Basic " + Base64.encodeToString(base.getBytes(), Base64.NO_WRAP);
@@ -146,7 +146,7 @@ public class GQPaymentSDK {
 
                     Intent intent = new Intent(context, WebActivity.class);
                     if (options != null) {
-                        Log.e(TAG, "Optional: " + options.toString());
+//                        Log.e(TAG, "Optional: " + options.toString());
                         intent.putExtra("options", options.toString());
                     }
                     intent.putExtra("config", String.valueOf(configJSON));
@@ -188,8 +188,8 @@ public class GQPaymentSDK {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("customer_mobile", customer_mobile);
 
-        Log.e(TAG, "ABASE: " + abase.trim());
-        Log.e(TAG, "GQAPIKEY: " + gq_api_key);
+//        Log.e(TAG, "ABASE: " + abase.trim());
+//        Log.e(TAG, "GQAPIKEY: " + gq_api_key);
 
         ApiInterface apiInterface = API_Client.getRetrofit().create(ApiInterface.class);
         Call<PaymentSDk_Contributor> create = apiInterface.createCustomer(gq_api_key, abase, jsonObject);
@@ -198,7 +198,7 @@ public class GQPaymentSDK {
             @Override
             public void onResponse(@NonNull Call<PaymentSDk_Contributor> call, @NonNull Response<PaymentSDk_Contributor> response) {
                 try {
-                    Log.e(TAG, "ResponseCode: " + response.code());
+//                    Log.e(TAG, "ResponseCode: " + response.code());
                     if (response.isSuccessful() && response.body() != null) {
                         /*Success Response*/
                         hideProgress();
@@ -209,7 +209,7 @@ public class GQPaymentSDK {
                             ResponseData responseData = new ResponseData();
 
                             responseData = response.body().getData();
-                            Log.e(TAG, "CustomerId: " + responseData.getCustomer_id());
+//                            Log.e(TAG, "CustomerId: " + responseData.getCustomer_id());
                             setCustomer_id(responseData.getCustomer_id());
                             setCustomer_code(responseData.getCustomer_code());
                             if (status_code == 201) {
@@ -236,18 +236,18 @@ public class GQPaymentSDK {
                         hideProgress();
                         String result = response.errorBody().string();
 
-                        Log.e(TAG, "Result: " + result);
+//                        Log.e(TAG, "Result: " + result);
                         JSONObject errorResponse = new JSONObject(result);
 
                         boolean success = errorResponse.getBoolean("success");
                         String message = errorResponse.getString("message");
 
-                        Log.e(TAG, "Success: " + success);
-                        Log.e(TAG, "Message: " + message);
+//                        Log.e(TAG, "Success: " + success);
+//                        Log.e(TAG, "Message: " + message);
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("error", message);
                         gqPaymentSDKListener.onFailed(jsonObject);
-                        Log.e(TAG, "ErrorResponse: " + response.errorBody().string());
+//                        Log.e(TAG, "ErrorResponse: " + response.errorBody().string());
                     }
 
                 } catch (Exception e) {
@@ -260,9 +260,9 @@ public class GQPaymentSDK {
                         jsonException.printStackTrace();
                     }
                     gqPaymentSDKListener.onFailed(jsonObject);
-                    Log.e(TAG, "Error: " + e.getCause());
-                    Log.e(TAG, "Error: " + e.getMessage());
-                    Log.e(TAG, "Error: " + e.getLocalizedMessage());
+//                    Log.e(TAG, "Error: " + e.getCause());
+//                    Log.e(TAG, "Error: " + e.getMessage());
+//                    Log.e(TAG, "Error: " + e.getLocalizedMessage());
                 }
             }
 
@@ -276,9 +276,9 @@ public class GQPaymentSDK {
                     jsonException.printStackTrace();
                 }
                 gqPaymentSDKListener.onFailed(jsonObject);
-                Log.e(TAG, "Error1: " + t.getCause());
-                Log.e(TAG, "Error1: " + t.getMessage());
-                Log.e(TAG, "Error1: " + t.getLocalizedMessage());
+//                Log.e(TAG, "Error1: " + t.getCause());
+//                Log.e(TAG, "Error1: " + t.getMessage());
+//                Log.e(TAG, "Error1: " + t.getLocalizedMessage());
             }
         });
     }
