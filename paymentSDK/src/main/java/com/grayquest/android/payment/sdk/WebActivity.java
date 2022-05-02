@@ -245,8 +245,6 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
             Log.e(TAG, "customer_id: "+ADOptionsObject.getString("customer_id"));
             Log.e(TAG, "callback_url: "+ADOptionsObject.getString("callback_url"));
 
-
-
             startPayment(ADOptionsObject.getString("key"), ADOptionsObject.getString("notes"),
                     ADOptionsObject.getString("order_id"), ADOptionsObject.getInt("recurring"),
                     redirect, ADOptionsObject.getString("customer_id"));
