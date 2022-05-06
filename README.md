@@ -24,7 +24,7 @@ Add the following code to the apps build.gradle file:
     
     dependencies {
     
-		  Implementation 'com.github.grayquest-finance:gq_payment_android_sdk:1.0.5
+		  Implementation 'com.github.grayquest-finance:gq_payment_android_sdk:1.0.7
       
 	  }
 
