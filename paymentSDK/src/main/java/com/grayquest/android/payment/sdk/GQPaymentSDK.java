@@ -12,11 +12,13 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +33,7 @@ public class GQPaymentSDK {
     private static JSONObject optionsJSON;
     private static JSONObject configJSON;
     private static JSONObject authJSON;
+    private static JSONObject financingMode;
     private static JSONObject customizationJSON;
 
     private static final String TAG = GQPaymentSDK.class.getSimpleName();
@@ -100,12 +103,102 @@ public class GQPaymentSDK {
                 isInValid = true;
             }
 
+            if (config.has("financing_config")) {
+                String financing = null;
+                try {
+                    financing = config.getString("financing_config");
+                    GQPaymentSDK.financingMode = new JSONObject(financing);
+                    Log.e(TAG, "FinancingConfig: " + financing.toString());
+                    if (financingMode.has("monthly_emi") && financingMode.getJSONObject("monthly_emi").has("amount")) {
+                        if (!financingMode.getJSONObject("monthly_emi").getString("amount").isEmpty()) {
+                            JSONObject monthly_emi = new JSONObject(String.valueOf(financingMode.get("monthly_emi")));
+                            String amount = monthly_emi.getString("amount");
+                            Double amountINt = Double.parseDouble(amount);
+                            Log.e(TAG, "MonthlyEmiJsonObject: " + monthly_emi);
+                            Log.e(TAG, "MonthlyEmiAmount: " + amount);
+                            if (amountINt > 0.0) {
+                                Log.e(TAG, "MonthlyEmiAmount: " + amountINt);
+                            } else {
+                                errorMessage.append(", Monthly Emi amount must be greater than 0");
+                                isInValid = true;
+                            }
+                        }else {
+                            errorMessage.append(", Please enter Monthly Emi Amount");
+                            isInValid = true;
+                        }
+                    }
+                    if (financingMode.has("auto_debit") && financingMode.getJSONObject("auto_debit").has("amount")) {
+                        if (!financingMode.getJSONObject("auto_debit").getString("amount").isEmpty()) {
+                            JSONObject auto_debit = new JSONObject(String.valueOf(financingMode.get("auto_debit")));
+                            String amount = auto_debit.getString("amount");
+                            Double amountINt = Double.parseDouble(amount);
+                            Log.e(TAG, "AutoDebitJsonObject: " + auto_debit);
+                            Log.e(TAG, "AutoDebitAmount: " + amount);
+                            if (amountINt > 0.0) {
+                                Log.e(TAG, "AutoDebitAmount: " + amountINt);
+                            } else {
+                                errorMessage.append(", Auto Debit amount must be greater than 0");
+                                isInValid = true;
+                            }
+                        }else {
+                            errorMessage.append(", Please enter Auto Debit Amount");
+                            isInValid = true;
+                        }
+                    }
+                    if (financingMode.has("auto_debit") && financingMode.getJSONObject("auto_debit").has("schedule")) {
+                        JSONObject auto_debit = new JSONObject(String.valueOf(financingMode.get("auto_debit")));
+                        Log.e(TAG, "ScheduleArraySize: " + auto_debit.get("schedule"));
+                        JSONArray scheduleArray = auto_debit.getJSONArray("schedule");
+                        Log.e(TAG, "ScheduleArraySize: " + scheduleArray.length());
+                        for (int i = 0; i < scheduleArray.length(); i++) {
+                            JSONObject schedule = scheduleArray.getJSONObject(i);
+                            String date = schedule.getString("date");
+                            Log.e(TAG, "Schedule Date: " + i + " - " + date);
+                            if (!schedule.getString("amount").isEmpty()) {
+                                String amount = schedule.getString("amount");
+                                Log.e(TAG, "Schedule Amount: " + i + " - " + amount);
+                                Double amountINt = Double.parseDouble(amount);
+                                if (amountINt > 0.0) {
+                                    Log.e(TAG, "AutoDebitScheduleAmount: " + amountINt);
+                                } else {
+                                    errorMessage.append(", Auto Debit Schedule date "+date+" amount must be greater than 0");
+                                    isInValid = true;
+                                }
+                            }else {
+                                errorMessage.append(", Please enter Auto Debit Schedule date "+date+" Amount");
+                                isInValid = true;
+                            }
+                        }
+                    }
+                    if (financingMode.has("direct") && financingMode.getJSONObject("direct").has("amount")) {
+                        if (!financingMode.getJSONObject("direct").getString("amount").isEmpty()) {
+                            JSONObject direct = new JSONObject(String.valueOf(financingMode.get("direct")));
+                            String amount = direct.getString("amount");
+                            Double amountINt = Double.parseDouble(amount);
+                            Log.e(TAG, "DirectJsonObject: " + direct);
+                            Log.e(TAG, "DirectAmount: " + amount);
+                            if (amountINt > 0.0) {
+                                Log.e(TAG, "DirectAmount: " + amountINt);
+                            } else {
+                                errorMessage.append(", Direct amount must be greater than 0");
+                                isInValid = true;
+                            }
+                        }else {
+                            errorMessage.append(", Please enter Direct Amount");
+                            isInValid = true;
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
 //            customer_number = config.getString("customer_number");
 //            Log.e(TAG, "customer_number: " + customer_number);
             if (config.has("fee_amount") && !config.getString("fee_amount").isEmpty()) {
                 fee_amount = config.getString("fee_amount");
                 Log.e(TAG, "fee_amount: " + fee_amount);
-                if (config.has("payable_amount")&&!config.getString("payable_amount").isEmpty()) {
+                if (config.has("payable_amount") && !config.getString("payable_amount").isEmpty()) {
                     payable_amount = config.getString("payable_amount");
                     Log.e(TAG, "payable_amount: " + payable_amount);
                 } else {
@@ -113,7 +206,7 @@ public class GQPaymentSDK {
                     isInValid = true;
                 }
             } else {
-                if(config.has("payable_amount")) {
+                if (config.has("payable_amount")) {
                     payable_amount = config.getString("payable_amount");
                     Log.e(TAG, "payable_amount: " + payable_amount);
                 }
@@ -123,7 +216,7 @@ public class GQPaymentSDK {
                 Log.e(TAG, "Customization: " + config.getString("customization"));
                 String jsonCustomization = config.getString("customization");
                 GQPaymentSDK.customizationJSON = new JSONObject(jsonCustomization);
-            }else {
+            } else {
                 Log.e(TAG, "No Customization");
             }
 
@@ -160,6 +253,11 @@ public class GQPaymentSDK {
             e.printStackTrace();
         }
     }
+
+//    private boolean isMatchDate(String date){
+//        String regex = "[1-31]";
+//        Pattern pattern = Pattern.compile()
+//    }
 
     private static ProgressDialog progress = null;
 
