@@ -12,30 +12,45 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.grayquest.android.payment.sdk.GQPaymentSDK;
 import com.grayquest.android.payment.sdk.GQPaymentSDKListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements GQPaymentSDKListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     EditText edtClientId, edtSecretKey, edtGQApi, edtStudentID, edtCustomerNumber, edtFeeAmount, edtPayableAmount, edtTheme, edtOptional;
-    SwitchCompat edtFeeEditable;
+    SwitchCompat edtFeeEditable, edtFinancing;
     RadioButton radioTest, radioLive;
     String clientId, secretKey, GQApi, studentId, env, customerNumber, feeAmount, payableAmount, themeColour, logo_url, fee_helper_text, optional = "";
     TextView btnOptionPrefill, btnRemovePrefill;
-    boolean feeEditable;
+    boolean feeEditable, hasMonthlyEmi, hasAuto, hasDirect;
+
+    LinearLayout llFinancing, llAutoDebit, llSchedule;
+    CheckBox chkMonthlyEmi, chkAutoDebit, chkDirect;
+    TextInputLayout inputMonthlyAmount, inputAutoAmount, inputDirectAmount;
+    TextInputEditText edtMonthlyAmount, edtAutoAmount, edtDirectAmount;
+    TextView btnAddSchedule;
 
     Button btn_open, btnPrefill;
+
+    ArrayList<Schedule_List> schedule_lists;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         edtGQApi = (EditText) findViewById(R.id.edt_gq_api);
         edtStudentID = (EditText) findViewById(R.id.edt_student_id);
         edtFeeEditable = (SwitchCompat) findViewById(R.id.edt_fee_editable);
+        edtFinancing = (SwitchCompat) findViewById(R.id.edt_financing);
         radioTest = (RadioButton) findViewById(R.id.rd_test);
         radioLive = (RadioButton) findViewById(R.id.rd_live);
         edtCustomerNumber = (EditText) findViewById(R.id.edt_customer_number);
@@ -55,8 +71,28 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         edtTheme = (EditText) findViewById(R.id.edt_theme);
         edtOptional = (EditText) findViewById(R.id.edt_optional);
 
+        llFinancing = (LinearLayout) findViewById(R.id.ll_financing);
+        llAutoDebit = (LinearLayout) findViewById(R.id.ll_auto_debit);
+        llSchedule = (LinearLayout) findViewById(R.id.ll_schedule);
+
+        chkMonthlyEmi = (CheckBox) findViewById(R.id.chk_monthly);
+        chkAutoDebit = (CheckBox) findViewById(R.id.chk_auto);
+        chkDirect = (CheckBox) findViewById(R.id.chk_direct);
+
+        inputMonthlyAmount = (TextInputLayout) findViewById(R.id.input_monthly_amount);
+        inputAutoAmount = (TextInputLayout) findViewById(R.id.input_auto_amount);
+        inputDirectAmount = (TextInputLayout) findViewById(R.id.input_direct_amount);
+
+        edtMonthlyAmount = (TextInputEditText) findViewById(R.id.edt_monthly_amount);
+        edtAutoAmount = (TextInputEditText) findViewById(R.id.edt_auto_emi);
+        edtDirectAmount = (TextInputEditText) findViewById(R.id.edt_direct_emi);
+
+        btnAddSchedule = (TextView) findViewById(R.id.btn_add);
+
         btnOptionPrefill = (TextView) findViewById(R.id.btn_option_prefill);
         btnRemovePrefill = (TextView) findViewById(R.id.btn_remove_prefill);
+
+        schedule_lists = new ArrayList<>();
 
         edtFeeEditable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -66,6 +102,69 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 } else {
                     feeEditable = false;
                 }
+            }
+        });
+
+        edtFinancing.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    llFinancing.setVisibility(View.VISIBLE);
+                } else {
+                    llFinancing.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        chkMonthlyEmi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    hasMonthlyEmi = true;
+                    inputMonthlyAmount.setVisibility(View.VISIBLE);
+                } else {
+                    hasMonthlyEmi = false;
+                    inputMonthlyAmount.setVisibility(View.GONE);
+                    edtMonthlyAmount.setText("");
+                }
+            }
+        });
+
+        chkAutoDebit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    llAutoDebit.setVisibility(View.VISIBLE);
+                    llSchedule.setVisibility(View.VISIBLE);
+                    hasAuto = true;
+                } else {
+                    llAutoDebit.setVisibility(View.GONE);
+                    llSchedule.setVisibility(View.GONE);
+                    hasAuto = false;
+                    llSchedule.removeAllViews();
+                    edtAutoAmount.setText("");
+                }
+            }
+        });
+
+        chkDirect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    inputDirectAmount.setVisibility(View.VISIBLE);
+                    hasDirect = true;
+                } else {
+                    inputDirectAmount.setVisibility(View.GONE);
+                    hasDirect = false;
+                    edtDirectAmount.setText("");
+                }
+            }
+        });
+
+        btnAddSchedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addLayout();
             }
         });
 
@@ -191,10 +290,13 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 edtClientId.setText("YOUR_CLIENT_ID_HERE");
                 edtSecretKey.setText("YOUR_CLIENT_SECRET_KEY_HERE");
                 edtGQApi.setText("YOUR_GQ_API_KEY_HERE");
-//                edtStudentID.setText("Studnet_51w128");
-//                edtFeeEditable.setChecked(true);
-//                radioTest.setChecked(true);
-//                radioLive.setChecked(false);
+                edtStudentID.setText("std_1212");
+                edtFeeEditable.setChecked(false);
+                radioTest.setChecked(true);
+                radioLive.setChecked(false);
+                edtCustomerNumber.setText("8425960199");
+                edtFeeAmount.setText("96000");
+                edtPayableAmount.setText("9600");
             }
         });
 
@@ -207,6 +309,38 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 optional = "";
             }
         });
+    }
+
+    private void addLayout() {
+        View layout2 = LayoutInflater.from(this).inflate(R.layout.schedule, llSchedule, false);
+
+        TextView btnRemove = (TextView) layout2.findViewById(R.id.btn_remove);
+
+        btnRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                llSchedule.removeView(layout2);
+            }
+        });
+
+        llSchedule.addView(layout2);
+    }
+
+    private void getValueAddedView() {
+        schedule_lists.clear();
+        if (llSchedule.getChildCount()>0) {
+            for (int i = 0; i < llSchedule.getChildCount(); i++) {
+                TextInputEditText edtDate = (TextInputEditText) llSchedule.getChildAt(i).findViewById(R.id.edt_date);
+                TextInputEditText edtAmount = (TextInputEditText) llSchedule.getChildAt(i).findViewById(R.id.edt_amount);
+
+                Schedule_List schedule_list = new Schedule_List();
+
+                schedule_list.setDate(edtDate.getText().toString());
+                schedule_list.setAmount(edtAmount.getText().toString());
+
+                schedule_lists.add(schedule_list);
+            }
+        }
     }
 
     public void openSDk() {
@@ -228,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
-
+        getValueAddedView();
         JSONObject config = new JSONObject();
 
         try {
@@ -242,6 +376,33 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
             customisation.put("fee_helper_text", "fee_helper_text");
             customisation.put("logo_url", logo_url);
             customisation.put("theme_color", themeColour);
+
+            if (hasMonthlyEmi || hasAuto || hasDirect) {
+                JSONObject financing_config = new JSONObject();
+
+                if (hasMonthlyEmi) {
+                    JSONObject monthlyEmi = new JSONObject();
+                    monthlyEmi.put("amount", edtMonthlyAmount.getText().toString());
+                    financing_config.put("monthly_emi", monthlyEmi);
+                }
+
+                if (hasAuto) {
+                    JSONObject auto_debit = new JSONObject();
+                    auto_debit.put("amount", edtAutoAmount.getText().toString());
+                    if (schedule_lists.size() > 0) {
+                        auto_debit.put("schedule", createScheduleArray());
+                    }
+                    financing_config.put("auto_debit", auto_debit);
+                }
+
+                if (hasDirect) {
+                    JSONObject direct = new JSONObject();
+                    direct.put("amount", edtDirectAmount.getText().toString());
+                    financing_config.put("direct", direct);
+                }
+
+                config.put("financing_config", financing_config);
+            }
 
             config.put("auth", auth);
             config.put("student_id", studentId);
@@ -321,10 +482,10 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
             e.printStackTrace();
         }
 
-//        JSONObject prefill = new JSONObject();
-//
+//        prefill = new JSONObject();
+
 //        try {
-//
+
 //            JSONObject student = new JSONObject();
 //            student.put("student_first_name", "sdsfsf");
 //            student.put("student_last_name", "sdsfsf");
@@ -337,7 +498,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
 //            customer.put("customer_gender", "sdsfsf");
 //            customer.put("customer_email", "sdsfsf");
 //            customer.put("customer_marital_status", "sdsfsf");
-//
+
 //            JSONObject kyc = new JSONObject();
 //            kyc.put("pan_number", "AAAPA0000A");
 //
@@ -372,14 +533,14 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
 //
 //            JSONObject note = new JSONObject();
 //            note.put("notes", "notes");
-//
+
 //            prefill.put("student_details", student);
 //            prefill.put("customer_details", customer);
 //            prefill.put("kyc_details", kyc);
 //            prefill.put("residential_details", residential);
 //            prefill.put("employment_details", employment);
 //            prefill.put("notes", note);
-//
+
 //            Log.e(TAG, "ConfigObject: "+config.toString());
 //            Log.e(TAG, "PrefillObject: " + prefill.toString());
 //
@@ -388,6 +549,24 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
 //        }
 
         GQPaymentSDK.initiate(MainActivity.this, config, prefill);
+    }
+
+    private JSONArray createScheduleArray() {
+        JSONArray schedule = new JSONArray();
+
+        for (int i = 0; i < schedule_lists.size(); i++) {
+            JSONObject scheduleObject = new JSONObject();
+            try {
+                scheduleObject.put("date", schedule_lists.get(i).getDate());
+                scheduleObject.put("amount", schedule_lists.get(i).getAmount());
+
+                schedule.put(i, scheduleObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return schedule;
     }
 
     @Override
