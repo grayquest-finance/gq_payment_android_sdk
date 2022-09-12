@@ -32,17 +32,17 @@ public class ADPayment extends AppCompatActivity implements PaymentResultWithDat
         if (getIntent()!=null){
             optionJson = getIntent().getStringExtra("options_json");
 
-            Log.e(TAG, "OptionsJSon: "+optionJson);
+//            Log.e(TAG, "OptionsJSon: "+optionJson);
 
             try {
                 jsonObject = new JSONObject(optionJson);
 
-                Log.e(TAG, "key: "+jsonObject.getString("key"));
-                Log.e(TAG, "notes: "+jsonObject.getString("notes"));
-                Log.e(TAG, "order_id: "+jsonObject.getString("order_id"));
-                Log.e(TAG, "recurring: "+jsonObject.getString("recurring"));
-                Log.e(TAG, "redirect: "+jsonObject.getString("redirect"));
-                Log.e(TAG, "customer_id: "+jsonObject.getString("customer_id"));
+//                Log.e(TAG, "key: "+jsonObject.getString("key"));
+//                Log.e(TAG, "notes: "+jsonObject.getString("notes"));
+//                Log.e(TAG, "order_id: "+jsonObject.getString("order_id"));
+//                Log.e(TAG, "recurring: "+jsonObject.getString("recurring"));
+//                Log.e(TAG, "redirect: "+jsonObject.getString("redirect"));
+//                Log.e(TAG, "customer_id: "+jsonObject.getString("customer_id"));
 
                 startPayment(jsonObject.getString("key"), jsonObject.getString("notes"),
                         jsonObject.getString("order_id"), jsonObject.getInt("recurring"),
@@ -83,7 +83,7 @@ public class ADPayment extends AppCompatActivity implements PaymentResultWithDat
             options.put("order_id", order_id);//from response of step 3.
 
             JSONObject notesObject = new JSONObject(notes);
-            Log.e(TAG, "NotesObject: "+notesObject.toString());
+//            Log.e(TAG, "NotesObject: "+notesObject.toString());
 
             options.put("notes", notesObject);//from response of step 3.
             if (recurring==1) {
@@ -106,14 +106,14 @@ public class ADPayment extends AppCompatActivity implements PaymentResultWithDat
             checkout.open(activity, options);
 
         } catch(Exception e) {
-            Log.e(TAG, "Error in starting Razorpay Checkout", e);
+//            Log.e(TAG, "Error in starting Razorpay Checkout", e);
         }
     }
 
     @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {
-        Log.e(TAG, "PaymentSuccess: "+s.toString());
-        Log.e(TAG, "PaymentSuccess: "+paymentData.getData().toString());
+//        Log.e(TAG, "PaymentSuccess: "+s.toString());
+//        Log.e(TAG, "PaymentSuccess: "+paymentData.getData().toString());
         Intent intent = new Intent();
         intent.putExtra("payment_data", paymentData.getData().toString());
         setResult(RESULT_OK, intent);
@@ -122,8 +122,8 @@ public class ADPayment extends AppCompatActivity implements PaymentResultWithDat
 
     @Override
     public void onPaymentError(int i, String s, PaymentData paymentData) {
-        Log.e(TAG, "PaymentError: "+s.toString());
-        Log.e(TAG, "PaymentError: "+paymentData.getData().toString());
+//        Log.e(TAG, "PaymentError: "+s.toString());
+//        Log.e(TAG, "PaymentError: "+paymentData.getData().toString());
         Intent intent = new Intent();
         intent.putExtra("payment_data", paymentData.getData().toString());
         setResult(RESULT_OK, intent);
