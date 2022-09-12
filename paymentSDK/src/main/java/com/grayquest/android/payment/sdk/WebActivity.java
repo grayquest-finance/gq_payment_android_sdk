@@ -36,14 +36,15 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
     private static final String TAG = WebActivity.class.getSimpleName();
     WebView webSdk;
-    String jsonOp, jsonCon, jsonAuth, jsonCustomization;
-    JSONObject optionsJSON, configJSON, authJSON, customizationJSON;
+    String jsonOp, jsonCon, jsonAuth, jsonCustomization, jsonFinancingConfig;
+    JSONObject optionsJSON, configJSON, authJSON, customizationJSON, financingConfigJSON;
 
     //    String url = "https://erp-sdk.graydev.tech/instant-eligibility?gapik=YOUR_GQ_API_KEY_HERE&abase=YOUR_BASE64_ENCODED_AUTH_HERE&cid=23960&ccode=YOUR_UUID_PARAMETER_HERE&sid=Studnet_51w121&pc=734858&fedit=true&famt=&pamt=&s=erp&user=existing";
 //    String url = "https://erp-sdk.graydev.tech/instant-eligibility?m=7794653261&gapik=YOUR_GQ_API_KEY_HERE&abase=YOUR_BASE64_ENCODED_AUTH_HERE&cid=23960&ccode=YOUR_UUID_PARAMETER_HERE&sid=Studnet_51w121&pc=734858&fedit=true&famt=&pamt=&s=erp&user=existing";
     String loadURL;
+    StringBuilder urlLoad;
     String clientId, secretKey;
-    String gapik, abase, sid, m, famt, pamt, env, ccode, pc, s = "asdk", user, callback_url;
+    String gapik, abase, sid, m, famt, pamt, env, ccode, pc, s = "asdk", user, callback_url, _gqfc;
     int cid;
     boolean fedit, redirect;
 
@@ -55,6 +56,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
         setContentView(R.layout.activity_web);
 
         webSdk = (WebView) findViewById(R.id.web_sdk);
+//        urlLoad = new StringBuilder(API_Client.WEB_LOAD_URL + "instant-eligibility?");
 
         Checkout.preload(getApplicationContext());
 
@@ -84,24 +86,30 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                 clientId = authJSON.getString("client_id");
                 secretKey = authJSON.getString("client_secret_key");
                 gapik = authJSON.getString("gq_api_key");
+//                urlLoad.append("gapik=").append(gapik);
                 sid = configJSON.getString("student_id");
                 if (configJSON.has("customer_number")) {
                     m = configJSON.getString("customer_number");
-                }else {
-                    m="";
+                } else {
+                    m = "";
                 }
                 if (configJSON.has("fee_amount")) {
                     famt = configJSON.getString("fee_amount");
-                }else {
+                } else {
                     famt = "";
                 }
                 if (configJSON.has("payable_amount")) {
                     pamt = configJSON.getString("payable_amount");
-                }else {
+                } else {
                     pamt = "";
                 }
                 env = configJSON.getString("env");
                 fedit = configJSON.getBoolean("fee_editable");
+
+                if (configJSON.has("financing_config")) {
+                    jsonFinancingConfig = configJSON.getString("financing_config");
+                    financingConfigJSON = new JSONObject(jsonFinancingConfig);
+                }
 
                 if (configJSON.has("customization")) {
                     jsonCustomization = configJSON.getString("customization");
@@ -109,7 +117,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //                    Log.e(TAG, "Customization: " + customizationJSON);
                     if (customizationJSON.has("theme_color")) {
                         pc = customizationJSON.getString("theme_color");
-                    }else {
+                    } else {
                         pc = "";
                     }
                 }
@@ -134,13 +142,22 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //            Log.e(TAG, "pc: " + pc);
 //            Log.e(TAG, "s: " + s);
 //            Log.e(TAG, "user: " + user);
+
+            urlLoad = new StringBuilder(API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user);
             if (optionsJSON != null && optionsJSON.length() != 0) {
 //                Log.e(TAG, "optional: " + optionsJSON.toString());
-                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user + "&optional=" + optionsJSON.toString();
-            } else {
-                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user;
+//                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user + "&optional=" + optionsJSON.toString();
+                urlLoad.append("&optional=").append(optionsJSON.toString());
             }
-//            Log.e(TAG, "LoadURL: " + loadURL);
+            if (financingConfigJSON != null && financingConfigJSON.length() != 0) {
+//                Log.e(TAG, "financingConfig: "+financingConfigJSON.toString());
+//                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user + "&_gqfc=" + financingConfigJSON.toString() + "&optional=" + optionsJSON.toString();
+                urlLoad.append("&_gqfc=").append(financingConfigJSON.toString());
+            }
+//            else {
+//                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user;
+//            }
+//            Log.e(TAG, "LoadURL: " + urlLoad);
         }
 
 //        GQPaymentSDK.showProgress();
@@ -174,7 +191,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
         webSdk.addJavascriptInterface(new GQPaymentSDKInterface(WebActivity.this), "Gqsdk");
 //        webSdk.loadUrl("https://erp-sdk.graydev.tech/instant-eligibility?optional="+jsonObject.toString());
-        webSdk.loadUrl(loadURL);
+        webSdk.loadUrl(String.valueOf(urlLoad));
 //        Log.e(TAG, "URL: "+"https://erp-sdk.graydev.tech/instant-eligibility?optional="+jsonObject.toString());
 //        Log.e(TAG, "URL: " + loadURL);
 
@@ -183,7 +200,8 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
 
-//                    Log.e(TAG, "PaymentData: "+result.getData().getStringExtra("payment_data"));
+//                    Log.e(TAG, "PaymentData: " + result.getData().getStringExtra("payment_data"));
+
                 }
             }
         });
@@ -222,28 +240,27 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
         WebActivity.this.finish();
     }
 
-    public void ADOptions(String jsonObject){
-//        Log.e(TAG, "ADOptions: "+jsonObject);
-//        Intent intent = new Intent(WebActivity.this, ADPayment.class);
-//        intent.putExtra("options_json", jsonObject);
-//        paymentLauncher.launch(intent);
+    public void ADOptions(String jsonObject) {
+//        Log.e(TAG, "ADOptions: " + jsonObject);
 
         JSONObject ADOptionsObject = null;
         try {
             ADOptionsObject = new JSONObject(jsonObject);
 
-//            Log.e(TAG, "key: "+ADOptionsObject.getString("key"));
-//            Log.e(TAG, "notes: "+ADOptionsObject.getString("notes"));
-//            Log.e(TAG, "order_id: "+ADOptionsObject.getString("order_id"));
-//            Log.e(TAG, "recurring: "+ADOptionsObject.getString("recurring"));
+//            Log.e(TAG, "key: " + ADOptionsObject.getString("key"));
+//            Log.e(TAG, "notes: " + ADOptionsObject.getString("notes"));
+//            Log.e(TAG, "order_id: " + ADOptionsObject.getString("order_id"));
+//            Log.e(TAG, "recurring: " + ADOptionsObject.getString("recurring"));
+
             if (ADOptionsObject.has("redirect")) {
                 redirect = ADOptionsObject.getBoolean("redirect");
 //                Log.e(TAG, "redirect: " + ADOptionsObject.getBoolean("redirect"));
             }
 
             callback_url = ADOptionsObject.getString("callback_url");
-//            Log.e(TAG, "customer_id: "+ADOptionsObject.getString("customer_id"));
-//            Log.e(TAG, "callback_url: "+ADOptionsObject.getString("callback_url"));
+
+//            Log.e(TAG, "customer_id: " + ADOptionsObject.getString("customer_id"));
+//            Log.e(TAG, "callback_url: " + ADOptionsObject.getString("callback_url"));
 
             startPayment(ADOptionsObject.getString("key"), ADOptionsObject.getString("notes"),
                     ADOptionsObject.getString("order_id"), ADOptionsObject.getInt("recurring"),
@@ -281,12 +298,13 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
             options.put("order_id", order_id);//from response of step 3.
 
             JSONObject notesObject = new JSONObject(notes);
-//            Log.e(TAG, "NotesObject: "+notesObject.toString());
+
+//            Log.e(TAG, "NotesObject: " + notesObject.toString());
 
             options.put("notes", notesObject);//from response of step 3.
-            if (recurring==1) {
+            if (recurring == 1) {
                 options.put("recurring", true);//from response of step 3.
-            }else {
+            } else {
                 options.put("recurring", false);//from response of step 3.
             }
             options.put("redirect", redirect);
@@ -303,21 +321,26 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
             checkout.open(activity, options);
 
-        } catch(Exception e) {
-//            Log.e(TAG, "Error in starting Razorpay Checkout", e);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error in starting Razorpay Checkout", e);
         }
     }
 
     @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {
-//        Log.e(TAG, "PaymentSuccess: "+s.toString());
-//        Log.e(TAG, "PaymentSuccess: "+paymentData.getData().toString());
+
+//        Log.e(TAG, "PaymentSuccess: " + s.toString());
+//        Log.e(TAG, "PaymentSuccess: " + paymentData.getData().toString());
+
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(paymentData.getData().toString());
             jsonObject.put("callback_url", callback_url);
-//            Log.e(TAG, "JSONObject: "+jsonObject.toString());
-            webSdk.evaluateJavascript("javascript:sendADPaymentResponse("+jsonObject+");", null);
+
+//            Log.e(TAG, "JSONObject: " + jsonObject.toString());
+            webSdk.evaluateJavascript("javascript:sendADPaymentResponse(" + jsonObject + ");", null);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -329,17 +352,21 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
     @Override
     public void onPaymentError(int i, String s, PaymentData paymentData) {
-//        Log.e(TAG, "PaymentError: "+s.toString());
-//        Log.e(TAG, "PaymentError: "+paymentData.getData().toString());
-        webSdk.evaluateJavascript("javascript:sendADPaymentResponse('"+callback_url+","+paymentData.getData().toString()+"');", null);
+
+//        Log.e(TAG, "PaymentError: " + s.toString());
+//        Log.e(TAG, "PaymentError: " + paymentData.getData().toString());
+        webSdk.evaluateJavascript("javascript:sendADPaymentResponse('" + callback_url + "," + paymentData.getData().toString() + "');", null);
+
 //        Intent intent = new Intent();
 //        intent.putExtra("payment_data", paymentData.getData().toString());
 //        setResult(RESULT_OK, intent);
 //        finish();
     }
 
-    public void getADPaymentResponse(String data){
-//        Log.e(TAG, "ResponseData: "+data);
+
+    public void getADPaymentResponse(String data) {
+        Log.e(TAG, "ResponseData: " + data);
+
     }
 
     class MyWebViewClient extends WebViewClient {
