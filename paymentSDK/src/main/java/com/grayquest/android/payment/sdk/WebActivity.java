@@ -65,23 +65,23 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                 if (getIntent().hasExtra("options") && getIntent().getStringExtra("options") != null) {
                     jsonOp = getIntent().getStringExtra("options");
                     optionsJSON = new JSONObject(jsonOp);
-                    Log.e(TAG, "OptionsJSON: " + optionsJSON.toString());
+//                    Log.e(TAG, "OptionsJSON: " + optionsJSON.toString());
                 }
                 jsonCon = getIntent().getStringExtra("config");
                 configJSON = new JSONObject(jsonCon);
 
                 jsonAuth = configJSON.getString("auth");
                 authJSON = new JSONObject(jsonAuth);
-                Log.e(TAG, "ConfigJSON: " + configJSON.toString());
+//                Log.e(TAG, "ConfigJSON: " + configJSON.toString());
 
                 cid = getIntent().getIntExtra("customer_id", 0);
                 ccode = getIntent().getStringExtra("customer_code");
                 user = getIntent().getStringExtra("user");
 
-                Log.e(TAG, "Options: " + jsonOp);
-                Log.e(TAG, "Config: " + jsonCon);
-                Log.e(TAG, "CustomerId: " + cid);
-                Log.e(TAG, "CustomerCode: " + ccode);
+//                Log.e(TAG, "Options: " + jsonOp);
+//                Log.e(TAG, "Config: " + jsonCon);
+//                Log.e(TAG, "CustomerId: " + cid);
+//                Log.e(TAG, "CustomerCode: " + ccode);
 
                 clientId = authJSON.getString("client_id");
                 secretKey = authJSON.getString("client_secret_key");
@@ -129,34 +129,34 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
             abase = Base64.encodeToString(base.getBytes(), Base64.NO_WRAP);
 
-            Log.e(TAG, "gapik: " + gapik);
-            Log.e(TAG, "abase: " + abase);
-            Log.e(TAG, "sid: " + sid);
-            Log.e(TAG, "m: " + m);
-            Log.e(TAG, "famt: " + famt);
-            Log.e(TAG, "pamt: " + pamt);
-            Log.e(TAG, "env: " + env);
-            Log.e(TAG, "fedit: " + fedit);
-            Log.e(TAG, "cid: " + cid);
-            Log.e(TAG, "ccode: " + ccode);
-            Log.e(TAG, "pc: " + pc);
-            Log.e(TAG, "s: " + s);
-            Log.e(TAG, "user: " + user);
+//            Log.e(TAG, "gapik: " + gapik);
+//            Log.e(TAG, "abase: " + abase);
+//            Log.e(TAG, "sid: " + sid);
+//            Log.e(TAG, "m: " + m);
+//            Log.e(TAG, "famt: " + famt);
+//            Log.e(TAG, "pamt: " + pamt);
+//            Log.e(TAG, "env: " + env);
+//            Log.e(TAG, "fedit: " + fedit);
+//            Log.e(TAG, "cid: " + cid);
+//            Log.e(TAG, "ccode: " + ccode);
+//            Log.e(TAG, "pc: " + pc);
+//            Log.e(TAG, "s: " + s);
+//            Log.e(TAG, "user: " + user);
             urlLoad = new StringBuilder(API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user);
             if (optionsJSON != null && optionsJSON.length() != 0) {
-                Log.e(TAG, "optional: " + optionsJSON.toString());
+//                Log.e(TAG, "optional: " + optionsJSON.toString());
 //                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user + "&optional=" + optionsJSON.toString();
                 urlLoad.append("&optional=").append(optionsJSON.toString());
             }
             if (financingConfigJSON != null && financingConfigJSON.length() != 0) {
-                Log.e(TAG, "financingConfig: "+financingConfigJSON.toString());
+//                Log.e(TAG, "financingConfig: "+financingConfigJSON.toString());
 //                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user + "&_gqfc=" + financingConfigJSON.toString() + "&optional=" + optionsJSON.toString();
                 urlLoad.append("&_gqfc=").append(financingConfigJSON.toString());
             }
 //            else {
 //                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user;
 //            }
-            Log.e(TAG, "LoadURL: " + urlLoad);
+//            Log.e(TAG, "LoadURL: " + urlLoad);
         }
 
 //        GQPaymentSDK.showProgress();
@@ -192,14 +192,14 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //        webSdk.loadUrl("https://erp-sdk.graydev.tech/instant-eligibility?optional="+jsonObject.toString());
         webSdk.loadUrl(String.valueOf(urlLoad));
 //        Log.e(TAG, "URL: "+"https://erp-sdk.graydev.tech/instant-eligibility?optional="+jsonObject.toString());
-        Log.e(TAG, "URL: " + loadURL);
+//        Log.e(TAG, "URL: " + loadURL);
 
         paymentLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
 
-                    Log.e(TAG, "PaymentData: " + result.getData().getStringExtra("payment_data"));
+//                    Log.e(TAG, "PaymentData: " + result.getData().getStringExtra("payment_data"));
                 }
             }
         });
@@ -239,27 +239,24 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
     }
 
     public void ADOptions(String jsonObject) {
-        Log.e(TAG, "ADOptions: " + jsonObject);
-//        Intent intent = new Intent(WebActivity.this, ADPayment.class);
-//        intent.putExtra("options_json", jsonObject);
-//        paymentLauncher.launch(intent);
+//        Log.e(TAG, "ADOptions: " + jsonObject);
 
         JSONObject ADOptionsObject = null;
         try {
             ADOptionsObject = new JSONObject(jsonObject);
 
-            Log.e(TAG, "key: " + ADOptionsObject.getString("key"));
-            Log.e(TAG, "notes: " + ADOptionsObject.getString("notes"));
-            Log.e(TAG, "order_id: " + ADOptionsObject.getString("order_id"));
-            Log.e(TAG, "recurring: " + ADOptionsObject.getString("recurring"));
+//            Log.e(TAG, "key: " + ADOptionsObject.getString("key"));
+//            Log.e(TAG, "notes: " + ADOptionsObject.getString("notes"));
+//            Log.e(TAG, "order_id: " + ADOptionsObject.getString("order_id"));
+//            Log.e(TAG, "recurring: " + ADOptionsObject.getString("recurring"));
             if (ADOptionsObject.has("redirect")) {
                 redirect = ADOptionsObject.getBoolean("redirect");
-                Log.e(TAG, "redirect: " + ADOptionsObject.getBoolean("redirect"));
+//                Log.e(TAG, "redirect: " + ADOptionsObject.getBoolean("redirect"));
             }
 
             callback_url = ADOptionsObject.getString("callback_url");
-            Log.e(TAG, "customer_id: " + ADOptionsObject.getString("customer_id"));
-            Log.e(TAG, "callback_url: " + ADOptionsObject.getString("callback_url"));
+//            Log.e(TAG, "customer_id: " + ADOptionsObject.getString("customer_id"));
+//            Log.e(TAG, "callback_url: " + ADOptionsObject.getString("callback_url"));
 
 
             startPayment(ADOptionsObject.getString("key"), ADOptionsObject.getString("notes"),
@@ -298,7 +295,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
             options.put("order_id", order_id);//from response of step 3.
 
             JSONObject notesObject = new JSONObject(notes);
-            Log.e(TAG, "NotesObject: " + notesObject.toString());
+//            Log.e(TAG, "NotesObject: " + notesObject.toString());
 
             options.put("notes", notesObject);//from response of step 3.
             if (recurring == 1) {
@@ -327,13 +324,13 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
     @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {
-        Log.e(TAG, "PaymentSuccess: " + s.toString());
-        Log.e(TAG, "PaymentSuccess: " + paymentData.getData().toString());
+//        Log.e(TAG, "PaymentSuccess: " + s.toString());
+//        Log.e(TAG, "PaymentSuccess: " + paymentData.getData().toString());
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(paymentData.getData().toString());
             jsonObject.put("callback_url", callback_url);
-            Log.e(TAG, "JSONObject: " + jsonObject.toString());
+//            Log.e(TAG, "JSONObject: " + jsonObject.toString());
             webSdk.evaluateJavascript("javascript:sendADPaymentResponse(" + jsonObject + ");", null);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -346,8 +343,8 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
     @Override
     public void onPaymentError(int i, String s, PaymentData paymentData) {
-        Log.e(TAG, "PaymentError: " + s.toString());
-        Log.e(TAG, "PaymentError: " + paymentData.getData().toString());
+//        Log.e(TAG, "PaymentError: " + s.toString());
+//        Log.e(TAG, "PaymentError: " + paymentData.getData().toString());
         webSdk.evaluateJavascript("javascript:sendADPaymentResponse('" + callback_url + "," + paymentData.getData().toString() + "');", null);
 //        Intent intent = new Intent();
 //        intent.putExtra("payment_data", paymentData.getData().toString());
@@ -362,7 +359,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
     class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.e(TAG, "ChangeUrl: " + url);
+//            Log.e(TAG, "ChangeUrl: " + url);
             if (url.startsWith("tel:")) {
                 Intent tel = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
                 startActivity(tel);
@@ -395,8 +392,8 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
             WebView.HitTestResult result = view.getHitTestResult();
             String data = result.getExtra();
             Context context = view.getContext();
-            Log.e(TAG, "ChangeUrl: " + data);
-            Log.e(TAG, "ChangeUrl: " + resultMsg.getData());
+//            Log.e(TAG, "ChangeUrl: " + data);
+//            Log.e(TAG, "ChangeUrl: " + resultMsg.getData());
 
 //            Toast.makeText(WebActivity.this, data, Toast.LENGTH_SHORT).show();
 
@@ -413,7 +410,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
             newWebView.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    Log.e(TAG, "ChangeUrl: " + url);
+//                    Log.e(TAG, "ChangeUrl: " + url);
                     if (url.startsWith("tel:")) {
                         Intent tel = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
                         startActivity(tel);
