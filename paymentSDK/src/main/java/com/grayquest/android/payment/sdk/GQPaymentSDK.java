@@ -114,10 +114,10 @@ public class GQPaymentSDK {
                             JSONObject monthly_emi = new JSONObject(String.valueOf(financingMode.get("monthly_emi")));
                             String amount = monthly_emi.getString("amount");
                             Double amountINt = Double.parseDouble(amount);
-                            Log.e(TAG, "MonthlyEmiJsonObject: " + monthly_emi);
-                            Log.e(TAG, "MonthlyEmiAmount: " + amount);
+//                            Log.e(TAG, "MonthlyEmiJsonObject: " + monthly_emi);
+//                            Log.e(TAG, "MonthlyEmiAmount: " + amount);
                             if (amountINt > 0.0) {
-                                Log.e(TAG, "MonthlyEmiAmount: " + amountINt);
+//                                Log.e(TAG, "MonthlyEmiAmount: " + amountINt);
                             } else {
                                 errorMessage.append(", Monthly Emi amount must be greater than 0");
                                 isInValid = true;
@@ -132,10 +132,10 @@ public class GQPaymentSDK {
                             JSONObject auto_debit = new JSONObject(String.valueOf(financingMode.get("auto_debit")));
                             String amount = auto_debit.getString("amount");
                             Double amountINt = Double.parseDouble(amount);
-                            Log.e(TAG, "AutoDebitJsonObject: " + auto_debit);
-                            Log.e(TAG, "AutoDebitAmount: " + amount);
+//                            Log.e(TAG, "AutoDebitJsonObject: " + auto_debit);
+//                            Log.e(TAG, "AutoDebitAmount: " + amount);
                             if (amountINt > 0.0) {
-                                Log.e(TAG, "AutoDebitAmount: " + amountINt);
+//                                Log.e(TAG, "AutoDebitAmount: " + amountINt);
                             } else {
                                 errorMessage.append(", Auto Debit amount must be greater than 0");
                                 isInValid = true;
@@ -147,19 +147,19 @@ public class GQPaymentSDK {
                     }
                     if (financingMode.has("auto_debit") && financingMode.getJSONObject("auto_debit").has("schedule")) {
                         JSONObject auto_debit = new JSONObject(String.valueOf(financingMode.get("auto_debit")));
-                        Log.e(TAG, "ScheduleArraySize: " + auto_debit.get("schedule"));
+//                        Log.e(TAG, "ScheduleArraySize: " + auto_debit.get("schedule"));
                         JSONArray scheduleArray = auto_debit.getJSONArray("schedule");
-                        Log.e(TAG, "ScheduleArraySize: " + scheduleArray.length());
+//                        Log.e(TAG, "ScheduleArraySize: " + scheduleArray.length());
                         for (int i = 0; i < scheduleArray.length(); i++) {
                             JSONObject schedule = scheduleArray.getJSONObject(i);
                             String date = schedule.getString("date");
-                            Log.e(TAG, "Schedule Date: " + i + " - " + date);
+//                            Log.e(TAG, "Schedule Date: " + i + " - " + date);
                             if (!schedule.getString("amount").isEmpty()) {
                                 String amount = schedule.getString("amount");
-                                Log.e(TAG, "Schedule Amount: " + i + " - " + amount);
+//                                Log.e(TAG, "Schedule Amount: " + i + " - " + amount);
                                 Double amountINt = Double.parseDouble(amount);
                                 if (amountINt > 0.0) {
-                                    Log.e(TAG, "AutoDebitScheduleAmount: " + amountINt);
+//                                    Log.e(TAG, "AutoDebitScheduleAmount: " + amountINt);
                                 } else {
                                     errorMessage.append(", Auto Debit Schedule date "+date+" amount must be greater than 0");
                                     isInValid = true;
@@ -175,10 +175,10 @@ public class GQPaymentSDK {
                             JSONObject direct = new JSONObject(String.valueOf(financingMode.get("direct")));
                             String amount = direct.getString("amount");
                             Double amountINt = Double.parseDouble(amount);
-                            Log.e(TAG, "DirectJsonObject: " + direct);
-                            Log.e(TAG, "DirectAmount: " + amount);
+//                            Log.e(TAG, "DirectJsonObject: " + direct);
+//                            Log.e(TAG, "DirectAmount: " + amount);
                             if (amountINt > 0.0) {
-                                Log.e(TAG, "DirectAmount: " + amountINt);
+//                                Log.e(TAG, "DirectAmount: " + amountINt);
                             } else {
                                 errorMessage.append(", Direct amount must be greater than 0");
                                 isInValid = true;
@@ -197,10 +197,10 @@ public class GQPaymentSDK {
 //            Log.e(TAG, "customer_number: " + customer_number);
             if (config.has("fee_amount") && !config.getString("fee_amount").isEmpty()) {
                 fee_amount = config.getString("fee_amount");
-                Log.e(TAG, "fee_amount: " + fee_amount);
+//                Log.e(TAG, "fee_amount: " + fee_amount);
                 if (config.has("payable_amount") && !config.getString("payable_amount").isEmpty()) {
                     payable_amount = config.getString("payable_amount");
-                    Log.e(TAG, "payable_amount: " + payable_amount);
+//                    Log.e(TAG, "payable_amount: " + payable_amount);
                 } else {
                     errorMessage.append(", Payable Amount required");
                     isInValid = true;
@@ -208,16 +208,16 @@ public class GQPaymentSDK {
             } else {
                 if (config.has("payable_amount")) {
                     payable_amount = config.getString("payable_amount");
-                    Log.e(TAG, "payable_amount: " + payable_amount);
+//                    Log.e(TAG, "payable_amount: " + payable_amount);
                 }
             }
 
             if (config.has("customization")) {
-                Log.e(TAG, "Customization: " + config.getString("customization"));
+//                Log.e(TAG, "Customization: " + config.getString("customization"));
                 String jsonCustomization = config.getString("customization");
                 GQPaymentSDK.customizationJSON = new JSONObject(jsonCustomization);
             } else {
-                Log.e(TAG, "No Customization");
+//                Log.e(TAG, "No Customization");
             }
 
             if (isInValid) {
@@ -239,7 +239,7 @@ public class GQPaymentSDK {
 
                     Intent intent = new Intent(context, WebActivity.class);
                     if (options != null) {
-                        Log.e(TAG, "Optional: " + options.toString());
+//                        Log.e(TAG, "Optional: " + options.toString());
                         intent.putExtra("options", options.toString());
                     }
                     intent.putExtra("config", String.valueOf(configJSON));
@@ -286,8 +286,8 @@ public class GQPaymentSDK {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("customer_mobile", customer_mobile);
 
-        Log.e(TAG, "ABASE: " + abase.trim());
-        Log.e(TAG, "GQAPIKEY: " + gq_api_key);
+//        Log.e(TAG, "ABASE: " + abase.trim());
+//        Log.e(TAG, "GQAPIKEY: " + gq_api_key);
 
         ApiInterface apiInterface = API_Client.getRetrofit().create(ApiInterface.class);
         Call<PaymentSDk_Contributor> create = apiInterface.createCustomer(gq_api_key, abase, jsonObject);
@@ -296,7 +296,7 @@ public class GQPaymentSDK {
             @Override
             public void onResponse(@NonNull Call<PaymentSDk_Contributor> call, @NonNull Response<PaymentSDk_Contributor> response) {
                 try {
-                    Log.e(TAG, "ResponseCode: " + response.code());
+//                    Log.e(TAG, "ResponseCode: " + response.code());
                     if (response.isSuccessful() && response.body() != null) {
                         /*Success Response*/
                         hideProgress();
@@ -307,7 +307,7 @@ public class GQPaymentSDK {
                             ResponseData responseData = new ResponseData();
 
                             responseData = response.body().getData();
-                            Log.e(TAG, "CustomerId: " + responseData.getCustomer_id());
+//                            Log.e(TAG, "CustomerId: " + responseData.getCustomer_id());
                             setCustomer_id(responseData.getCustomer_id());
                             setCustomer_code(responseData.getCustomer_code());
                             if (status_code == 201) {
@@ -334,18 +334,18 @@ public class GQPaymentSDK {
                         hideProgress();
                         String result = response.errorBody().string();
 
-                        Log.e(TAG, "Result: " + result);
+//                        Log.e(TAG, "Result: " + result);
                         JSONObject errorResponse = new JSONObject(result);
 
                         boolean success = errorResponse.getBoolean("success");
                         String message = errorResponse.getString("message");
 
-                        Log.e(TAG, "Success: " + success);
-                        Log.e(TAG, "Message: " + message);
+//                        Log.e(TAG, "Success: " + success);
+//                        Log.e(TAG, "Message: " + message);
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("error", message);
                         gqPaymentSDKListener.onFailed(jsonObject);
-                        Log.e(TAG, "ErrorResponse: " + response.errorBody().string());
+//                        Log.e(TAG, "ErrorResponse: " + response.errorBody().string());
                     }
 
                 } catch (Exception e) {
@@ -358,9 +358,9 @@ public class GQPaymentSDK {
                         jsonException.printStackTrace();
                     }
                     gqPaymentSDKListener.onFailed(jsonObject);
-                    Log.e(TAG, "Error: " + e.getCause());
-                    Log.e(TAG, "Error: " + e.getMessage());
-                    Log.e(TAG, "Error: " + e.getLocalizedMessage());
+//                    Log.e(TAG, "Error: " + e.getCause());
+//                    Log.e(TAG, "Error: " + e.getMessage());
+//                    Log.e(TAG, "Error: " + e.getLocalizedMessage());
                 }
             }
 
@@ -374,9 +374,9 @@ public class GQPaymentSDK {
                     jsonException.printStackTrace();
                 }
                 gqPaymentSDKListener.onFailed(jsonObject);
-                Log.e(TAG, "Error1: " + t.getCause());
-                Log.e(TAG, "Error1: " + t.getMessage());
-                Log.e(TAG, "Error1: " + t.getLocalizedMessage());
+//                Log.e(TAG, "Error1: " + t.getCause());
+//                Log.e(TAG, "Error1: " + t.getMessage());
+//                Log.e(TAG, "Error1: " + t.getLocalizedMessage());
             }
         });
     }

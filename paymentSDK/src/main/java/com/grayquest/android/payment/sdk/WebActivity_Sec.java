@@ -28,7 +28,7 @@ public class WebActivity_Sec extends AppCompatActivity {
             public void onPageFinished(WebView view, String url) {
                 // do your stuff here
 //                GQPaymentSDK.hideProgress();
-                Log.e(TAG, "LoadedUrl: "+url);
+//                Log.e(TAG, "LoadedUrl: "+url);
                 if (url.contains("cf-redirect")){
                     finish();
                 }
