@@ -22,6 +22,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.cashfree.pg.api.CFPaymentGatewayService;
+import com.cashfree.pg.core.api.CFSession;
+import com.cashfree.pg.core.api.callback.CFCheckoutResponseCallback;
+import com.cashfree.pg.core.api.exception.CFException;
+import com.cashfree.pg.core.api.exception.CFInvalidArgumentException;
+import com.cashfree.pg.core.api.utils.CFErrorResponse;
+import com.cashfree.pg.ui.api.CFDropCheckoutPayment;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
@@ -32,7 +39,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
-public class WebActivity extends AppCompatActivity implements PaymentResultWithDataListener {
+public class WebActivity extends AppCompatActivity implements PaymentResultWithDataListener, CFCheckoutResponseCallback {
 
     private static final String TAG = WebActivity.class.getSimpleName();
     WebView webSdk;
@@ -203,6 +210,14 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                 }
             }
         });
+
+        doDropCheckoutPayment();
+
+        try {
+            CFPaymentGatewayService.getInstance().setCheckoutCallback(this);
+        } catch (CFException e) {
+            e.printStackTrace();
+        }
     }
 
 //    @Override
@@ -350,6 +365,41 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //        intent.putExtra("payment_data", paymentData.getData().toString());
 //        setResult(RESULT_OK, intent);
 //        finish();
+    }
+
+    public void doDropCheckoutPayment(){
+        try {
+            CFSession cfSession = new CFSession.CFSessionBuilder()
+                    .setEnvironment(CFSession.Environment.SANDBOX)
+                    .setOrderToken("token")
+                    .setOrderId("orderID")
+                    .build();
+
+            CFDropCheckoutPayment cfDropCheckoutPayment = new CFDropCheckoutPayment.CFDropCheckoutPaymentBuilder()
+                    .setSession(cfSession)
+//                    .setCFUIPaymentModes(cfPaymentComponent)
+//                    .setCFNativeCheckoutUITheme(cfTheme)
+                    .build();
+            CFPaymentGatewayService gatewayService = CFPaymentGatewayService.getInstance();
+            gatewayService.doPayment(WebActivity.this, cfDropCheckoutPayment);
+        } catch (CFException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPaymentVerify(String s) {
+        Log.e(TAG, "PaymentSuccess: "+s);
+    }
+
+    @Override
+    public void onPaymentFailure(CFErrorResponse cfErrorResponse, String s) {
+        Log.e(TAG, "PaymentFailure: "+s);
+        Log.e(TAG, "PaymentFailure: "+cfErrorResponse.getCode());
+        Log.e(TAG, "PaymentFailure: "+cfErrorResponse.getMessage());
+        Log.e(TAG, "PaymentFailure: "+cfErrorResponse.getDescription());
+        Log.e(TAG, "PaymentFailure: "+cfErrorResponse.getStatus());
+        Log.e(TAG, "PaymentFailure: "+cfErrorResponse.getType());
     }
 
     public void getADPaymentResponse(String data) {
