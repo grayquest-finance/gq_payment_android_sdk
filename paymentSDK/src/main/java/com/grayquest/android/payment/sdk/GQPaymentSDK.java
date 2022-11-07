@@ -56,48 +56,48 @@ public class GQPaymentSDK {
         try {
             String jsonAuth = config.getString("auth");
             GQPaymentSDK.authJSON = new JSONObject(jsonAuth);
-            Log.e(TAG, "Auth: " + jsonAuth.toString());
+//            Log.e(TAG, "Auth: " + jsonAuth.toString());
 
-            Log.e(TAG, "Config: " + config.toString());
+//            Log.e(TAG, "Config: " + config.toString());
 
             if (GQPaymentSDK.authJSON.has("client_id") && !GQPaymentSDK.authJSON.getString("client_id").isEmpty()) {
                 client_id = GQPaymentSDK.authJSON.getString("client_id");
-                Log.e(TAG, "client_id: " + client_id);
+//                Log.e(TAG, "client_id: " + client_id);
             } else {
                 errorMessage.append("Client Id required");
                 isInValid = true;
             }
             if (GQPaymentSDK.authJSON.has("client_secret_key") && !GQPaymentSDK.authJSON.getString("client_secret_key").isEmpty()) {
                 client_secret_key = GQPaymentSDK.authJSON.getString("client_secret_key");
-                Log.e(TAG, "client_secret_key: " + client_secret_key);
+//                Log.e(TAG, "client_secret_key: " + client_secret_key);
             } else {
                 errorMessage.append(", Client secret key required");
                 isInValid = true;
             }
             if (GQPaymentSDK.authJSON.has("gq_api_key") && !GQPaymentSDK.authJSON.getString("gq_api_key").isEmpty()) {
                 gq_api_key = GQPaymentSDK.authJSON.getString("gq_api_key");
-                Log.e(TAG, "gq_api_key: " + gq_api_key);
+//                Log.e(TAG, "gq_api_key: " + gq_api_key);
             } else {
                 errorMessage.append(", GQ Api Key required");
                 isInValid = true;
             }
             if (config.has("student_id") && !config.getString("student_id").isEmpty()) {
                 student_id = config.getString("student_id");
-                Log.e(TAG, "student_id: " + student_id);
+//                Log.e(TAG, "student_id: " + student_id);
             } else {
                 errorMessage.append(", Student Id required");
                 isInValid = true;
             }
             if (config.has("fee_editable")) {
                 fee_editable = config.getBoolean("fee_editable");
-                Log.e(TAG, "fee_editable: " + fee_editable);
+//                Log.e(TAG, "fee_editable: " + fee_editable);
             } else {
                 errorMessage.append(", Fee Editable required");
                 isInValid = true;
             }
             if (config.has("env") && !config.getString("env").isEmpty()) {
                 env = config.getString("env");
-                Log.e(TAG, "env: " + env);
+//                Log.e(TAG, "env: " + env);
             } else {
                 errorMessage.append(", Environment required");
                 isInValid = true;
@@ -198,7 +198,9 @@ public class GQPaymentSDK {
             if (config.has("fee_amount") && !config.getString("fee_amount").isEmpty()) {
                 fee_amount = config.getString("fee_amount");
 //                Log.e(TAG, "fee_amount: " + fee_amount);
+
                 if (config.has("payable_amount") && !config.getString("payable_amount").isEmpty()) {
+                
                     payable_amount = config.getString("payable_amount");
 //                    Log.e(TAG, "payable_amount: " + payable_amount);
                 } else {
@@ -216,7 +218,9 @@ public class GQPaymentSDK {
 //                Log.e(TAG, "Customization: " + config.getString("customization"));
                 String jsonCustomization = config.getString("customization");
                 GQPaymentSDK.customizationJSON = new JSONObject(jsonCustomization);
+
             } else {
+
 //                Log.e(TAG, "No Customization");
             }
 
@@ -227,7 +231,7 @@ public class GQPaymentSDK {
             } else {
 
                 if (config.has("customer_number") && !config.getString("customer_number").isEmpty()) {
-                    Log.e(TAG, "CustomerNumber: " + config.getString("customer_number"));
+//                    Log.e(TAG, "CustomerNumber: " + config.getString("customer_number"));
 
                     String base = client_id + ":" + client_secret_key;
                     String abase = "Basic " + Base64.encodeToString(base.getBytes(), Base64.NO_WRAP);
