@@ -24,11 +24,13 @@ import android.widget.Toast;
 
 import com.cashfree.pg.api.CFPaymentGatewayService;
 import com.cashfree.pg.core.api.CFSession;
+import com.cashfree.pg.core.api.CFTheme;
 import com.cashfree.pg.core.api.callback.CFCheckoutResponseCallback;
 import com.cashfree.pg.core.api.exception.CFException;
 import com.cashfree.pg.core.api.exception.CFInvalidArgumentException;
 import com.cashfree.pg.core.api.utils.CFErrorResponse;
 import com.cashfree.pg.ui.api.CFDropCheckoutPayment;
+import com.cashfree.pg.ui.api.CFPaymentComponent;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
@@ -149,7 +151,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //            Log.e(TAG, "pc: " + pc);
 //            Log.e(TAG, "s: " + s);
 //            Log.e(TAG, "user: " + user);
-            urlLoad = new StringBuilder(API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user);
+            urlLoad = new StringBuilder(Environment.webLoadUrl() + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user);
             if (optionsJSON != null && optionsJSON.length() != 0) {
 //                Log.e(TAG, "optional: " + optionsJSON.toString());
 //                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user + "&optional=" + optionsJSON.toString();
@@ -163,7 +165,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //            else {
 //                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user;
 //            }
-//            Log.e(TAG, "LoadURL: " + urlLoad);
+            Log.e(TAG, "LoadURL: " + urlLoad);
         }
 
 //        GQPaymentSDK.showProgress();
@@ -210,14 +212,6 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                 }
             }
         });
-
-        doDropCheckoutPayment();
-
-        try {
-            CFPaymentGatewayService.getInstance().setCheckoutCallback(this);
-        } catch (CFException e) {
-            e.printStackTrace();
-        }
     }
 
 //    @Override
@@ -367,18 +361,60 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //        finish();
     }
 
-    public void doDropCheckoutPayment(){
+    public void PGOptions(String jsonObject){
+        Log.e(TAG, "PGOptions: "+jsonObject);
+
         try {
+            JSONObject pgOptionsObject = new JSONObject(jsonObject);
+
+            String order_code = pgOptionsObject.getString("order_code");
+            String order_token = pgOptionsObject.getString("order_token");
+
+            Log.e(TAG, "order_code: "+order_code);
+            Log.e(TAG, "order_token: "+order_token);
+
+            doDropCheckoutPayment(order_token, order_code);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            CFPaymentGatewayService.getInstance().setCheckoutCallback(this);
+        } catch (CFException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void doDropCheckoutPayment(String token, String order_id){
+        try {
+            Log.e(TAG, "CashFeeEnvironment: "+Environment.cashFreeEnvironment());
+
             CFSession cfSession = new CFSession.CFSessionBuilder()
-                    .setEnvironment(CFSession.Environment.SANDBOX)
-                    .setOrderToken("token")
-                    .setOrderId("orderID")
+                    .setEnvironment(Environment.cashFreeEnvironment())
+                    .setOrderToken(token)
+                    .setOrderId(order_id)
+                    .build();
+
+            CFPaymentComponent cfPaymentComponent = new CFPaymentComponent.CFPaymentComponentBuilder()
+                    .add(CFPaymentComponent.CFPaymentModes.CARD)
+                    .add(CFPaymentComponent.CFPaymentModes.UPI)
+                    .add(CFPaymentComponent.CFPaymentModes.NB)
+                    .add(CFPaymentComponent.CFPaymentModes.WALLET)
+                    .build();
+
+            CFTheme cfTheme = new CFTheme.CFThemeBuilder()
+                    .setNavigationBarBackgroundColor("#4563cb")
+                    .setNavigationBarTextColor("#FFFFFF")
+                    .setButtonBackgroundColor("#4563cb")
+                    .setButtonTextColor("#FFFFFF")
+                    .setPrimaryTextColor("#000000")
+                    .setSecondaryTextColor("#000000")
                     .build();
 
             CFDropCheckoutPayment cfDropCheckoutPayment = new CFDropCheckoutPayment.CFDropCheckoutPaymentBuilder()
                     .setSession(cfSession)
-//                    .setCFUIPaymentModes(cfPaymentComponent)
-//                    .setCFNativeCheckoutUITheme(cfTheme)
+                    .setCFUIPaymentModes(cfPaymentComponent)
+                    .setCFNativeCheckoutUITheme(cfTheme)
                     .build();
             CFPaymentGatewayService gatewayService = CFPaymentGatewayService.getInstance();
             gatewayService.doPayment(WebActivity.this, cfDropCheckoutPayment);
@@ -389,17 +425,35 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
     @Override
     public void onPaymentVerify(String s) {
-        Log.e(TAG, "PaymentSuccess: "+s);
+
+        JSONObject paymentVerify = new JSONObject();
+        try {
+            paymentVerify.put("status", "SUCCESS");
+            paymentVerify.put("order_code", s);
+            Log.e(TAG, "PaymentFailure: "+paymentVerify.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentVerify+ "');", null);
     }
 
     @Override
     public void onPaymentFailure(CFErrorResponse cfErrorResponse, String s) {
-        Log.e(TAG, "PaymentFailure: "+s);
-        Log.e(TAG, "PaymentFailure: "+cfErrorResponse.getCode());
-        Log.e(TAG, "PaymentFailure: "+cfErrorResponse.getMessage());
-        Log.e(TAG, "PaymentFailure: "+cfErrorResponse.getDescription());
-        Log.e(TAG, "PaymentFailure: "+cfErrorResponse.getStatus());
-        Log.e(TAG, "PaymentFailure: "+cfErrorResponse.getType());
+
+        JSONObject paymentFailure = new JSONObject();
+        try {
+            paymentFailure.put("order_code", s);
+            paymentFailure.put("status", cfErrorResponse.getStatus());
+            paymentFailure.put("message", cfErrorResponse.getMessage());
+            paymentFailure.put("code", cfErrorResponse.getCode());
+            paymentFailure.put("type", cfErrorResponse.getType());
+            Log.e(TAG, "PaymentFailure: "+paymentFailure.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentFailure + "');", null);
     }
 
     public void getADPaymentResponse(String data) {
