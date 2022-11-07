@@ -77,7 +77,7 @@ public class GQPaymentSDKInterface {
 
     @JavascriptInterface
     public void sendADOptions(String data){
-        Log.e(TAG, "Data: "+data);
+//        Log.e(TAG, "Data: "+data);
 
         if (data!=null){
             JSONObject dataObject = null;
@@ -88,6 +88,14 @@ public class GQPaymentSDKInterface {
             }catch (JSONException e){
                 e.printStackTrace();
             }
+        }
+    }
+
+    @JavascriptInterface
+    public void sendPGOptions(String data){
+//        Log.e(TAG, "Data: "+data);
+        if (data!=null){
+            ((WebActivity)mContext).PGOptions(data);
         }
     }
 }
