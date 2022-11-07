@@ -123,7 +123,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                 if (configJSON.has("customization")) {
                     jsonCustomization = configJSON.getString("customization");
                     customizationJSON = new JSONObject(jsonCustomization);
-                    Log.e(TAG, "Customization: " + customizationJSON);
+//                    Log.e(TAG, "Customization: " + customizationJSON);
                     if (customizationJSON.has("theme_color")) {
                         pc = customizationJSON.getString("theme_color");
                     } else {
@@ -151,7 +151,9 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //            Log.e(TAG, "pc: " + pc);
 //            Log.e(TAG, "s: " + s);
 //            Log.e(TAG, "user: " + user);
+
             urlLoad = new StringBuilder(Environment.webLoadUrl() + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user);
+
             if (optionsJSON != null && optionsJSON.length() != 0) {
 //                Log.e(TAG, "optional: " + optionsJSON.toString());
 //                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user + "&optional=" + optionsJSON.toString();
@@ -209,6 +211,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
 
 //                    Log.e(TAG, "PaymentData: " + result.getData().getStringExtra("payment_data"));
+
                 }
             }
         });
@@ -227,21 +230,21 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //    }
 
     public void sdkSuccess(JSONObject jsonObject) {
-        Log.e(TAG, "Success: " + jsonObject.toString());
+//        Log.e(TAG, "Success: " + jsonObject.toString());
 //        webSdk.clearCache(true);
         GQPaymentSDK.successSDK(jsonObject);
 //        WebActivity.this.finish();
     }
 
     public void sdkFailed(JSONObject jsonObject) {
-        Log.e(TAG, "Failed: " + jsonObject.toString());
+//        Log.e(TAG, "Failed: " + jsonObject.toString());
 //        webSdk.clearCache(true);
         GQPaymentSDK.failedSDK(jsonObject);
 //        WebActivity.this.finish();
     }
 
     public void sdkCancel(JSONObject jsonObject) {
-        Log.e(TAG, "Cancel: " + jsonObject.toString());
+//        Log.e(TAG, "Cancel: " + jsonObject.toString());
 //        webSdk.clearCache(true);
         GQPaymentSDK.cancelSDK(jsonObject);
         WebActivity.this.finish();
@@ -258,15 +261,16 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //            Log.e(TAG, "notes: " + ADOptionsObject.getString("notes"));
 //            Log.e(TAG, "order_id: " + ADOptionsObject.getString("order_id"));
 //            Log.e(TAG, "recurring: " + ADOptionsObject.getString("recurring"));
+
             if (ADOptionsObject.has("redirect")) {
                 redirect = ADOptionsObject.getBoolean("redirect");
 //                Log.e(TAG, "redirect: " + ADOptionsObject.getBoolean("redirect"));
             }
 
             callback_url = ADOptionsObject.getString("callback_url");
+
 //            Log.e(TAG, "customer_id: " + ADOptionsObject.getString("customer_id"));
 //            Log.e(TAG, "callback_url: " + ADOptionsObject.getString("callback_url"));
-
 
             startPayment(ADOptionsObject.getString("key"), ADOptionsObject.getString("notes"),
                     ADOptionsObject.getString("order_id"), ADOptionsObject.getInt("recurring"),
@@ -304,6 +308,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
             options.put("order_id", order_id);//from response of step 3.
 
             JSONObject notesObject = new JSONObject(notes);
+
 //            Log.e(TAG, "NotesObject: " + notesObject.toString());
 
             options.put("notes", notesObject);//from response of step 3.
@@ -326,6 +331,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
             checkout.open(activity, options);
 
+
         } catch (Exception e) {
             Log.e(TAG, "Error in starting Razorpay Checkout", e);
         }
@@ -333,14 +339,18 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
     @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {
+
 //        Log.e(TAG, "PaymentSuccess: " + s.toString());
 //        Log.e(TAG, "PaymentSuccess: " + paymentData.getData().toString());
+
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(paymentData.getData().toString());
             jsonObject.put("callback_url", callback_url);
+
 //            Log.e(TAG, "JSONObject: " + jsonObject.toString());
             webSdk.evaluateJavascript("javascript:sendADPaymentResponse(" + jsonObject + ");", null);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -352,9 +362,11 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
     @Override
     public void onPaymentError(int i, String s, PaymentData paymentData) {
+
 //        Log.e(TAG, "PaymentError: " + s.toString());
 //        Log.e(TAG, "PaymentError: " + paymentData.getData().toString());
         webSdk.evaluateJavascript("javascript:sendADPaymentResponse('" + callback_url + "," + paymentData.getData().toString() + "');", null);
+
 //        Intent intent = new Intent();
 //        intent.putExtra("payment_data", paymentData.getData().toString());
 //        setResult(RESULT_OK, intent);
@@ -458,6 +470,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
     public void getADPaymentResponse(String data) {
         Log.e(TAG, "ResponseData: " + data);
+
     }
 
     class MyWebViewClient extends WebViewClient {
