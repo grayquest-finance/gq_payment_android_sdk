@@ -18,7 +18,7 @@ public class GQPaymentSDKInterface {
 
     @JavascriptInterface
     public void sdkSuccess(String data) {
-        Log.e(TAG, "Data: " + data);
+//        Log.e(TAG, "Data: " + data);
 
         JSONObject testObjet = null;
         try {
@@ -39,7 +39,7 @@ public class GQPaymentSDKInterface {
 
     @JavascriptInterface
     public void sdkError(String data) {
-        Log.e(TAG, "Data: " + data);
+//        Log.e(TAG, "Data: " + data);
 
 //        Toast.makeText(mContext, data.toString(), Toast.LENGTH_SHORT).show();
 
@@ -58,7 +58,7 @@ public class GQPaymentSDKInterface {
 
     @JavascriptInterface
     public void sdkCancel(String data) {
-        Log.e(TAG, "Data: " + data);
+//        Log.e(TAG, "Data: " + data);
 
 //        Toast.makeText(mContext, data.toString(), Toast.LENGTH_SHORT).show();
 
