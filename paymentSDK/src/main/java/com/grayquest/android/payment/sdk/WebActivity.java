@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,10 +17,12 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cashfree.pg.api.CFPaymentGatewayService;
@@ -373,8 +376,8 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //        finish();
     }
 
-    public void PGOptions(String jsonObject){
-        Log.e(TAG, "PGOptions: "+jsonObject);
+    public void PGOptions(String jsonObject) {
+        Log.e(TAG, "PGOptions: " + jsonObject);
 
         try {
             JSONObject pgOptionsObject = new JSONObject(jsonObject);
@@ -382,8 +385,8 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
             String order_code = pgOptionsObject.getString("order_code");
             String order_token = pgOptionsObject.getString("order_token");
 
-            Log.e(TAG, "order_code: "+order_code);
-            Log.e(TAG, "order_token: "+order_token);
+            Log.e(TAG, "order_code: " + order_code);
+            Log.e(TAG, "order_token: " + order_token);
 
             doDropCheckoutPayment(order_token, order_code);
         } catch (JSONException e) {
@@ -397,9 +400,9 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
         }
     }
 
-    public void doDropCheckoutPayment(String token, String order_id){
+    public void doDropCheckoutPayment(String token, String order_id) {
         try {
-            Log.e(TAG, "CashFeeEnvironment: "+Environment.cashFreeEnvironment());
+            Log.e(TAG, "CashFeeEnvironment: " + Environment.cashFreeEnvironment());
 
             CFSession cfSession = new CFSession.CFSessionBuilder()
                     .setEnvironment(Environment.cashFreeEnvironment())
@@ -442,17 +445,16 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
         try {
             paymentVerify.put("status", "SUCCESS");
             paymentVerify.put("order_code", s);
-            Log.e(TAG, "PaymentFailure: "+paymentVerify.toString());
+            Log.e(TAG, "PaymentFailure: " + paymentVerify.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentVerify+ "');", null);
+        webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentVerify + "');", null);
     }
 
     @Override
     public void onPaymentFailure(CFErrorResponse cfErrorResponse, String s) {
-
         JSONObject paymentFailure = new JSONObject();
         try {
             paymentFailure.put("order_code", s);
@@ -460,12 +462,38 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
             paymentFailure.put("message", cfErrorResponse.getMessage());
             paymentFailure.put("code", cfErrorResponse.getCode());
             paymentFailure.put("type", cfErrorResponse.getType());
-            Log.e(TAG, "PaymentFailure: "+paymentFailure.toString());
+            Log.e(TAG, "PaymentFailure: " + paymentFailure.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentFailure + "');", null);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(WebActivity.this);
+// ...Irrelevant code for customizing the buttons and title
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.common_alert_dialog, null);
+        dialogBuilder.setView(dialogView);
+        final AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.setCancelable(false);
+        alertDialog.setCanceledOnTouchOutside(false);
+
+        TextView txt_message = (TextView) dialogView.findViewById(R.id.txt_message);
+        TextView btn_ok = (TextView) dialogView.findViewById(R.id.btn_ok);
+
+        txt_message.setText(cfErrorResponse.getMessage());
+
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentFailure + "');", null);
+                alertDialog.cancel();
+
+            }
+        });
+
+        if (!alertDialog.isShowing()) {
+            alertDialog.show();
+//            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
     }
 
     public void getADPaymentResponse(String data) {
