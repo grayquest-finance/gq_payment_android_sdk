@@ -90,4 +90,12 @@ public class GQPaymentSDKInterface {
             }
         }
     }
+
+    @JavascriptInterface
+    public void sendPGOptions(String data){
+//        Log.e(TAG, "Data: "+data);
+        if (data!=null){
+            ((WebActivity)mContext).PGOptions(data);
+        }
+    }
 }
