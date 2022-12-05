@@ -287,14 +287,21 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         btnPrefill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                edtClientId.setText("YOUR_CLIENT_ID_HERE");
+                // Test Credentials
+                /*edtClientId.setText("YOUR_CLIENT_ID_HERE");
                 edtSecretKey.setText("YOUR_CLIENT_SECRET_KEY_HERE");
-                edtGQApi.setText("YOUR_GQ_API_KEY_HERE");
+                edtGQApi.setText("YOUR_GQ_API_KEY_HERE");*/
+
+                // Live Credentials
+                edtClientId.setText("5dcd22af-13b3-4970-9293-55c3be282f93");
+                edtSecretKey.setText("a8aa18f2e043e1313685d0324f38e8599f7c1fed");
+                edtGQApi.setText("122eab04ddd7ad9df25bb77de7494a48afafddee");
+
                 edtStudentID.setText("std_1212");
                 edtFeeEditable.setChecked(false);
                 radioTest.setChecked(true);
                 radioLive.setChecked(false);
-                edtCustomerNumber.setText("8425960199");
+                edtCustomerNumber.setText("8425960118");
                 edtFeeAmount.setText("96000");
                 edtPayableAmount.setText("9600");
             }
