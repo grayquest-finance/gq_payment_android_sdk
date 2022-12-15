@@ -7,6 +7,9 @@ dependencyResolutionManagement {
         maven
                 {
                     url 'https://maven.cashfree.com/release'
+                    content {
+                        includeGroup "com.cashfree.pg"
+                    }
                 }
     }
 }
