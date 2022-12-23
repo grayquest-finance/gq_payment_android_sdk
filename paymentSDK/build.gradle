@@ -43,7 +43,11 @@ dependencies {
 
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.cashfree.pg:api:1.1.0'
+//    implementation 'com.cashfree.pg:api:1.1.0'
+
+    implementation 'com.cashfree.pg:core:2.0.2-rc'
+    implementation 'com.cashfree.pg:api:2.0.2-rc'
+    implementation 'com.cashfree.pg:ui:2.0.2-rc'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

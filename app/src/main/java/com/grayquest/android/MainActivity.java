@@ -293,15 +293,15 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 edtGQApi.setText("YOUR_GQ_API_KEY_HERE");*/
 
                 // Live Credentials
-                edtClientId.setText("<KEY>");
-                edtSecretKey.setText("<KEY>");
-                edtGQApi.setText("<KEY>");
+                edtClientId.setText("YOUR_CLIENT_ID_HERE");
+                edtSecretKey.setText("YOUR_CLIENT_SECRET_KEY_HERE");
+                edtGQApi.setText("YOUR_GQ_API_KEY_HERE");
 
                 edtStudentID.setText("std_1212");
                 edtFeeEditable.setChecked(false);
                 radioTest.setChecked(true);
                 radioLive.setChecked(false);
-                edtCustomerNumber.setText("8425960118");
+                edtCustomerNumber.setText("8425960199");
                 edtFeeAmount.setText("96000");
                 edtPayableAmount.setText("9600");
             }

@@ -406,7 +406,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
             CFSession cfSession = new CFSession.CFSessionBuilder()
                     .setEnvironment(Environment.cashFreeEnvironment())
-                    .setOrderToken(token)
+                    .setPaymentSessionID(token)
                     .setOrderId(order_id)
                     .build();
 
