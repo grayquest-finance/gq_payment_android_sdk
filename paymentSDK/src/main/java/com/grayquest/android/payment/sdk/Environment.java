@@ -22,9 +22,9 @@ public class Environment {
 
     public static String webLoadUrl(){
         if (isProduction){
-            WEB_LOAD_URL = "https://erp-sdk.grayquest.com/";// Base Url for Live
+            WEB_LOAD_URL = "https://erp-sdk-old.grayquest.com/";// Base Url for Live
         }else {
-            WEB_LOAD_URL = "https://erp-sdk.graydev.tech/";// Base URL for UAT
+            WEB_LOAD_URL = "https://erp-sdk-old.graydev.tech/";// Base URL for UAT
         }
         return WEB_LOAD_URL;
     }
