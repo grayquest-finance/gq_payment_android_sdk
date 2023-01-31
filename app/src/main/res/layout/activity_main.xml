@@ -78,16 +78,6 @@
                 android:padding="10dp"
                 android:textSize="16sp" />
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/edt_fee_editable"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/input_field_background"
-                android:padding="10dp"
-                android:text="Fee editable"
-                android:textSize="16sp" />
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -135,201 +125,177 @@
                 android:textSize="16sp" />
 
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/edt_financing"
+                android:id="@+id/switch_pp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/input_field_background"
                 android:padding="10dp"
-                android:text="Financing Config"
+                android:text="Payment Pages Configuration"
                 android:textSize="16sp" />
 
             <LinearLayout
-                android:id="@+id/ll_financing"
+                android:id="@+id/ll_pp_config"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:orientation="vertical"
                 android:padding="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Slug"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/edt_pp_slug"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/input_field_background"
+                    android:padding="10dp"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Card"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/edt_pp_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/input_field_background"
+                    android:padding="10dp"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_fee_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/input_field_background"
-                android:orientation="vertical">
+                android:padding="10dp"
+                android:text="Fee Headers"
+                android:textSize="16sp" />
 
-                <CheckBox
-                    android:id="@+id/chk_monthly"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="Monthly Emi" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_monthly_amount"
-                    android:layout_width="match_parent"
-                    android:visibility="gone"
-                    android:layout_height="wrap_content">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edt_monthly_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#00000000"
-                        android:hint="Amount"
-                        android:inputType="numberDecimal" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#e3e3e3" />
-
-                <CheckBox
-                    android:id="@+id/chk_auto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="Auto Debit" />
+            <LinearLayout
+                android:id="@+id/ll_fee_headers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="gone">
 
                 <LinearLayout
-                    android:id="@+id/ll_auto_debit"
+                    android:id="@+id/ll_fee_layout"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:orientation="vertical">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/input_auto_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/edt_auto_emi"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#00000000"
-                            android:hint="Amount"
-                            android:inputType="numberDecimal" />
+                </LinearLayout>
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                <LinearLayout
+                    android:id="@+id/btn_add_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="#e3e3e3"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="Schedule"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                    <LinearLayout
-                        android:id="@+id/ll_schedule"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="vertical">
-
-                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_add_circle" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/btn_add"
-                        android:text="ADD SCHEDULE"
-                        android:padding="5dp"
-                        android:textStyle="bold"
-                        android:textSize="14sp"
-                        android:layout_marginEnd="10dp"
-                        android:textColor="#3e52ce"/>
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:text="ADD FEE HEADER"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#e3e3e3" />
-
-                <CheckBox
-                    android:id="@+id/chk_direct"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Direct" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_direct_amount"
-                    android:layout_width="match_parent"
-                    android:visibility="gone"
-                    android:layout_height="wrap_content">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edt_direct_emi"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#00000000"
-                        android:hint="Amount"
-                        android:inputType="numberDecimal" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#e3e3e3" />
-
             </LinearLayout>
 
-            <TextView
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_customisation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Fee Amount"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/edt_fee_amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:background="@drawable/input_field_background"
-                android:inputType="number"
                 android:padding="10dp"
+                android:text="Customisation"
                 android:textSize="16sp" />
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/ll_customisation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Payable Amount"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/edt_payable_amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/input_field_background"
-                android:inputType="number"
+                android:orientation="vertical"
                 android:padding="10dp"
-                android:textSize="16sp" />
+                android:visibility="gone">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Theme Color"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Theme Color"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
 
-            <EditText
-                android:id="@+id/edt_theme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/input_field_background"
-                android:hint="#5667ff"
-                android:padding="10dp"
-                android:textSize="16sp" />
+                <EditText
+                    android:id="@+id/edt_theme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/input_field_background"
+                    android:hint="#5667ff"
+                    android:padding="10dp"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Logo Url"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/edt_logo_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/input_field_background"
+                    android:padding="10dp"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Fee helper Text"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/edt_fee_helper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/input_field_background"
+                    android:padding="10dp"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
