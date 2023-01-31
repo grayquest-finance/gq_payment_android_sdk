@@ -58,7 +58,7 @@ public class GQPaymentSDK {
             GQPaymentSDK.authJSON = new JSONObject(jsonAuth);
 //            Log.e(TAG, "Auth: " + jsonAuth.toString());
 
-//            Log.e(TAG, "Config: " + config.toString());
+            Log.e(TAG, "Config: " + config.toString());
 
             if (GQPaymentSDK.authJSON.has("client_id") && !GQPaymentSDK.authJSON.getString("client_id").isEmpty()) {
                 client_id = GQPaymentSDK.authJSON.getString("client_id");
@@ -88,13 +88,13 @@ public class GQPaymentSDK {
                 errorMessage.append(", Student Id required");
                 isInValid = true;
             }
-            if (config.has("fee_editable")) {
-                fee_editable = config.getBoolean("fee_editable");
-//                Log.e(TAG, "fee_editable: " + fee_editable);
-            } else {
-                errorMessage.append(", Fee Editable required");
-                isInValid = true;
-            }
+//            if (config.has("fee_editable")) {
+//                fee_editable = config.getBoolean("fee_editable");
+////                Log.e(TAG, "fee_editable: " + fee_editable);
+//            } else {
+//                errorMessage.append(", Fee Editable required");
+//                isInValid = true;
+//            }
             if (config.has("env") && !config.getString("env").isEmpty()) {
                 env = config.getString("env");
 //                Log.e(TAG, "env: " + env);
@@ -103,116 +103,116 @@ public class GQPaymentSDK {
                 isInValid = true;
             }
 
-            if (config.has("financing_config")) {
-                String financing = null;
-                try {
-                    financing = config.getString("financing_config");
-                    GQPaymentSDK.financingMode = new JSONObject(financing);
-                    Log.e(TAG, "FinancingConfig: " + financing.toString());
-                    if (financingMode.has("monthly_emi") && financingMode.getJSONObject("monthly_emi").has("amount")) {
-                        if (!financingMode.getJSONObject("monthly_emi").getString("amount").isEmpty()) {
-                            JSONObject monthly_emi = new JSONObject(String.valueOf(financingMode.get("monthly_emi")));
-                            String amount = monthly_emi.getString("amount");
-                            Double amountINt = Double.parseDouble(amount);
-//                            Log.e(TAG, "MonthlyEmiJsonObject: " + monthly_emi);
-//                            Log.e(TAG, "MonthlyEmiAmount: " + amount);
-                            if (amountINt > 0.0) {
-//                                Log.e(TAG, "MonthlyEmiAmount: " + amountINt);
-                            } else {
-                                errorMessage.append(", Monthly Emi amount must be greater than 0");
-                                isInValid = true;
-                            }
-                        }else {
-                            errorMessage.append(", Please enter Monthly Emi Amount");
-                            isInValid = true;
-                        }
-                    }
-                    if (financingMode.has("auto_debit") && financingMode.getJSONObject("auto_debit").has("amount")) {
-                        if (!financingMode.getJSONObject("auto_debit").getString("amount").isEmpty()) {
-                            JSONObject auto_debit = new JSONObject(String.valueOf(financingMode.get("auto_debit")));
-                            String amount = auto_debit.getString("amount");
-                            Double amountINt = Double.parseDouble(amount);
-//                            Log.e(TAG, "AutoDebitJsonObject: " + auto_debit);
-//                            Log.e(TAG, "AutoDebitAmount: " + amount);
-                            if (amountINt > 0.0) {
-//                                Log.e(TAG, "AutoDebitAmount: " + amountINt);
-                            } else {
-                                errorMessage.append(", Auto Debit amount must be greater than 0");
-                                isInValid = true;
-                            }
-                        }else {
-                            errorMessage.append(", Please enter Auto Debit Amount");
-                            isInValid = true;
-                        }
-                    }
-                    if (financingMode.has("auto_debit") && financingMode.getJSONObject("auto_debit").has("schedule")) {
-                        JSONObject auto_debit = new JSONObject(String.valueOf(financingMode.get("auto_debit")));
-//                        Log.e(TAG, "ScheduleArraySize: " + auto_debit.get("schedule"));
-                        JSONArray scheduleArray = auto_debit.getJSONArray("schedule");
-//                        Log.e(TAG, "ScheduleArraySize: " + scheduleArray.length());
-                        for (int i = 0; i < scheduleArray.length(); i++) {
-                            JSONObject schedule = scheduleArray.getJSONObject(i);
-                            String date = schedule.getString("date");
-//                            Log.e(TAG, "Schedule Date: " + i + " - " + date);
-                            if (!schedule.getString("amount").isEmpty()) {
-                                String amount = schedule.getString("amount");
-//                                Log.e(TAG, "Schedule Amount: " + i + " - " + amount);
-                                Double amountINt = Double.parseDouble(amount);
-                                if (amountINt > 0.0) {
-//                                    Log.e(TAG, "AutoDebitScheduleAmount: " + amountINt);
-                                } else {
-                                    errorMessage.append(", Auto Debit Schedule date "+date+" amount must be greater than 0");
-                                    isInValid = true;
-                                }
-                            }else {
-                                errorMessage.append(", Please enter Auto Debit Schedule date "+date+" Amount");
-                                isInValid = true;
-                            }
-                        }
-                    }
-                    if (financingMode.has("direct") && financingMode.getJSONObject("direct").has("amount")) {
-                        if (!financingMode.getJSONObject("direct").getString("amount").isEmpty()) {
-                            JSONObject direct = new JSONObject(String.valueOf(financingMode.get("direct")));
-                            String amount = direct.getString("amount");
-                            Double amountINt = Double.parseDouble(amount);
-//                            Log.e(TAG, "DirectJsonObject: " + direct);
-//                            Log.e(TAG, "DirectAmount: " + amount);
-                            if (amountINt > 0.0) {
-//                                Log.e(TAG, "DirectAmount: " + amountINt);
-                            } else {
-                                errorMessage.append(", Direct amount must be greater than 0");
-                                isInValid = true;
-                            }
-                        }else {
-                            errorMessage.append(", Please enter Direct Amount");
-                            isInValid = true;
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+//            if (config.has("financing_config")) {
+//                String financing = null;
+//                try {
+//                    financing = config.getString("financing_config");
+//                    GQPaymentSDK.financingMode = new JSONObject(financing);
+//                    Log.e(TAG, "FinancingConfig: " + financing.toString());
+//                    if (financingMode.has("monthly_emi") && financingMode.getJSONObject("monthly_emi").has("amount")) {
+//                        if (!financingMode.getJSONObject("monthly_emi").getString("amount").isEmpty()) {
+//                            JSONObject monthly_emi = new JSONObject(String.valueOf(financingMode.get("monthly_emi")));
+//                            String amount = monthly_emi.getString("amount");
+//                            Double amountINt = Double.parseDouble(amount);
+////                            Log.e(TAG, "MonthlyEmiJsonObject: " + monthly_emi);
+////                            Log.e(TAG, "MonthlyEmiAmount: " + amount);
+//                            if (amountINt > 0.0) {
+////                                Log.e(TAG, "MonthlyEmiAmount: " + amountINt);
+//                            } else {
+//                                errorMessage.append(", Monthly Emi amount must be greater than 0");
+//                                isInValid = true;
+//                            }
+//                        }else {
+//                            errorMessage.append(", Please enter Monthly Emi Amount");
+//                            isInValid = true;
+//                        }
+//                    }
+//                    if (financingMode.has("auto_debit") && financingMode.getJSONObject("auto_debit").has("amount")) {
+//                        if (!financingMode.getJSONObject("auto_debit").getString("amount").isEmpty()) {
+//                            JSONObject auto_debit = new JSONObject(String.valueOf(financingMode.get("auto_debit")));
+//                            String amount = auto_debit.getString("amount");
+//                            Double amountINt = Double.parseDouble(amount);
+////                            Log.e(TAG, "AutoDebitJsonObject: " + auto_debit);
+////                            Log.e(TAG, "AutoDebitAmount: " + amount);
+//                            if (amountINt > 0.0) {
+////                                Log.e(TAG, "AutoDebitAmount: " + amountINt);
+//                            } else {
+//                                errorMessage.append(", Auto Debit amount must be greater than 0");
+//                                isInValid = true;
+//                            }
+//                        }else {
+//                            errorMessage.append(", Please enter Auto Debit Amount");
+//                            isInValid = true;
+//                        }
+//                    }
+//                    if (financingMode.has("auto_debit") && financingMode.getJSONObject("auto_debit").has("schedule")) {
+//                        JSONObject auto_debit = new JSONObject(String.valueOf(financingMode.get("auto_debit")));
+////                        Log.e(TAG, "ScheduleArraySize: " + auto_debit.get("schedule"));
+//                        JSONArray scheduleArray = auto_debit.getJSONArray("schedule");
+////                        Log.e(TAG, "ScheduleArraySize: " + scheduleArray.length());
+//                        for (int i = 0; i < scheduleArray.length(); i++) {
+//                            JSONObject schedule = scheduleArray.getJSONObject(i);
+//                            String date = schedule.getString("date");
+////                            Log.e(TAG, "Schedule Date: " + i + " - " + date);
+//                            if (!schedule.getString("amount").isEmpty()) {
+//                                String amount = schedule.getString("amount");
+////                                Log.e(TAG, "Schedule Amount: " + i + " - " + amount);
+//                                Double amountINt = Double.parseDouble(amount);
+//                                if (amountINt > 0.0) {
+////                                    Log.e(TAG, "AutoDebitScheduleAmount: " + amountINt);
+//                                } else {
+//                                    errorMessage.append(", Auto Debit Schedule date "+date+" amount must be greater than 0");
+//                                    isInValid = true;
+//                                }
+//                            }else {
+//                                errorMessage.append(", Please enter Auto Debit Schedule date "+date+" Amount");
+//                                isInValid = true;
+//                            }
+//                        }
+//                    }
+//                    if (financingMode.has("direct") && financingMode.getJSONObject("direct").has("amount")) {
+//                        if (!financingMode.getJSONObject("direct").getString("amount").isEmpty()) {
+//                            JSONObject direct = new JSONObject(String.valueOf(financingMode.get("direct")));
+//                            String amount = direct.getString("amount");
+//                            Double amountINt = Double.parseDouble(amount);
+////                            Log.e(TAG, "DirectJsonObject: " + direct);
+////                            Log.e(TAG, "DirectAmount: " + amount);
+//                            if (amountINt > 0.0) {
+////                                Log.e(TAG, "DirectAmount: " + amountINt);
+//                            } else {
+//                                errorMessage.append(", Direct amount must be greater than 0");
+//                                isInValid = true;
+//                            }
+//                        }else {
+//                            errorMessage.append(", Please enter Direct Amount");
+//                            isInValid = true;
+//                        }
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
 
 //            customer_number = config.getString("customer_number");
 //            Log.e(TAG, "customer_number: " + customer_number);
-            if (config.has("fee_amount") && !config.getString("fee_amount").isEmpty()) {
-                fee_amount = config.getString("fee_amount");
-//                Log.e(TAG, "fee_amount: " + fee_amount);
-
-                if (config.has("payable_amount") && !config.getString("payable_amount").isEmpty()) {
-                
-                    payable_amount = config.getString("payable_amount");
-//                    Log.e(TAG, "payable_amount: " + payable_amount);
-                } else {
-                    errorMessage.append(", Payable Amount required");
-                    isInValid = true;
-                }
-            } else {
-                if (config.has("payable_amount")) {
-                    payable_amount = config.getString("payable_amount");
-//                    Log.e(TAG, "payable_amount: " + payable_amount);
-                }
-            }
+//            if (config.has("fee_amount") && !config.getString("fee_amount").isEmpty()) {
+//                fee_amount = config.getString("fee_amount");
+////                Log.e(TAG, "fee_amount: " + fee_amount);
+//
+//                if (config.has("payable_amount") && !config.getString("payable_amount").isEmpty()) {
+//
+//                    payable_amount = config.getString("payable_amount");
+////                    Log.e(TAG, "payable_amount: " + payable_amount);
+//                } else {
+//                    errorMessage.append(", Payable Amount required");
+//                    isInValid = true;
+//                }
+//            } else {
+//                if (config.has("payable_amount")) {
+//                    payable_amount = config.getString("payable_amount");
+////                    Log.e(TAG, "payable_amount: " + payable_amount);
+//                }
+//            }
 
             if (config.has("customization")) {
 //                Log.e(TAG, "Customization: " + config.getString("customization"));
@@ -222,6 +222,33 @@ public class GQPaymentSDK {
             } else {
 
 //                Log.e(TAG, "No Customization");
+            }
+            if (config.has("pp_config")) {
+                String pp_config = config.getString("pp_config");
+                JSONObject ppConfig = new JSONObject(pp_config);
+
+                if (ppConfig.has("card") && ppConfig.getString("card").isEmpty()) {
+                    isInValid = true;
+                    errorMessage.append(", Payment Configuration Card required");
+                }
+
+                if (ppConfig.has("card") && !ppConfig.has("slug")) {
+                    isInValid = true;
+                    errorMessage.append(", Payment Configuration Slug required");
+                } else if (ppConfig.has("slug") && ppConfig.getString("slug").isEmpty()) {
+                    isInValid = true;
+                    errorMessage.append(", Payment Configuration Slug required");
+                }
+
+//                if (!config.getJSONObject("pp_config").has("slug") && config.getJSONObject("pp_config").getString("slug").isEmpty()) {
+//                    isInValid = true;
+//                    errorMessage.append(", Payment Configuration Slug required");
+//                }
+//
+//                if (!config.getJSONObject("pp_config").has("card") && config.getJSONObject("pp_config").getString("card").isEmpty()) {
+//                    isInValid = true;
+//                    errorMessage.append(", Payment Configuration Card required");
+//                }
             }
 
             if (isInValid) {
