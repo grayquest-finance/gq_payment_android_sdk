@@ -48,8 +48,8 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
     private static final String TAG = WebActivity.class.getSimpleName();
     WebView webSdk;
-    String jsonOp, jsonCon, jsonAuth, jsonCustomization, jsonFinancingConfig;
-    JSONObject optionsJSON, configJSON, authJSON, customizationJSON, financingConfigJSON;
+    String jsonOp, jsonCon, jsonAuth, jsonCustomization, jsonPPConfig, jsonFeeHeader;
+    JSONObject optionsJSON, configJSON, authJSON, customizationJSON, ppConfigJSON, feeHeaderJSON;
 
     //    String url = "https://erp-sdk.graydev.tech/instant-eligibility?gapik=YOUR_GQ_API_KEY_HERE&abase=YOUR_BASE64_ENCODED_AUTH_HERE&cid=23960&ccode=YOUR_UUID_PARAMETER_HERE&sid=Studnet_51w121&pc=734858&fedit=true&famt=&pamt=&s=erp&user=existing";
 //    String url = "https://erp-sdk.graydev.tech/instant-eligibility?m=7794653261&gapik=YOUR_GQ_API_KEY_HERE&abase=YOUR_BASE64_ENCODED_AUTH_HERE&cid=23960&ccode=YOUR_UUID_PARAMETER_HERE&sid=Studnet_51w121&pc=734858&fedit=true&famt=&pamt=&s=erp&user=existing";
@@ -105,23 +105,23 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                 } else {
                     m = "";
                 }
-                if (configJSON.has("fee_amount")) {
-                    famt = configJSON.getString("fee_amount");
-                } else {
-                    famt = "";
-                }
-                if (configJSON.has("payable_amount")) {
-                    pamt = configJSON.getString("payable_amount");
-                } else {
-                    pamt = "";
-                }
+//                if (configJSON.has("fee_amount")) {
+//                    famt = configJSON.getString("fee_amount");
+//                } else {
+//                    famt = "";
+//                }
+//                if (configJSON.has("payable_amount")) {
+//                    pamt = configJSON.getString("payable_amount");
+//                } else {
+//                    pamt = "";
+//                }
                 env = configJSON.getString("env");
-                fedit = configJSON.getBoolean("fee_editable");
+//                fedit = configJSON.getBoolean("fee_editable");
 
-                if (configJSON.has("financing_config")) {
-                    jsonFinancingConfig = configJSON.getString("financing_config");
-                    financingConfigJSON = new JSONObject(jsonFinancingConfig);
-                }
+//                if (configJSON.has("financing_config")) {
+//                    jsonFinancingConfig = configJSON.getString("financing_config");
+//                    financingConfigJSON = new JSONObject(jsonFinancingConfig);
+//                }
 
                 if (configJSON.has("customization")) {
                     jsonCustomization = configJSON.getString("customization");
@@ -132,6 +132,16 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                     } else {
                         pc = "";
                     }
+                }
+
+                if (configJSON.has("pp_config")){
+                    jsonPPConfig = configJSON.getString("pp_config");
+                    ppConfigJSON = new JSONObject(jsonPPConfig);
+                }
+
+                if (configJSON.has("fee_headers")){
+                    jsonFeeHeader = configJSON.getString("fee_headers");
+                    feeHeaderJSON = new JSONObject(jsonFeeHeader);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -155,18 +165,25 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //            Log.e(TAG, "s: " + s);
 //            Log.e(TAG, "user: " + user);
 
-            urlLoad = new StringBuilder(Environment.webLoadUrl() + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user);
+            urlLoad = new StringBuilder(Environment.webLoadUrl() + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&env=" + env + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user);
 
             if (optionsJSON != null && optionsJSON.length() != 0) {
 //                Log.e(TAG, "optional: " + optionsJSON.toString());
 //                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user + "&optional=" + optionsJSON.toString();
                 urlLoad.append("&optional=").append(optionsJSON.toString());
             }
-            if (financingConfigJSON != null && financingConfigJSON.length() != 0) {
-//                Log.e(TAG, "financingConfig: "+financingConfigJSON.toString());
-//                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user + "&_gqfc=" + financingConfigJSON.toString() + "&optional=" + optionsJSON.toString();
-                urlLoad.append("&_gqfc=").append(financingConfigJSON.toString());
+//            if (financingConfigJSON != null && financingConfigJSON.length() != 0) {
+////                Log.e(TAG, "financingConfig: "+financingConfigJSON.toString());
+////                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user + "&_gqfc=" + financingConfigJSON.toString() + "&optional=" + optionsJSON.toString();
+//                urlLoad.append("&_gqfc=").append(financingConfigJSON.toString());
+//            }
+            if (ppConfigJSON != null && ppConfigJSON.length() != 0){
+                urlLoad.append("&_pp_config=").append(ppConfigJSON.toString());
             }
+            if (feeHeaderJSON !=null && feeHeaderJSON.length() != 0){
+                urlLoad.append("&_fee_headers=").append(feeHeaderJSON.toString());
+            }
+            urlLoad.append("&_v=").append(Environment.VERSION);
 //            else {
 //                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user;
 //            }
@@ -417,7 +434,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
     }
 
     public void PGOptions(String jsonObject) {
-//        Log.e(TAG, "PGOptions: " + jsonObject);
+        Log.e(TAG, "PGOptions: " + jsonObject);
 
         try {
             JSONObject pgOptionsObject = new JSONObject(jsonObject);
