@@ -26,7 +26,7 @@ public class Environment {
         if (isProduction){
             WEB_LOAD_URL = "https://erp-sdk.grayquest.com/";// Base Url for Live
         }else {
-            WEB_LOAD_URL = "https://erp-sdk-beta.graydev.tech/";// Base URL for UAT
+            WEB_LOAD_URL = "https://erp-sdk.graydev.tech/";// Base URL for UAT
         }
         return WEB_LOAD_URL;
     }

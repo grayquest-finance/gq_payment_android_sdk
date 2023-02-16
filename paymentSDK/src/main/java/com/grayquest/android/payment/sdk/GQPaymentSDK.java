@@ -227,12 +227,12 @@ public class GQPaymentSDK {
                 String pp_config = config.getString("pp_config");
                 JSONObject ppConfig = new JSONObject(pp_config);
 
-                if (ppConfig.has("card") && ppConfig.getString("card").isEmpty()) {
+                if (ppConfig.has("card_code") && ppConfig.getString("card_code").isEmpty()) {
                     isInValid = true;
                     errorMessage.append(", Payment Configuration Card required");
                 }
 
-                if (ppConfig.has("card") && !ppConfig.has("slug")) {
+                if (ppConfig.has("card_code") && !ppConfig.has("slug")) {
                     isInValid = true;
                     errorMessage.append(", Payment Configuration Slug required");
                 } else if (ppConfig.has("slug") && ppConfig.getString("slug").isEmpty()) {
