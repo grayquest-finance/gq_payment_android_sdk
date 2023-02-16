@@ -266,14 +266,23 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 edtSecretKey.setText("YOUR_CLIENT_SECRET_KEY_HERE");
                 edtGQApi.setText("YOUR_GQ_API_KEY_HERE");*/
 
-                edtClientId.setText("YOUR_CLIENT_ID_HERE");
+                //Test Credentials
+                /*edtClientId.setText("YOUR_CLIENT_ID_HERE");
                 edtSecretKey.setText("YOUR_CLIENT_SECRET_KEY_HERE");
-                edtGQApi.setText("YOUR_GQ_API_KEY_HERE");
+                edtGQApi.setText("YOUR_GQ_API_KEY_HERE");*/
+
+                /*edtClientId.setText("YOUR_CLIENT_ID_HERE");
+                edtSecretKey.setText("YOUR_CLIENT_SECRET_KEY_HERE");
+                edtGQApi.setText("YOUR_GQ_API_KEY_HERE");*/
+
+                edtClientId.setText("<KEY>");
+                edtSecretKey.setText("<KEY>");
+                edtGQApi.setText("<KEY>");
 
                 //Live Credentials
-                /*edtClientId.setText("<KEY>");
-                edtSecretKey.setText("<KEY>");
-                edtGQApi.setText("<KEY>");*/
+                /*edtClientId.setText("YOUR_CLIENT_ID_HERE");
+                edtSecretKey.setText("YOUR_CLIENT_SECRET_KEY_HERE");
+                edtGQApi.setText("YOUR_GQ_API_KEY_HERE");*/
 
                 edtStudentID.setText("std_1212");
                 radioTest.setChecked(true);
@@ -562,7 +571,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 ppConfig.put("slug", ppSlug);
             }
             if (ppCard != null) {
-                ppConfig.put("card", ppCard);
+                ppConfig.put("card_code", ppCard);
             }
         } catch (JSONException e) {
             e.printStackTrace();
