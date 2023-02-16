@@ -90,6 +90,24 @@ Must Have
 |||1.  If a fee amount is provided then the fee editable can be true or false.|
 |||2.  If fee amount is not provided the fee editable should be true otherwise sdk will throw an error that can be seen in the network tab's console area.|
 
+# Payment Page
+
+
+|Sr. No.| Option | Description | Mandatory |
+|--|--|--|--|
+|1|slug|Slug to activate the configuration of a specific payment page. (provided by GQ)|No|
+
+# Fee Headers
+
+
+|Sr. No.| Option | Description | Mandatory |
+|--|--|--|--|
+|1|fee_type_1|Here you can pass the payable fee amount|No|
+|||Eg: Quarter 1 Payable fee|
+|2|fee_type_2|Here you can pass the payable fee amount|No|
+|||Eg: Quarter 2 Payable fee|
+
+
 # Additional Options that can be used to ease the journey for your customers / parents / users.
 
 # Student Details
@@ -240,26 +258,32 @@ Note: If data for a specific field is not available then you should not send the
         try {
             JSONObject auth = new JSONObject();
             auth.put("client_id", <client_id>);
-            auth.put("client_secret_key", <client_secret_key>);
-            auth.put("gq_api_key", <gq_api_key>);
+            auth.put("client_secret_key", <client_secret>);
+            auth.put("gq_api_key", <api_key>);
             config.put("auth", auth);
 
  	      JSONObject customization = new JSONObject();
-            customization.put("fee_helper_text", <fee_helper_text>);
             customization.put("logo_url", <logo_url>);
             customization.put("theme_color", <theme_color>);
             config.put("customization", customization);
 
             config.put("student_id", <student_id>);
-            config.put("fee_editable", <fee_editable>);
             config.put("env", <env>);
             config.put("customer_number", <customer_number>);
-            config.put("fee_amount", <fee_amount>);
-            config.put("payable_amount", <payable_amount>);
+            
+            JSONObject pp_config = new JSONObject();
+            pp_config.put("slug", <slug>);
+            config.put("pp_config", pp_config);
 
+            JSONObject fee_headers = new JSONObject();
+            fee_headers.put("fee_type_1", <fee_type_1_amount>);
+            fee_headers.put("fee_type_2", <fee_type_2_amount>);
+            config.put("fee_headers", fee_heaers);
+         
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
 
 	JSONObject prefill = new JSONObject();
 
