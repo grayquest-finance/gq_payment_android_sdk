@@ -266,14 +266,23 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 edtSecretKey.setText("62e360a1-5e51-43ea-8a7c-666fd4283d90");
                 edtGQApi.setText("8b40407c-4244-4b71-9039-4cef55b14c8d");*/
 
-                edtClientId.setText("354598fd-575a-4c1f-a6e3-e08fc5ea06d3");
+                //Test Credentials
+                /*edtClientId.setText("354598fd-575a-4c1f-a6e3-e08fc5ea06d3");
                 edtSecretKey.setText("2eb349732594fe777be079fb3c7e557194f55a14");
-                edtGQApi.setText("9db4fc333d8bcf7fee98804105d9fc0c85199d77");
+                edtGQApi.setText("9db4fc333d8bcf7fee98804105d9fc0c85199d77");*/
+
+                /*edtClientId.setText("GQ-4bfb3731-ce22-451a-a87e-aa1b193bbf74");
+                edtSecretKey.setText("4a391850-909e-4641-93b5-e02b550c353a");
+                edtGQApi.setText("80f43ca1-115d-4ee0-851d-fa4199d568a3");*/
+
+                edtClientId.setText("GQ-4fec5122-c0fa-4374-aa79-f658297bb4b5");
+                edtSecretKey.setText("2ee224db-333d-4883-b10d-c7d114debb11");
+                edtGQApi.setText("9e810d76-ab8b-4548-a85d-4fee06553d4c");
 
                 //Live Credentials
-                /*edtClientId.setText("5f38dfcb-1008-47e3-9196-88e231b2f36f");
-                edtSecretKey.setText("690faa44b60e24ef279bb692b8d45346438bb8c0");
-                edtGQApi.setText("7a921981ec520fff2fe68417a5ebcc6e1073e62a");*/
+                /*edtClientId.setText("GQ-58fb5a39-4253-4ec8-8bef-a3f8b418f880");
+                edtSecretKey.setText("9f5ab415-0e3e-4f5a-9f4a-d1c9b2abcf84");
+                edtGQApi.setText("4b8136ab-915a-4d38-a0e3-432267c4a44b");*/
 
                 edtStudentID.setText("std_1212");
                 radioTest.setChecked(true);
@@ -562,7 +571,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 ppConfig.put("slug", ppSlug);
             }
             if (ppCard != null) {
-                ppConfig.put("card", ppCard);
+                ppConfig.put("card_code", ppCard);
             }
         } catch (JSONException e) {
             e.printStackTrace();
