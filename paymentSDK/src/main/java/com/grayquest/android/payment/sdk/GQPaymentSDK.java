@@ -58,7 +58,7 @@ public class GQPaymentSDK {
             GQPaymentSDK.authJSON = new JSONObject(jsonAuth);
 //            Log.e(TAG, "Auth: " + jsonAuth.toString());
 
-            Log.e(TAG, "Config: " + config.toString());
+//            Log.e(TAG, "Config: " + config.toString());
 
             if (GQPaymentSDK.authJSON.has("client_id") && !GQPaymentSDK.authJSON.getString("client_id").isEmpty()) {
                 client_id = GQPaymentSDK.authJSON.getString("client_id");

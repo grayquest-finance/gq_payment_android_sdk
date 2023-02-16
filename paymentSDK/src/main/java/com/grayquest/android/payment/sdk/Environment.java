@@ -4,8 +4,8 @@ import com.cashfree.pg.core.api.CFSession;
 
 public class Environment {
 
-    public static final boolean isProduction = false; // Under UAT
-//    public static final boolean isProduction = true; // Live
+//    public static final boolean isProduction = false; // Under UAT
+    public static final boolean isProduction = true; // Live
 
     public static String BASE_URL;
     public static String WEB_LOAD_URL;
