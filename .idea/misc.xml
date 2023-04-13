@@ -7,9 +7,12 @@
         <entry key="..\:/Users/Avinash/AndroidStudioProjects/GrayQuestAndroidPaymentSdk/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/Avinash/AndroidStudioProjects/GrayQuestAndroidPaymentSdk/app/src/main/res/layout/common_alert_dialog.xml" value="0.25" />
         <entry key="..\:/Users/Avinash/AndroidStudioProjects/GrayQuestAndroidPaymentSdk/paymentSDK/src/main/res/layout/activity_web.xml" value="0.25" />
+        <entry key="app/src/main/res/drawable/input_field_background.xml" value="0.158" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.28812255859375" />
+        <entry key="app/src/main/res/layout/fee_headers_layout.xml" value="0.2" />
         <entry key="app/src/main/res/layout/schedule.xml" value="0.30885416666666665" />
         <entry key="paymentSDK/src/main/res/layout/activity_web_sec.xml" value="0.19610507246376813" />
+        <entry key="paymentSDK/src/main/res/layout/common_alert_dialog.xml" value="0.2947916666666667" />
       </map>
     </option>
   </component>
