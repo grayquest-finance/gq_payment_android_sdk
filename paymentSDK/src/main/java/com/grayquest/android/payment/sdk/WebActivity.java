@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,10 +17,12 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cashfree.pg.api.CFPaymentGatewayService;
@@ -45,14 +48,14 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
     private static final String TAG = WebActivity.class.getSimpleName();
     WebView webSdk;
-    String jsonOp, jsonCon, jsonAuth, jsonCustomization, jsonFinancingConfig;
-    JSONObject optionsJSON, configJSON, authJSON, customizationJSON, financingConfigJSON;
+    String jsonOp, jsonCon, jsonAuth, jsonCustomization, jsonPPConfig, jsonFeeHeader;
+    JSONObject optionsJSON, configJSON, authJSON, customizationJSON, ppConfigJSON, feeHeaderJSON;
 
     //    String url = "https://erp-sdk.graydev.tech/instant-eligibility?gapik=YOUR_GQ_API_KEY_HERE&abase=YOUR_BASE64_ENCODED_AUTH_HERE&cid=23960&ccode=YOUR_UUID_PARAMETER_HERE&sid=Studnet_51w121&pc=734858&fedit=true&famt=&pamt=&s=erp&user=existing";
 //    String url = "https://erp-sdk.graydev.tech/instant-eligibility?m=7794653261&gapik=YOUR_GQ_API_KEY_HERE&abase=YOUR_BASE64_ENCODED_AUTH_HERE&cid=23960&ccode=YOUR_UUID_PARAMETER_HERE&sid=Studnet_51w121&pc=734858&fedit=true&famt=&pamt=&s=erp&user=existing";
     String loadURL;
     StringBuilder urlLoad;
-    String clientId, secretKey;
+    String clientId, secretKey, name;
     String gapik, abase, sid, m, famt, pamt, env, ccode, pc, s = "asdk", user, callback_url, _gqfc;
     int cid;
     boolean fedit, redirect;
@@ -102,23 +105,23 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                 } else {
                     m = "";
                 }
-                if (configJSON.has("fee_amount")) {
-                    famt = configJSON.getString("fee_amount");
-                } else {
-                    famt = "";
-                }
-                if (configJSON.has("payable_amount")) {
-                    pamt = configJSON.getString("payable_amount");
-                } else {
-                    pamt = "";
-                }
+//                if (configJSON.has("fee_amount")) {
+//                    famt = configJSON.getString("fee_amount");
+//                } else {
+//                    famt = "";
+//                }
+//                if (configJSON.has("payable_amount")) {
+//                    pamt = configJSON.getString("payable_amount");
+//                } else {
+//                    pamt = "";
+//                }
                 env = configJSON.getString("env");
-                fedit = configJSON.getBoolean("fee_editable");
+//                fedit = configJSON.getBoolean("fee_editable");
 
-                if (configJSON.has("financing_config")) {
-                    jsonFinancingConfig = configJSON.getString("financing_config");
-                    financingConfigJSON = new JSONObject(jsonFinancingConfig);
-                }
+//                if (configJSON.has("financing_config")) {
+//                    jsonFinancingConfig = configJSON.getString("financing_config");
+//                    financingConfigJSON = new JSONObject(jsonFinancingConfig);
+//                }
 
                 if (configJSON.has("customization")) {
                     jsonCustomization = configJSON.getString("customization");
@@ -129,6 +132,16 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                     } else {
                         pc = "";
                     }
+                }
+
+                if (configJSON.has("pp_config")){
+                    jsonPPConfig = configJSON.getString("pp_config");
+                    ppConfigJSON = new JSONObject(jsonPPConfig);
+                }
+
+                if (configJSON.has("fee_headers")){
+                    jsonFeeHeader = configJSON.getString("fee_headers");
+                    feeHeaderJSON = new JSONObject(jsonFeeHeader);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -152,18 +165,25 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //            Log.e(TAG, "s: " + s);
 //            Log.e(TAG, "user: " + user);
 
-            urlLoad = new StringBuilder(Environment.webLoadUrl() + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user);
+            urlLoad = new StringBuilder(Environment.webLoadUrl() + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&env=" + env + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user);
 
             if (optionsJSON != null && optionsJSON.length() != 0) {
 //                Log.e(TAG, "optional: " + optionsJSON.toString());
 //                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user + "&optional=" + optionsJSON.toString();
                 urlLoad.append("&optional=").append(optionsJSON.toString());
             }
-            if (financingConfigJSON != null && financingConfigJSON.length() != 0) {
-//                Log.e(TAG, "financingConfig: "+financingConfigJSON.toString());
-//                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user + "&_gqfc=" + financingConfigJSON.toString() + "&optional=" + optionsJSON.toString();
-                urlLoad.append("&_gqfc=").append(financingConfigJSON.toString());
+//            if (financingConfigJSON != null && financingConfigJSON.length() != 0) {
+////                Log.e(TAG, "financingConfig: "+financingConfigJSON.toString());
+////                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user + "&_gqfc=" + financingConfigJSON.toString() + "&optional=" + optionsJSON.toString();
+//                urlLoad.append("&_gqfc=").append(financingConfigJSON.toString());
+//            }
+            if (ppConfigJSON != null && ppConfigJSON.length() != 0){
+                urlLoad.append("&_pp_config=").append(ppConfigJSON.toString());
             }
+            if (feeHeaderJSON !=null && feeHeaderJSON.length() != 0){
+                urlLoad.append("&_fee_headers=").append(feeHeaderJSON.toString());
+            }
+            urlLoad.append("&_v=").append(Environment.VERSION);
 //            else {
 //                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user;
 //            }
@@ -267,20 +287,38 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //                Log.e(TAG, "redirect: " + ADOptionsObject.getBoolean("redirect"));
             }
 
-            callback_url = ADOptionsObject.getString("callback_url");
+            if (ADOptionsObject.has("callback_url")) {
+                callback_url = ADOptionsObject.getString("callback_url");
+            }
 
 //            Log.e(TAG, "customer_id: " + ADOptionsObject.getString("customer_id"));
 //            Log.e(TAG, "callback_url: " + ADOptionsObject.getString("callback_url"));
+            int recurring = 0;
+
+            if (ADOptionsObject.has("recurring")) {
+                recurring = ADOptionsObject.getInt("recurring");
+            }
+            String customer_id = null;
+
+            if (ADOptionsObject.has("customer_id")) {
+                customer_id = ADOptionsObject.getString("customer_id");
+            }
+
+            JSONObject prefill = null;
+            if (ADOptionsObject.has("prefill")) {
+                String pre = ADOptionsObject.getString("prefill");
+                prefill = new JSONObject(pre);
+            }
 
             startPayment(ADOptionsObject.getString("key"), ADOptionsObject.getString("notes"),
-                    ADOptionsObject.getString("order_id"), ADOptionsObject.getInt("recurring"),
-                    redirect, ADOptionsObject.getString("customer_id"));
+                    ADOptionsObject.getString("order_id"), recurring,
+                    redirect, customer_id, prefill);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public void startPayment(String key, String notes, String order_id, int recurring, boolean redirect, String customer_id) {
+    public void startPayment(String key, String notes, String order_id, int recurring, boolean redirect, String customer_id, JSONObject prefill) {
         /**
          * Instantiate Checkout
          */
@@ -318,7 +356,17 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                 options.put("recurring", false);//from response of step 3.
             }
             options.put("redirect", redirect);
-            options.put("customer_id", customer_id);
+            if (customer_id != null) {
+                options.put("customer_id", customer_id);
+            } else {
+                String name = prefill.getString("name");
+                String email = prefill.getString("email");
+                String contact = prefill.getString("contact");
+
+                options.put("prefill.name", name);
+                options.put("prefill.email", email);
+                options.put("prefill.contact", contact);
+            }
 //            options.put("theme.color", "#3399cc");
 //            options.put("currency", "INR");
 //            options.put("amount", "50000");//pass amount in currency subunits
@@ -346,13 +394,21 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(paymentData.getData().toString());
-            jsonObject.put("callback_url", callback_url);
 
 //            Log.e(TAG, "JSONObject: " + jsonObject.toString());
-            webSdk.evaluateJavascript("javascript:sendADPaymentResponse(" + jsonObject + ");", null);
+            if (name != null && name.equals("UNIPG")) {
+                Log.e(TAG, "UNIPG Success: "+jsonObject.toString());
+                webSdk.evaluateJavascript("javascript:sendPGPaymentResponse(" + jsonObject + ");", null);
+            } else {
+                jsonObject.put("callback_url", callback_url);
+//                Log.e(TAG, "AD Success: "+jsonObject.toString());
+                webSdk.evaluateJavascript("javascript:sendADPaymentResponse(" + jsonObject + ");", null);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
+            Log.e(TAG, "JSONError; "+e.getCause());
+            Log.e(TAG, "JSONError; "+e.getMessage());
         }
 //        Intent intent = new Intent();
 //        intent.putExtra("payment_data", paymentData.getData().toString());
@@ -365,7 +421,11 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
 //        Log.e(TAG, "PaymentError: " + s.toString());
 //        Log.e(TAG, "PaymentError: " + paymentData.getData().toString());
-        webSdk.evaluateJavascript("javascript:sendADPaymentResponse('" + callback_url + "," + paymentData.getData().toString() + "');", null);
+        if (name.equals("UNIPG")) {
+            webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentData.getData().toString() + "');", null);
+        } else {
+            webSdk.evaluateJavascript("javascript:sendADPaymentResponse('" + callback_url + "," + paymentData.getData().toString() + "');", null);
+        }
 
 //        Intent intent = new Intent();
 //        intent.putExtra("payment_data", paymentData.getData().toString());
@@ -373,19 +433,28 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //        finish();
     }
 
-    public void PGOptions(String jsonObject){
-        Log.e(TAG, "PGOptions: "+jsonObject);
+    public void PGOptions(String jsonObject) {
+        Log.e(TAG, "PGOptions: " + jsonObject);
 
         try {
             JSONObject pgOptionsObject = new JSONObject(jsonObject);
 
-            String order_code = pgOptionsObject.getString("order_code");
-            String order_token = pgOptionsObject.getString("order_token");
+            name = pgOptionsObject.getString("name");
+//            Log.e(TAG, "Name: " + name);
+            String pgOption = pgOptionsObject.getString("pgOptions");
+            JSONObject pgDetailsObject = new JSONObject(pgOption);
+            if (name.equals("CASHFREE")) {
+                String order_code = pgDetailsObject.getString("order_code");
+                String payment_session_id = pgDetailsObject.getString("payment_session_id");
 
-            Log.e(TAG, "order_code: "+order_code);
-            Log.e(TAG, "order_token: "+order_token);
+//                Log.e(TAG, "order_code: " + order_code);
+//                Log.e(TAG, "payment_session_id: " + payment_session_id);
 
-            doDropCheckoutPayment(order_token, order_code);
+                doDropCheckoutPayment(payment_session_id, order_code);
+            } else if (name.equals("UNIPG")) {
+                ADOptions(pgOption);
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -397,13 +466,13 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
         }
     }
 
-    public void doDropCheckoutPayment(String token, String order_id){
+    public void doDropCheckoutPayment(String payment_session_id, String order_id) {
         try {
-            Log.e(TAG, "CashFeeEnvironment: "+Environment.cashFreeEnvironment());
+//            Log.e(TAG, "CashFeeEnvironment: " + Environment.cashFreeEnvironment());
 
             CFSession cfSession = new CFSession.CFSessionBuilder()
                     .setEnvironment(Environment.cashFreeEnvironment())
-                    .setOrderToken(token)
+                    .setPaymentSessionID(payment_session_id)
                     .setOrderId(order_id)
                     .build();
 
@@ -442,17 +511,16 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
         try {
             paymentVerify.put("status", "SUCCESS");
             paymentVerify.put("order_code", s);
-            Log.e(TAG, "PaymentFailure: "+paymentVerify.toString());
+//            Log.e(TAG, "PaymentFailure: " + paymentVerify.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentVerify+ "');", null);
+        webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentVerify + "');", null);
     }
 
     @Override
     public void onPaymentFailure(CFErrorResponse cfErrorResponse, String s) {
-
         JSONObject paymentFailure = new JSONObject();
         try {
             paymentFailure.put("order_code", s);
@@ -460,12 +528,38 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
             paymentFailure.put("message", cfErrorResponse.getMessage());
             paymentFailure.put("code", cfErrorResponse.getCode());
             paymentFailure.put("type", cfErrorResponse.getType());
-            Log.e(TAG, "PaymentFailure: "+paymentFailure.toString());
+//            Log.e(TAG, "PaymentFailure: " + paymentFailure.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentFailure + "');", null);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(WebActivity.this);
+// ...Irrelevant code for customizing the buttons and title
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.common_alert_dialog, null);
+        dialogBuilder.setView(dialogView);
+        final AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.setCancelable(false);
+        alertDialog.setCanceledOnTouchOutside(false);
+
+        TextView txt_message = (TextView) dialogView.findViewById(R.id.txt_message);
+        TextView btn_ok = (TextView) dialogView.findViewById(R.id.btn_ok);
+
+        txt_message.setText(cfErrorResponse.getMessage());
+
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentFailure + "');", null);
+                alertDialog.cancel();
+
+            }
+        });
+
+        if (!alertDialog.isShowing()) {
+            alertDialog.show();
+//            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
     }
 
     public void getADPaymentResponse(String data) {
