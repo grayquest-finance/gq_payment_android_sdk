@@ -17,8 +17,8 @@ public class Environment {
         if (isProduction){
             BASE_URL = "https://erp-api.grayquest.com/";// Base Url for Live
         }else {
-//            BASE_URL = "https://erp-api.graydev.tech/";// Base URL for UAT
-            BASE_URL = "https://erp-api-stage.graydev.tech/";// Base URL for STAGING
+            BASE_URL = "https://erp-api.graydev.tech/";// Base URL for UAT
+//            BASE_URL = "https://erp-api-stage.graydev.tech/";// Base URL for STAGING
         }
         return BASE_URL;
     }
@@ -27,8 +27,8 @@ public class Environment {
         if (isProduction){
             WEB_LOAD_URL = "https://erp-sdk.grayquest.com/";// Base Url for Live
         }else {
-//            WEB_LOAD_URL = "https://erp-sdk.graydev.tech/";// Base URL for UAT
-            WEB_LOAD_URL = "https://erp-sdk-stage.graydev.tech/";// Base URL for STAGING
+            WEB_LOAD_URL = "https://erp-sdk.graydev.tech/";// Base URL for UAT
+//            WEB_LOAD_URL = "https://erp-sdk-stage.graydev.tech/";// Base URL for STAGING
         }
         return WEB_LOAD_URL;
     }
