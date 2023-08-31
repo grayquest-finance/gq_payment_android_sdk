@@ -270,19 +270,15 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 edtSecretKey.setText("4a391850-909e-4641-93b5-e02b550c353a");
                 edtGQApi.setText("80f43ca1-115d-4ee0-851d-fa4199d568a3");*/
 
-                edtClientId.setText("GQ-d9167506-30ac-4a0d-bb61-8e487a596c43");
+                // CashFree - UAT
+                /*edtClientId.setText("GQ-8abcc1d9-cdb9-4791-86e6-6a5b2a87736b");
+                edtSecretKey.setText("03f6727a-65b1-4d95-9683-535722ee5112");
+                edtGQApi.setText("72447d75-fe68-45b9-8bcc-b33806a62d52");*/
+
+                //UNIPG - UAT
+                /*edtClientId.setText("GQ-d9167506-30ac-4a0d-bb61-8e487a596c43");
                 edtSecretKey.setText("4a937d7a-5b41-445c-94ae-4289efff2237");
-                edtGQApi.setText("513476f6-dfa9-4bc4-9ae3-8da925a1207d");
-
-                // CashFree - Stage
-                /*edtClientId.setText("GQ-5da3c4ad-f687-445d-976f-208a25e7dbfc");
-                edtSecretKey.setText("b3110d74-0d5a-4302-9f62-2bef2bc6fbf5");
-                edtGQApi.setText("fc2c4fb1-50ef-4361-bf94-bb2024b0265f");*/
-
-                // EaseBuzz - Stage
-                /*edtClientId.setText("GQ-3d5276ae-bb21-46b7-b86f-1decab6e0843");
-                edtSecretKey.setText("dc8f6764-f6a1-47ba-ab23-dbea9254474f");
-                edtGQApi.setText("964ee5b7-4ab5-448f-9e83-40d773bc6141");*/
+                edtGQApi.setText("513476f6-dfa9-4bc4-9ae3-8da925a1207d");*/
 
                 //Live Credentials
                 /*edtClientId.setText("GQ-58fb5a39-4253-4ec8-8bef-a3f8b418f880");
