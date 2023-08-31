@@ -270,16 +270,12 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 edtSecretKey.setText("YOUR_CLIENT_SECRET_KEY_HERE");
                 edtGQApi.setText("YOUR_GQ_API_KEY_HERE");*/
 
-                edtClientId.setText("YOUR_CLIENT_ID_HERE");
-                edtSecretKey.setText("YOUR_CLIENT_SECRET_KEY_HERE");
-                edtGQApi.setText("YOUR_GQ_API_KEY_HERE");
-
-                // CashFree - Stage
+                // CashFree - UAT
                 /*edtClientId.setText("YOUR_CLIENT_ID_HERE");
                 edtSecretKey.setText("YOUR_CLIENT_SECRET_KEY_HERE");
                 edtGQApi.setText("YOUR_GQ_API_KEY_HERE");*/
 
-                // EaseBuzz - Stage
+                //UNIPG - UAT
                 /*edtClientId.setText("YOUR_CLIENT_ID_HERE");
                 edtSecretKey.setText("YOUR_CLIENT_SECRET_KEY_HERE");
                 edtGQApi.setText("YOUR_GQ_API_KEY_HERE");*/
