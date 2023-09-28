@@ -163,7 +163,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //            Log.e(TAG, "s: " + s);
 //            Log.e(TAG, "user: " + user);
 
-            urlLoad = new StringBuilder(Environment.webLoadUrl() + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&env=" + env + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user);
+            urlLoad = new StringBuilder(Environment.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&env=" + env + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user);
 
             if (optionsJSON != null && optionsJSON.length() != 0) {
 //                Log.e(TAG, "optional: " + optionsJSON.toString());
@@ -592,8 +592,13 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                     try {
                         // Handle response here
 
-                        JSONObject paymentStatus = new JSONObject(payment_response);
-
+                        JSONObject paymentStatus = new JSONObject();
+                        if (payment_result.equals("payment_successfull")) {
+                            paymentStatus.put("status", "SUCCESS");
+                        }else {
+                            paymentStatus.put("status", "FAILED");
+                        }
+                        paymentStatus.put("payment_response", payment_response);
                         Log.e(TAG, "paymentStatus: "+paymentStatus );
 
                         webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentStatus + "');", null);

@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
     private static final String TAG = MainActivity.class.getSimpleName();
 
     EditText edtClientId, edtSecretKey, edtGQApi, edtStudentID, edtCustomerNumber,
-            edtTheme, edtOptional, edtPPSlug, edtPPCard, edtLogoUrl, edtFeeHelper;
+            edtTheme, edtOptional, edtPPSlug, edtPPCard, edtLogoUrl, edtFeeHelper, edtEnvironment;
     SwitchCompat switchPP, switchFeeHeader, switchCustomisation;
-    RadioButton radioTest, radioLive;
+    RadioButton radioTest, radioLive, radioStage, radioPreProd;
     String clientId, secretKey, GQApi, studentId, env, customerNumber, themeColour,
             logo_url, fee_helper_text, optional = "", ppSlug, ppCard;
     TextView btnOptionPrefill, btnRemovePrefill;
@@ -54,9 +54,12 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         edtSecretKey = (EditText) findViewById(R.id.edt_client_secret);
         edtGQApi = (EditText) findViewById(R.id.edt_gq_api);
         edtStudentID = (EditText) findViewById(R.id.edt_student_id);
+        edtEnvironment = (EditText) findViewById(R.id.edt_environment);
 
         radioTest = (RadioButton) findViewById(R.id.rd_test);
         radioLive = (RadioButton) findViewById(R.id.rd_live);
+        radioStage = (RadioButton) findViewById(R.id.rd_stage);
+        radioPreProd = (RadioButton) findViewById(R.id.rd_preprod);
         edtCustomerNumber = (EditText) findViewById(R.id.edt_customer_number);
 
         switchCustomisation = (SwitchCompat) findViewById(R.id.switch_customisation);
@@ -137,10 +140,11 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-//                    env = "test";
-                    env = "staging";
+                    env = "test";
                     radioTest.setChecked(true);
                     radioLive.setChecked(false);
+                    radioStage.setChecked(false);
+                    radioPreProd.setChecked(false);
                 }
             }
         });
@@ -151,6 +155,32 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                     env = "live";
                     radioTest.setChecked(false);
                     radioLive.setChecked(true);
+                    radioStage.setChecked(false);
+                    radioPreProd.setChecked(false);
+                }
+            }
+        });
+        radioStage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    env = "stage";
+                    radioTest.setChecked(false);
+                    radioLive.setChecked(false);
+                    radioStage.setChecked(true);
+                    radioPreProd.setChecked(false);
+                }
+            }
+        });
+        radioPreProd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    env = "preprod";
+                    radioTest.setChecked(false);
+                    radioLive.setChecked(false);
+                    radioStage.setChecked(false);
+                    radioPreProd.setChecked(true);
                 }
             }
         });
@@ -270,6 +300,21 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 edtSecretKey.setText("4a391850-909e-4641-93b5-e02b550c353a");
                 edtGQApi.setText("80f43ca1-115d-4ee0-851d-fa4199d568a3");*/
 
+                // CashFree - Stage
+                /*edtClientId.setText("GQ-5da3c4ad-f687-445d-976f-208a25e7dbfc");
+                edtSecretKey.setText("b3110d74-0d5a-4302-9f62-2bef2bc6fbf5");
+                edtGQApi.setText("fc2c4fb1-50ef-4361-bf94-bb2024b0265f");*/
+
+                // EaseBuzz - Stage
+                /*edtClientId.setText("GQ-3d5276ae-bb21-46b7-b86f-1decab6e0843");
+                edtSecretKey.setText("dc8f6764-f6a1-47ba-ab23-dbea9254474f");
+                edtGQApi.setText("964ee5b7-4ab5-448f-9e83-40d773bc6141");*/
+
+                // EaseBuzz - Live
+                edtClientId.setText("GQ-97d21aae-c983-4e81-807c-0e07371b1daa");
+                edtSecretKey.setText("a5e490f6-53dc-46e3-8749-fa5c5b3bc07e");
+                edtGQApi.setText("13d8d489-a211-4539-ab49-d00a6429648f");
+
                 // CashFree - UAT
                 /*edtClientId.setText("GQ-8abcc1d9-cdb9-4791-86e6-6a5b2a87736b");
                 edtSecretKey.setText("03f6727a-65b1-4d95-9683-535722ee5112");
@@ -286,8 +331,8 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 edtGQApi.setText("4b8136ab-915a-4d38-a0e3-432267c4a44b");*/
 
                 edtStudentID.setText("std_1212");
-                radioTest.setChecked(true);
-                radioLive.setChecked(false);
+//                radioTest.setChecked(true);
+//                radioLive.setChecked(false);
                 edtCustomerNumber.setText("8425960199");
             }
         });
@@ -571,7 +616,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
             if (ppSlug != null) {
                 ppConfig.put("slug", ppSlug);
             }
-            if (ppCard != null) {
+            if (ppCard != null && !ppCard.isEmpty()) {
                 ppConfig.put("card_code", ppCard);
             }
         } catch (JSONException e) {
@@ -678,6 +723,27 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                     fee_helper_text = edtFeeHelper.getText().toString();
                 } else {
                     fee_helper_text = "";
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        edtEnvironment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() > 0) {
+                    env = edtEnvironment.getText().toString();
+                } else {
+                    env = "";
                 }
             }
 
