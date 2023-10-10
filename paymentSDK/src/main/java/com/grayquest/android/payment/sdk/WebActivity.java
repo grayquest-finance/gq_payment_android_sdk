@@ -592,13 +592,15 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                     try {
                         // Handle response here
 
+                        JSONObject jsonObject = new JSONObject(payment_response);
+
                         JSONObject paymentStatus = new JSONObject();
                         if (payment_result.equals("payment_successfull")) {
                             paymentStatus.put("status", "SUCCESS");
                         }else {
                             paymentStatus.put("status", "FAILED");
                         }
-                        paymentStatus.put("payment_response", payment_response);
+                        paymentStatus.put("payment_response", jsonObject);
                         Log.e(TAG, "paymentStatus: "+paymentStatus );
 
                         webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentStatus + "');", null);
