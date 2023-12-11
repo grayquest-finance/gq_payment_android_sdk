@@ -185,7 +185,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //            else {
 //                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user;
 //            }
-            Log.e(TAG, "LoadURL: " + urlLoad);
+//            Log.e(TAG, "LoadURL: " + urlLoad);
         }
 
 //        GQPaymentSDK.showProgress();
@@ -432,7 +432,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
     }
 
     public void PGOptions(String jsonObject) {
-        Log.e(TAG, "PGOptions: " + jsonObject);
+//        Log.e(TAG, "PGOptions: " + jsonObject);
 
 //        Intent intentProceed = new Intent(WebActivity.this, PWECouponsActivity.class);
 //        intentProceed.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // This is mandatory flag
