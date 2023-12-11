@@ -107,6 +107,37 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rd_stage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Stage" />
+
+                <RadioButton
+                    android:id="@+id/rd_preprod"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Pre-Prod" />
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/edt_environment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_field_background"
+                android:inputType="text"
+                android:padding="10dp"
+                android:visibility="gone"
+                android:textSize="16sp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,6 +153,7 @@
                 android:background="@drawable/input_field_background"
                 android:inputType="number"
                 android:padding="10dp"
+                android:maxLength="10"
                 android:textSize="16sp" />
 
             <androidx.appcompat.widget.SwitchCompat
