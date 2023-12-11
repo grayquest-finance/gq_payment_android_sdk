@@ -1,12 +1,6 @@
 package com.grayquest.android;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
-
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -22,25 +15,23 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+
 import com.grayquest.android.payment.sdk.GQPaymentSDK;
 import com.grayquest.android.payment.sdk.GQPaymentSDKListener;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements GQPaymentSDKListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     EditText edtClientId, edtSecretKey, edtGQApi, edtStudentID, edtCustomerNumber,
-            edtTheme, edtOptional, edtPPSlug, edtPPCard, edtLogoUrl, edtFeeHelper;
+            edtTheme, edtOptional, edtPPSlug, edtPPCard, edtLogoUrl, edtFeeHelper, edtEnvironment;
     SwitchCompat switchPP, switchFeeHeader, switchCustomisation;
-    RadioButton radioTest, radioLive;
+    RadioButton radioTest, radioLive, radioStage, radioPreProd;
     String clientId, secretKey, GQApi, studentId, env, customerNumber, themeColour,
             logo_url, fee_helper_text, optional = "", ppSlug, ppCard;
     TextView btnOptionPrefill, btnRemovePrefill;
@@ -63,9 +54,12 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         edtSecretKey = (EditText) findViewById(R.id.edt_client_secret);
         edtGQApi = (EditText) findViewById(R.id.edt_gq_api);
         edtStudentID = (EditText) findViewById(R.id.edt_student_id);
+        edtEnvironment = (EditText) findViewById(R.id.edt_environment);
 
         radioTest = (RadioButton) findViewById(R.id.rd_test);
         radioLive = (RadioButton) findViewById(R.id.rd_live);
+        radioStage = (RadioButton) findViewById(R.id.rd_stage);
+        radioPreProd = (RadioButton) findViewById(R.id.rd_preprod);
         edtCustomerNumber = (EditText) findViewById(R.id.edt_customer_number);
 
         switchCustomisation = (SwitchCompat) findViewById(R.id.switch_customisation);
@@ -149,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                     env = "test";
                     radioTest.setChecked(true);
                     radioLive.setChecked(false);
+                    radioStage.setChecked(false);
+                    radioPreProd.setChecked(false);
                 }
             }
         });
@@ -159,6 +155,32 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                     env = "live";
                     radioTest.setChecked(false);
                     radioLive.setChecked(true);
+                    radioStage.setChecked(false);
+                    radioPreProd.setChecked(false);
+                }
+            }
+        });
+        radioStage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    env = "stage";
+                    radioTest.setChecked(false);
+                    radioLive.setChecked(false);
+                    radioStage.setChecked(true);
+                    radioPreProd.setChecked(false);
+                }
+            }
+        });
+        radioPreProd.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    env = "preprod";
+                    radioTest.setChecked(false);
+                    radioLive.setChecked(false);
+                    radioStage.setChecked(false);
+                    radioPreProd.setChecked(true);
                 }
             }
         });
@@ -177,59 +199,62 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                         prefill = new JSONObject(optional);
                     } else {
                         prefill = new JSONObject();
-                        JSONObject student = new JSONObject();
-                        student.put("student_first_name", "");
-                        student.put("student_last_name", "");
-                        student.put("student_type", "");
-
-                        JSONObject customer = new JSONObject();
-                        customer.put("customer_first_name", "");
-                        customer.put("customer_last_name", "");
-                        customer.put("customer_dob", "");
-                        customer.put("customer_gender", "");
-                        customer.put("customer_email", "");
-                        customer.put("customer_marital_status", "");
-
-                        JSONObject kyc = new JSONObject();
-                        kyc.put("pan_number", "");
-
-                        JSONObject residential = new JSONObject();
-                        residential.put("residential_addr_line_1", "");
-                        residential.put("residential_addr_line_2", "");
-                        residential.put("residential_type", "");
-                        residential.put("residential_period", "");
-                        residential.put("residential_pincode", "");
-                        residential.put("residential_city", "");
-                        residential.put("residential_state", "");
-
-                        JSONObject employment = new JSONObject();
-                        employment.put("income_type", "");
-                        employment.put("employer_name", "");
-                        employment.put("work_experience", "");
-                        employment.put("net_monthly_salary", "");
-                        employment.put("income_type", "");
-                        employment.put("business_name", "");
-                        employment.put("business_turnover", "");
-                        employment.put("business_annual_income", "");
-                        employment.put("business_category", "");
-                        employment.put("business_type", "");
-                        employment.put("business_description", "");
-                        employment.put("business_employee_count", "");
-                        employment.put("years_of_current_business", "");
-                        employment.put("same_as_residence_address", "");
-                        employment.put("addr_line_1", "");
-                        employment.put("addr_line_2", "");
-                        employment.put("city", "");
-                        employment.put("state", "");
+//                        JSONObject student = new JSONObject();
+//                        student.put("student_first_name", "");
+//                        student.put("student_last_name", "");
+//                        student.put("student_type", "");
+//
+//                        JSONObject customer = new JSONObject();
+//                        customer.put("customer_first_name", "");
+//                        customer.put("customer_last_name", "");
+//                        customer.put("customer_dob", "");
+//                        customer.put("customer_gender", "");
+//                        customer.put("customer_email", "");
+//                        customer.put("customer_marital_status", "");
+//
+//                        JSONObject kyc = new JSONObject();
+//                        kyc.put("pan_number", "");
+//
+//                        JSONObject residential = new JSONObject();
+//                        residential.put("residential_addr_line_1", "");
+//                        residential.put("residential_addr_line_2", "");
+//                        residential.put("residential_type", "");
+//                        residential.put("residential_period", "");
+//                        residential.put("residential_pincode", "");
+//                        residential.put("residential_city", "");
+//                        residential.put("residential_state", "");
+//
+//                        JSONObject employment = new JSONObject();
+//                        employment.put("income_type", "");
+//                        employment.put("employer_name", "");
+//                        employment.put("work_experience", "");
+//                        employment.put("net_monthly_salary", "");
+//                        employment.put("income_type", "");
+//                        employment.put("business_name", "");
+//                        employment.put("business_turnover", "");
+//                        employment.put("business_annual_income", "");
+//                        employment.put("business_category", "");
+//                        employment.put("business_type", "");
+//                        employment.put("business_description", "");
+//                        employment.put("business_employee_count", "");
+//                        employment.put("years_of_current_business", "");
+//                        employment.put("same_as_residence_address", "");
+//                        employment.put("addr_line_1", "");
+//                        employment.put("addr_line_2", "");
+//                        employment.put("city", "");
+//                        employment.put("state", "");
 
                         JSONObject note = new JSONObject();
-                        note.put("notes", "");
+                        note.put("test_notes1", "test_notes1_value");
+                        note.put("test_notes2", "test_notes2_value");
+                        note.put("test_notes3", "test_notes3_value");
+                        note.put("test_notes4", "test_notes4_value");
 
-                        prefill.put("student_details", student);
-                        prefill.put("customer_details", customer);
-                        prefill.put("kyc_details", kyc);
-                        prefill.put("residential_details", residential);
-                        prefill.put("employment_details", employment);
+//                        prefill.put("student_details", student);
+//                        prefill.put("customer_details", customer);
+//                        prefill.put("kyc_details", kyc);
+//                        prefill.put("residential_details", residential);
+//                        prefill.put("employment_details", employment);
                         prefill.put("notes", note);
                     }
                 } catch (JSONException e) {
@@ -275,9 +300,30 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 edtSecretKey.setText("4a391850-909e-4641-93b5-e02b550c353a");
                 edtGQApi.setText("80f43ca1-115d-4ee0-851d-fa4199d568a3");*/
 
-                edtClientId.setText("GQ-4fec5122-c0fa-4374-aa79-f658297bb4b5");
-                edtSecretKey.setText("2ee224db-333d-4883-b10d-c7d114debb11");
-                edtGQApi.setText("9e810d76-ab8b-4548-a85d-4fee06553d4c");
+                // CashFree - Stage
+                /*edtClientId.setText("GQ-5da3c4ad-f687-445d-976f-208a25e7dbfc");
+                edtSecretKey.setText("b3110d74-0d5a-4302-9f62-2bef2bc6fbf5");
+                edtGQApi.setText("fc2c4fb1-50ef-4361-bf94-bb2024b0265f");*/
+
+                // EaseBuzz - Stage
+                /*edtClientId.setText("GQ-3d5276ae-bb21-46b7-b86f-1decab6e0843");
+                edtSecretKey.setText("dc8f6764-f6a1-47ba-ab23-dbea9254474f");
+                edtGQApi.setText("964ee5b7-4ab5-448f-9e83-40d773bc6141");*/
+
+                // EaseBuzz - Live
+                edtClientId.setText("GQ-97d21aae-c983-4e81-807c-0e07371b1daa");
+                edtSecretKey.setText("a5e490f6-53dc-46e3-8749-fa5c5b3bc07e");
+                edtGQApi.setText("13d8d489-a211-4539-ab49-d00a6429648f");
+
+                // CashFree - UAT
+                /*edtClientId.setText("GQ-8abcc1d9-cdb9-4791-86e6-6a5b2a87736b");
+                edtSecretKey.setText("03f6727a-65b1-4d95-9683-535722ee5112");
+                edtGQApi.setText("72447d75-fe68-45b9-8bcc-b33806a62d52");*/
+
+                //UNIPG - UAT
+                /*edtClientId.setText("GQ-d9167506-30ac-4a0d-bb61-8e487a596c43");
+                edtSecretKey.setText("4a937d7a-5b41-445c-94ae-4289efff2237");
+                edtGQApi.setText("513476f6-dfa9-4bc4-9ae3-8da925a1207d");*/
 
                 //Live Credentials
                 /*edtClientId.setText("GQ-58fb5a39-4253-4ec8-8bef-a3f8b418f880");
@@ -285,8 +331,8 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 edtGQApi.setText("4b8136ab-915a-4d38-a0e3-432267c4a44b");*/
 
                 edtStudentID.setText("std_1212");
-                radioTest.setChecked(true);
-                radioLive.setChecked(false);
+//                radioTest.setChecked(true);
+//                radioLive.setChecked(false);
                 edtCustomerNumber.setText("8425960199");
             }
         });
@@ -570,7 +616,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
             if (ppSlug != null) {
                 ppConfig.put("slug", ppSlug);
             }
-            if (ppCard != null) {
+            if (ppCard != null && !ppCard.isEmpty()) {
                 ppConfig.put("card_code", ppCard);
             }
         } catch (JSONException e) {
@@ -677,6 +723,27 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                     fee_helper_text = edtFeeHelper.getText().toString();
                 } else {
                     fee_helper_text = "";
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        edtEnvironment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() > 0) {
+                    env = edtEnvironment.getText().toString();
+                } else {
+                    env = "";
                 }
             }
 
