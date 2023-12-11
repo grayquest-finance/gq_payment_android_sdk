@@ -25,7 +25,7 @@ public class API_Client {
                 .addInterceptor(interceptor).build();
 
         return new Retrofit.Builder()
-                .baseUrl(Environment.baseUrl())
+                .baseUrl(Environment.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
