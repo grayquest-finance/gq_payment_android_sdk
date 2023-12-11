@@ -1,10 +1,8 @@
 package com.grayquest.android.payment.sdk;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 
@@ -12,13 +10,10 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -97,6 +92,7 @@ public class GQPaymentSDK {
 //            }
             if (config.has("env") && !config.getString("env").isEmpty()) {
                 env = config.getString("env");
+                Environment.env(env);
 //                Log.e(TAG, "env: " + env);
             } else {
                 errorMessage.append(", Environment required");
@@ -227,10 +223,10 @@ public class GQPaymentSDK {
                 String pp_config = config.getString("pp_config");
                 JSONObject ppConfig = new JSONObject(pp_config);
 
-                if (ppConfig.has("card_code") && ppConfig.getString("card_code").isEmpty()) {
-                    isInValid = true;
-                    errorMessage.append(", Payment Configuration Card required");
-                }
+//                if (ppConfig.has("card_code") && ppConfig.getString("card_code").isEmpty()) {
+//                    isInValid = true;
+//                    errorMessage.append(", Payment Configuration Card required");
+//                }
 
                 if (ppConfig.has("card_code") && !ppConfig.has("slug")) {
                     isInValid = true;

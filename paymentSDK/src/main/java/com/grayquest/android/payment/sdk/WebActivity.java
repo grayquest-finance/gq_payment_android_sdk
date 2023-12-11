@@ -1,18 +1,10 @@
 package com.grayquest.android.payment.sdk;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Base64;
@@ -25,24 +17,27 @@ import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.cashfree.pg.api.CFPaymentGatewayService;
 import com.cashfree.pg.core.api.CFSession;
 import com.cashfree.pg.core.api.CFTheme;
 import com.cashfree.pg.core.api.callback.CFCheckoutResponseCallback;
 import com.cashfree.pg.core.api.exception.CFException;
-import com.cashfree.pg.core.api.exception.CFInvalidArgumentException;
 import com.cashfree.pg.core.api.utils.CFErrorResponse;
 import com.cashfree.pg.ui.api.CFDropCheckoutPayment;
 import com.cashfree.pg.ui.api.CFPaymentComponent;
+import com.easebuzz.payment.kit.PWECouponsActivity;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 
 public class WebActivity extends AppCompatActivity implements PaymentResultWithDataListener, CFCheckoutResponseCallback {
 
@@ -62,6 +57,8 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
     ActivityResultLauncher<Intent> paymentLauncher;
 
+    private ActivityResultLauncher<Intent> pweActivityResultLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +68,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //        urlLoad = new StringBuilder(API_Client.WEB_LOAD_URL + "instant-eligibility?");
 
         Checkout.preload(getApplicationContext());
+        onResultPG();
 
         if (getIntent() != null) {
             try {
@@ -165,7 +163,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 //            Log.e(TAG, "s: " + s);
 //            Log.e(TAG, "user: " + user);
 
-            urlLoad = new StringBuilder(Environment.webLoadUrl() + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&env=" + env + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user);
+            urlLoad = new StringBuilder(Environment.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&env=" + env + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user);
 
             if (optionsJSON != null && optionsJSON.length() != 0) {
 //                Log.e(TAG, "optional: " + optionsJSON.toString());
@@ -388,8 +386,8 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
     @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {
 
-//        Log.e(TAG, "PaymentSuccess: " + s.toString());
-//        Log.e(TAG, "PaymentSuccess: " + paymentData.getData().toString());
+        Log.e(TAG, "PaymentSuccess: " + s.toString());
+        Log.e(TAG, "PaymentSuccess: " + paymentData.getData().toString());
 
         JSONObject jsonObject = null;
         try {
@@ -419,8 +417,8 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
     @Override
     public void onPaymentError(int i, String s, PaymentData paymentData) {
 
-//        Log.e(TAG, "PaymentError: " + s.toString());
-//        Log.e(TAG, "PaymentError: " + paymentData.getData().toString());
+        Log.e(TAG, "PaymentError: " + s.toString());
+        Log.e(TAG, "PaymentError: " + paymentData.getData().toString());
         if (name.equals("UNIPG")) {
             webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentData.getData().toString() + "');", null);
         } else {
@@ -435,6 +433,12 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
     public void PGOptions(String jsonObject) {
 //        Log.e(TAG, "PGOptions: " + jsonObject);
+
+//        Intent intentProceed = new Intent(WebActivity.this, PWECouponsActivity.class);
+//        intentProceed.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // This is mandatory flag
+//        intentProceed.putExtra("access_key","YOUR_ACCESS_KEY_HERE");// "Access key generated by the Initiate Payment API"
+//        intentProceed.putExtra("pay_mode","production");//"This will either be "test" or "production""
+//        pweActivityResultLauncher.launch(intentProceed);
 
         try {
             JSONObject pgOptionsObject = new JSONObject(jsonObject);
@@ -453,6 +457,10 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                 doDropCheckoutPayment(payment_session_id, order_code);
             } else if (name.equals("UNIPG")) {
                 ADOptions(pgOption);
+            }else if (name.equals("EASEBUZZ")){
+                String access_key = pgDetailsObject.getString("access_key");
+                Log.e(TAG, "access_key: "+access_key);
+                ezPGCheckout(access_key);
             }
 
         } catch (JSONException e) {
@@ -511,7 +519,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
         try {
             paymentVerify.put("status", "SUCCESS");
             paymentVerify.put("order_code", s);
-//            Log.e(TAG, "PaymentFailure: " + paymentVerify.toString());
+            Log.e(TAG, "PaymentFailure: " + paymentVerify.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -528,7 +536,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
             paymentFailure.put("message", cfErrorResponse.getMessage());
             paymentFailure.put("code", cfErrorResponse.getCode());
             paymentFailure.put("type", cfErrorResponse.getType());
-//            Log.e(TAG, "PaymentFailure: " + paymentFailure.toString());
+            Log.e(TAG, "PaymentFailure: " + paymentFailure.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -560,6 +568,48 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
             alertDialog.show();
 //            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
+    }
+
+    private void ezPGCheckout(String access_key){
+        Intent intentProceed = new Intent(WebActivity.this, PWECouponsActivity.class);
+        intentProceed.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // This is mandatory flag
+        intentProceed.putExtra("access_key",access_key);// "Access key generated by the Initiate Payment API"
+        intentProceed.putExtra("pay_mode","production");//"This will either be "test" or "production""
+        pweActivityResultLauncher.launch(intentProceed);
+    }
+
+    private void onResultPG(){
+        pweActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                Intent data = result.getData();
+                if (data != null) {
+                    String payment_result = data.getStringExtra("result");
+                    String payment_response = data.getStringExtra("payment_response");
+
+                    Log.e(TAG, "PaymentResult: "+payment_result);
+                    Log.e(TAG, "PaymentResponse: "+payment_response);
+                    try {
+                        // Handle response here
+
+                        JSONObject jsonObject = new JSONObject(payment_response);
+
+                        JSONObject paymentStatus = new JSONObject();
+                        if (payment_result.equals("payment_successfull")) {
+                            paymentStatus.put("status", "SUCCESS");
+                        }else {
+                            paymentStatus.put("status", "FAILED");
+                        }
+                        paymentStatus.put("payment_response", jsonObject);
+                        Log.e(TAG, "paymentStatus: "+paymentStatus );
+
+                        webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentStatus + "');", null);
+                    }catch (Exception e){
+                        // Handle exception here
+                    }
+                }
+            }
+        });
     }
 
     public void getADPaymentResponse(String data) {
