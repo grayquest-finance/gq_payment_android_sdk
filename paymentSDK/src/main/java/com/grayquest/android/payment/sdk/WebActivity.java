@@ -386,8 +386,8 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
     @Override
     public void onPaymentSuccess(String s, PaymentData paymentData) {
 
-        Log.e(TAG, "PaymentSuccess: " + s.toString());
-        Log.e(TAG, "PaymentSuccess: " + paymentData.getData().toString());
+//        Log.e(TAG, "PaymentSuccess: " + s.toString());
+//        Log.e(TAG, "PaymentSuccess: " + paymentData.getData().toString());
 
         JSONObject jsonObject = null;
         try {
@@ -395,7 +395,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
 
 //            Log.e(TAG, "JSONObject: " + jsonObject.toString());
             if (name != null && name.equals("UNIPG")) {
-                Log.e(TAG, "UNIPG Success: "+jsonObject.toString());
+//                Log.e(TAG, "UNIPG Success: "+jsonObject.toString());
                 webSdk.evaluateJavascript("javascript:sendPGPaymentResponse(" + jsonObject + ");", null);
             } else {
                 jsonObject.put("callback_url", callback_url);
@@ -417,8 +417,8 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
     @Override
     public void onPaymentError(int i, String s, PaymentData paymentData) {
 
-        Log.e(TAG, "PaymentError: " + s.toString());
-        Log.e(TAG, "PaymentError: " + paymentData.getData().toString());
+//        Log.e(TAG, "PaymentError: " + s.toString());
+//        Log.e(TAG, "PaymentError: " + paymentData.getData().toString());
         if (name.equals("UNIPG")) {
             webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentData.getData().toString() + "');", null);
         } else {
@@ -519,7 +519,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
         try {
             paymentVerify.put("status", "SUCCESS");
             paymentVerify.put("order_code", s);
-            Log.e(TAG, "PaymentFailure: " + paymentVerify.toString());
+//            Log.e(TAG, "PaymentFailure: " + paymentVerify.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -536,7 +536,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
             paymentFailure.put("message", cfErrorResponse.getMessage());
             paymentFailure.put("code", cfErrorResponse.getCode());
             paymentFailure.put("type", cfErrorResponse.getType());
-            Log.e(TAG, "PaymentFailure: " + paymentFailure.toString());
+//            Log.e(TAG, "PaymentFailure: " + paymentFailure.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -587,8 +587,8 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                     String payment_result = data.getStringExtra("result");
                     String payment_response = data.getStringExtra("payment_response");
 
-                    Log.e(TAG, "PaymentResult: "+payment_result);
-                    Log.e(TAG, "PaymentResponse: "+payment_response);
+//                    Log.e(TAG, "PaymentResult: "+payment_result);
+//                    Log.e(TAG, "PaymentResponse: "+payment_response);
                     try {
                         // Handle response here
 
@@ -601,7 +601,7 @@ public class WebActivity extends AppCompatActivity implements PaymentResultWithD
                             paymentStatus.put("status", "FAILED");
                         }
                         paymentStatus.put("payment_response", jsonObject);
-                        Log.e(TAG, "paymentStatus: "+paymentStatus );
+//                        Log.e(TAG, "paymentStatus: "+paymentStatus );
 
                         webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentStatus + "');", null);
                     }catch (Exception e){
