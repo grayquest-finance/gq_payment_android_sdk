@@ -4,11 +4,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    namespace "com.grayquest.android.payment.sdk"
+    compileSdk 34
 
     defaultConfig {
         minSdk 21
-        targetSdk 32
+        targetSdk 34
         versionCode 1
         versionName "1.8.1"
 
@@ -54,15 +55,15 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
 
-afterEvaluate {
-    publishing{
-        publications{
-            release(MavenPublication){
-                from components.release
-                groupId = 'com.grayquest.android'
-                artifactId = 'payment-sdk'
-                version = '1.0'
-            }
-        }
-    }
-}
+//afterEvaluate {
+//    publishing{
+//        publications{
+//            release(MavenPublication){
+//                from components.release
+//                groupId = 'com.grayquest.android'
+//                artifactId = 'payment-sdk'
+//                version = '1.0'
+//            }
+//        }
+//    }
+//}
