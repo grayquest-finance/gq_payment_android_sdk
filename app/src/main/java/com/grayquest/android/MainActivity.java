@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
     private static final String TAG = MainActivity.class.getSimpleName();
 
     EditText edtClientId, edtSecretKey, edtGQApi, edtStudentID, edtCustomerNumber,
-            edtTheme, edtOptional, edtPPSlug, edtPPCard, edtLogoUrl, edtFeeHelper, edtEnvironment;
+            edtTheme, edtOptional, edtPPSlug, edtPPCard, edtLogoUrl, edtFeeHelper, edtEnvironment,
+    edtPPConfig, edtFeeHeaderObj, edtCustomisation;
     SwitchCompat switchPP, switchFeeHeader, switchCustomisation;
     RadioButton radioTest, radioLive, radioStage, radioPreProd;
     String clientId, secretKey, GQApi, studentId, env, customerNumber, themeColour,
@@ -61,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         radioStage = (RadioButton) findViewById(R.id.rd_stage);
         radioPreProd = (RadioButton) findViewById(R.id.rd_preprod);
         edtCustomerNumber = (EditText) findViewById(R.id.edt_customer_number);
+
+        edtPPConfig = (EditText)findViewById(R.id.edt_pp_config);
+        edtFeeHeaderObj = (EditText)findViewById(R.id.edt_fee_header_obj);
+        edtCustomisation = (EditText)findViewById(R.id.edt_customisation);
 
         switchCustomisation = (SwitchCompat) findViewById(R.id.switch_customisation);
         llCustomisation = (LinearLayout) findViewById(R.id.ll_customisation);
@@ -423,13 +428,28 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 customisation.put("theme_color", themeColour);
             }
 
+            if(!edtCustomisation.getText().toString().isEmpty()){
+                customisation = new JSONObject(edtCustomisation.getText().toString());
+                config.put("customization", customisation);
+            }
+
             if (isPPConfig) {
                 createPPConfig();
                 config.put("pp_config", ppConfig);
             }
 
+            if(!edtPPConfig.getText().toString().isEmpty()) {
+                ppConfig = new JSONObject((edtPPConfig.getText().toString()));
+                config.put("pp_config", ppConfig);
+            }
+
             if (isFeeHeaders) {
                 getFeeLayoutValues();
+                config.put("fee_headers", feeHeaderObject);
+            }
+
+            if(!edtFeeHeaderObj.getText().toString().isEmpty()){
+                feeHeaderObject = new JSONObject(edtFeeHeaderObj.getText().toString());
                 config.put("fee_headers", feeHeaderObject);
             }
 
@@ -466,7 +486,6 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
             config.put("customer_number", customerNumber);
 //            config.put("fee_amount", feeAmount);
 //            config.put("payable_amount", payableAmount);
-            config.put("customization", customisation);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -606,6 +625,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         if (prefill != null) {
             Log.e(TAG, "PrefillObject: " + prefill.toString());
         }
+        Log.e(TAG, "ConfigObject: "+config.toString());
         GQPaymentSDK.initiate(MainActivity.this, config, prefill);
     }
 

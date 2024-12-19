@@ -163,8 +163,25 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/input_field_background"
                 android:padding="10dp"
+                android:visibility="gone"
                 android:text="Payment Pages Configuration"
                 android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Payment Pages Configuration"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_pp_config"
+                android:background="@drawable/input_field_background"
+                android:padding="10dp"
+                android:textSize="16sp"/>
 
             <LinearLayout
                 android:id="@+id/ll_pp_config"
@@ -208,6 +225,22 @@
 
             </LinearLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Fee Headers"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_fee_header_obj"
+                android:background="@drawable/input_field_background"
+                android:padding="10dp"
+                android:textSize="16sp"/>
+
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_fee_header"
                 android:layout_width="match_parent"
@@ -215,6 +248,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/input_field_background"
                 android:padding="10dp"
+                android:visibility="gone"
                 android:text="Fee Headers"
                 android:textSize="16sp" />
 
@@ -237,7 +271,7 @@
 
                 <LinearLayout
                     android:id="@+id/btn_add_fee"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal"
@@ -260,6 +294,22 @@
 
             </LinearLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Customisation"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_customisation"
+                android:background="@drawable/input_field_background"
+                android:padding="10dp"
+                android:textSize="16sp"/>
+
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_customisation"
                 android:layout_width="match_parent"
@@ -267,6 +317,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/input_field_background"
                 android:padding="10dp"
+                android:visibility="gone"
                 android:text="Customisation"
                 android:textSize="16sp" />
 
