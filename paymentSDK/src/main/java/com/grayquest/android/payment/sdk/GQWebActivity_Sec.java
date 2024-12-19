@@ -3,13 +3,12 @@ package com.grayquest.android.payment.sdk;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class WebActivity_Sec extends AppCompatActivity {
+public class GQWebActivity_Sec extends AppCompatActivity {
 
-    private static final String TAG = WebActivity_Sec.class.getSimpleName();
+    private static final String TAG = GQWebActivity_Sec.class.getSimpleName();
     WebView web_load;
     String urlLoad;
 
