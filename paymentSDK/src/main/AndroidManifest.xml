@@ -4,8 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <queries>
         <package android:name="com.google.android.apps.nbu.paisa.user" />
@@ -18,6 +18,9 @@
 
     <application>
         <activity
+            android:name=".GQWebActivity_New"
+            android:exported="false" />
+        <activity
             android:name=".ADPayment"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
@@ -27,8 +30,47 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".GQWebActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+<!--        <intent-filter>-->
+<!--            <action android:name="android.intent.action.MAIN" />-->
+
+<!--            <category android:name="android.intent.category.LAUNCHER" />-->
+<!--        </intent-filter>-->
+
+        <!-- as we want to open main activity from our link so we are specifying
+            only in main activity or we can specify that in different activity as well -->
+        <!-- on below line we are adding intent filter to our MainActivity -->
+<!--        <intent-filter android:autoVerify="true">-->
+<!--            &lt;!&ndash; below line is to set the action to our intent to view &ndash;&gt;-->
+<!--            <action android:name="android.intent.action.VIEW" />-->
+
+<!--            &lt;!&ndash; on below line we are adding a default category to our intent &ndash;&gt;-->
+<!--            <category android:name="android.intent.category.DEFAULT" />-->
+
+<!--            &lt;!&ndash; on below line we are adding a category to make our app browsable &ndash;&gt;-->
+<!--            <category android:name="android.intent.category.BROWSABLE" />-->
+
+<!--            &lt;!&ndash; on below line we are specifying the host name and-->
+<!--                the scheme type from which we will be calling our app &ndash;&gt;-->
+<!--            <data-->
+<!--                android:host="svc-dp.graydev.tech/"-->
+<!--                android:scheme="https" />-->
+<!--        </intent-filter>-->
+
+<!--        &lt;!&ndash; below is the same filter as above just the scheme is changed to http &ndash;&gt;-->
+<!--        &lt;!&ndash; so we can open our app with the url starting with https and http as well &ndash;&gt;-->
+<!--        <intent-filter  android:autoVerify="true">-->
+<!--            <action android:name="android.intent.action.VIEW" />-->
+
+<!--            <category android:name="android.intent.category.DEFAULT" />-->
+<!--            <category android:name="android.intent.category.BROWSABLE" />-->
+<!--            <data-->
+<!--                android:host="svc-dp.graydev.tech/"-->
+<!--                android:scheme="http" />-->
+<!--        </intent-filter>-->
+
+        </activity>
     </application>
 
 </manifest>
