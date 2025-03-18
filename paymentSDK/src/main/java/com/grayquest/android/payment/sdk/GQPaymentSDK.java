@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.StringWriter;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,7 +37,7 @@ public class GQPaymentSDK {
 
     public static void initiate(Context context1, JSONObject config, JSONObject options) {
 
-        String client_id = null, client_secret_key = null, gq_api_key = null, student_id, env,
+        String client_id = null, client_secret_key = null, gq_api_key = null, student_id, env, reference_id,
                 customer_number, fee_amount, payable_amount, theme_color;
         boolean fee_editable;
         boolean isInValid = false;
@@ -90,6 +91,10 @@ public class GQPaymentSDK {
             } else {
                 errorMessage.append(", Environment required");
                 isInValid = true;
+            }
+
+            if(config.has("reference_id") && !config.getString("reference_id").isEmpty()){
+                reference_id = config.getString("reference_id");
             }
 
             if (config.has("customization")) {
