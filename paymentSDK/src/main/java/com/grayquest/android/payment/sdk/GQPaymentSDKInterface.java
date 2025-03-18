@@ -1,9 +1,7 @@
 package com.grayquest.android.payment.sdk;
 
 import android.content.Context;
-import android.util.Log;
 import android.webkit.JavascriptInterface;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +28,7 @@ public class GQPaymentSDKInterface {
 //        Toast.makeText(mContext, data.toString(), Toast.LENGTH_SHORT).show();
 
         if (testObjet!=null) {
-            ((WebActivity) mContext).sdkSuccess(testObjet);
+            ((GQWebActivity) mContext).sdkSuccess(testObjet);
         }
 //        GQPaymentSDK.successSDK(data);
 
@@ -51,7 +49,7 @@ public class GQPaymentSDKInterface {
                 e.printStackTrace();
             }
 //        return testObjet.toString();
-            ((WebActivity) mContext).sdkFailed(testObjet);
+            ((GQWebActivity) mContext).sdkFailed(testObjet);
         }
 //        GQPaymentSDK.failedSDK(data);
     }
@@ -70,7 +68,7 @@ public class GQPaymentSDKInterface {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            ((WebActivity) mContext).sdkCancel(testObjet);
+            ((GQWebActivity) mContext).sdkCancel(testObjet);
         }
 //        GQPaymentSDK.cancelSDK(data);
     }
@@ -84,7 +82,7 @@ public class GQPaymentSDKInterface {
             try {
                  dataObject = new JSONObject(data);
 
-                ((WebActivity)mContext).ADOptions(data);
+                ((GQWebActivity)mContext).ADOptions(data);
             }catch (JSONException e){
                 e.printStackTrace();
             }
@@ -95,7 +93,7 @@ public class GQPaymentSDKInterface {
     public void sendPGOptions(String data){
 //        Log.e(TAG, "Data: "+data);
         if (data!=null){
-            ((WebActivity)mContext).PGOptions(data);
+            ((GQWebActivity)mContext).PGOptions(data);
         }
     }
 }

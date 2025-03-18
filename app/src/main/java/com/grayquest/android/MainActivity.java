@@ -1,6 +1,8 @@
 package com.grayquest.android;
 
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,11 +31,14 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
     private static final String TAG = MainActivity.class.getSimpleName();
 
     EditText edtClientId, edtSecretKey, edtGQApi, edtStudentID, edtCustomerNumber,
-            edtTheme, edtOptional, edtPPSlug, edtPPCard, edtLogoUrl, edtFeeHelper, edtEnvironment;
+            edtTheme, edtOptional, edtPPSlug, edtPPCard, edtLogoUrl, edtFeeHelper, edtEnvironment,
+    edtPPConfig, edtFeeHeaderObj, edtCustomisation, edtReferenceID, edtEmiPlanID, edtUdfDetails,
+    edtPaymentModes, edtFeeHeaderSplit;
     SwitchCompat switchPP, switchFeeHeader, switchCustomisation;
     RadioButton radioTest, radioLive, radioStage, radioPreProd;
     String clientId, secretKey, GQApi, studentId, env, customerNumber, themeColour,
-            logo_url, fee_helper_text, optional = "", ppSlug, ppCard;
+            logo_url, fee_helper_text, optional = "", ppSlug, ppCard, referenceID, emiPlanID, udfDetails,
+            paymentModes, feeHeadersSplit;
     TextView btnOptionPrefill, btnRemovePrefill;
     boolean isPPConfig, isFeeHeaders;
 
@@ -44,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
 
     JSONObject ppConfig;
     JSONObject feeHeaderObject;
+    JSONObject udfDetailsObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +67,22 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         radioStage = (RadioButton) findViewById(R.id.rd_stage);
         radioPreProd = (RadioButton) findViewById(R.id.rd_preprod);
         edtCustomerNumber = (EditText) findViewById(R.id.edt_customer_number);
+        edtEmiPlanID = (EditText) findViewById(R.id.edt_emi_plan);
+        edtUdfDetails = (EditText) findViewById(R.id.edt_udf_details);
+
+        edtPPConfig = (EditText)findViewById(R.id.edt_pp_config);
+        edtFeeHeaderObj = (EditText)findViewById(R.id.edt_fee_header_obj);
+        edtCustomisation = (EditText)findViewById(R.id.edt_customisation);
 
         switchCustomisation = (SwitchCompat) findViewById(R.id.switch_customisation);
         llCustomisation = (LinearLayout) findViewById(R.id.ll_customisation);
         edtTheme = (EditText) findViewById(R.id.edt_theme);
         edtLogoUrl = (EditText) findViewById(R.id.edt_logo_url);
         edtFeeHelper = (EditText) findViewById(R.id.edt_fee_helper);
+
+        edtReferenceID = (EditText) findViewById(R.id.edt_reference_id);
+        edtPaymentModes = (EditText) findViewById(R.id.edt_payment_modes);
+        edtFeeHeaderSplit = (EditText) findViewById(R.id.edt_fee_headers_split);
 
         edtOptional = (EditText) findViewById(R.id.edt_optional);
 
@@ -273,10 +289,13 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 secretKey = edtSecretKey.getText().toString();
                 GQApi = edtGQApi.getText().toString();
                 studentId = edtStudentID.getText().toString();
+                referenceID = edtReferenceID.getText().toString();
                 customerNumber = edtCustomerNumber.getText().toString();
                 themeColour = edtTheme.getText().toString();
                 logo_url = edtLogoUrl.getText().toString();
                 fee_helper_text = edtFeeHelper.getText().toString();
+                emiPlanID = edtEmiPlanID.getText().toString();
+                udfDetails = edtUdfDetails.getText().toString();
                 optional = edtOptional.getText().toString();
                 Log.e(TAG, "Optional: " + optional);
                 openSDk();
@@ -310,10 +329,9 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 edtSecretKey.setText("dc8f6764-f6a1-47ba-ab23-dbea9254474f");
                 edtGQApi.setText("964ee5b7-4ab5-448f-9e83-40d773bc6141");*/
 
-                // EaseBuzz - Live
-                edtClientId.setText("GQ-97d21aae-c983-4e81-807c-0e07371b1daa");
-                edtSecretKey.setText("a5e490f6-53dc-46e3-8749-fa5c5b3bc07e");
-                edtGQApi.setText("13d8d489-a211-4539-ab49-d00a6429648f");
+                edtClientId.setText("GQ-c76f7920-e8c7-41bb-a91d-d7b5ab312b54");
+                edtSecretKey.setText("58192b74-0226-4b42-9fe5-2b71b5aac1e7");
+                edtGQApi.setText("69ad2a7c-0138-4816-978f-1aea409bd067");
 
                 // CashFree - UAT
                 /*edtClientId.setText("GQ-8abcc1d9-cdb9-4791-86e6-6a5b2a87736b");
@@ -330,10 +348,10 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 edtSecretKey.setText("9f5ab415-0e3e-4f5a-9f4a-d1c9b2abcf84");
                 edtGQApi.setText("4b8136ab-915a-4d38-a0e3-432267c4a44b");*/
 
-                edtStudentID.setText("std_1212");
+                edtStudentID.setText("std_1210001");
 //                radioTest.setChecked(true);
 //                radioLive.setChecked(false);
-                edtCustomerNumber.setText("8425960199");
+                edtCustomerNumber.setText("8425900001");
             }
         });
 
@@ -348,6 +366,8 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         });
 
         viewHandler();
+
+        handleDeepLink(getIntent());
     }
 
     private void addFeeHeadersLayout() {
@@ -423,14 +443,54 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 customisation.put("theme_color", themeColour);
             }
 
+            if(!edtCustomisation.getText().toString().isEmpty()){
+                customisation = new JSONObject(edtCustomisation.getText().toString());
+                config.put("customization", customisation);
+            }
+
             if (isPPConfig) {
                 createPPConfig();
+                config.put("pp_config", ppConfig);
+            }
+
+            if(!edtPPConfig.getText().toString().isEmpty()) {
+                ppConfig = new JSONObject((edtPPConfig.getText().toString()));
                 config.put("pp_config", ppConfig);
             }
 
             if (isFeeHeaders) {
                 getFeeLayoutValues();
                 config.put("fee_headers", feeHeaderObject);
+            }
+
+            if(!edtFeeHeaderObj.getText().toString().isEmpty()){
+                feeHeaderObject = new JSONObject(edtFeeHeaderObj.getText().toString());
+                config.put("fee_headers", feeHeaderObject);
+            }
+
+            if(!edtUdfDetails.getText().toString().isEmpty()){
+                udfDetailsObject = new JSONObject(edtUdfDetails.getText().toString());
+                config.put("udf_details", udfDetails);
+            }
+
+            if (!edtReferenceID.getText().toString().isEmpty()){
+                referenceID = edtReferenceID.getText().toString();
+                config.put("reference_id", referenceID);
+            }
+
+            if (!edtEmiPlanID.getText().toString().isEmpty()){
+                emiPlanID = edtEmiPlanID.getText().toString();
+                config.put("emi_plan_id", emiPlanID);
+            }
+
+            if (!edtPaymentModes.getText().toString().isEmpty()){
+                paymentModes = edtPaymentModes.getText().toString();
+                config.put("payment_methods", paymentModes);
+            }
+
+            if(!edtFeeHeaderSplit.getText().toString().isEmpty()){
+                feeHeadersSplit = edtFeeHeaderSplit.getText().toString();
+                config.put("fee_headers_split", feeHeadersSplit);
             }
 
 //            if (hasMonthlyEmi || hasAuto || hasDirect) {
@@ -466,7 +526,6 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
             config.put("customer_number", customerNumber);
 //            config.put("fee_amount", feeAmount);
 //            config.put("payable_amount", payableAmount);
-            config.put("customization", customisation);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -606,6 +665,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         if (prefill != null) {
             Log.e(TAG, "PrefillObject: " + prefill.toString());
         }
+        Log.e(TAG, "ConfigObject: "+config.toString());
         GQPaymentSDK.initiate(MainActivity.this, config, prefill);
     }
 
@@ -797,6 +857,38 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         if (!alertDialog.isShowing()) {
             alertDialog.show();
 //            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        handleDeepLink(intent);
+        // Handle the deep link
+        Uri data = intent.getData();
+        if (data != null) {
+            Log.d("DeepLink", "URL: " + data.toString());
+
+            // Example: Check if the path matches
+            if ("/v1".equals(data.getPath())) {
+                // Perform actions upon returning to the app
+                Toast.makeText(this, "Welcome back to the app!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void handleDeepLink(Intent intent) {
+        Uri data = intent.getData();
+        if (data != null) {
+            Log.d("DeepLink", "Deep link triggered: " + data.toString());
+
+            // Example: Perform actions based on the deep link
+            if ("/return".equals(data.getPath())) {
+                Toast.makeText(this, "Welcome back via deep link!", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Log.d("DeepLink", "No deep link data found");
         }
     }
 }
