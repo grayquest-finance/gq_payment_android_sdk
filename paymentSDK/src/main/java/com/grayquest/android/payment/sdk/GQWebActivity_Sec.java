@@ -87,7 +87,7 @@ public class GQWebActivity_Sec extends AppCompatActivity {
                 if (url.contains("cf-redirect")){
                     finish();
                 }
-                if (url.contains("svc-dp.graydev.tech")){
+                if (url.contains(Environment.REDIRECTION_URL)){
                     Log.e(TAG, "true");
                     finish();
                 }
@@ -148,7 +148,7 @@ public class GQWebActivity_Sec extends AppCompatActivity {
                 if (url.contains("cf-redirect")){
                     finish();
                 }
-                if (url.contains("svc-dp.graydev.tech")){
+                if (url.contains(Environment.REDIRECTION_URL)){
                     Log.e(TAG, "true");
                     finish();
                 }
@@ -165,7 +165,7 @@ public class GQWebActivity_Sec extends AppCompatActivity {
 
             webview2.setVisibility(View.GONE);
 
-            if(url.contains("svc-dp.graydev.tech")){
+            if(url.contains(Environment.REDIRECTION_URL)){
                 finish();
             }
 
