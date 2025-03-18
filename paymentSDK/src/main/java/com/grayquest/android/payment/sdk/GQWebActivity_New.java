@@ -68,6 +68,10 @@ public class GQWebActivity_New extends AppCompatActivity {
                 if (url.contains("cf-redirect")){
                     finish();
                 }
+                if (url.contains(Environment.REDIRECTION_URL)){
+                    Log.e(TAG, "true");
+                    finish();
+                }
             }
         });
 
