@@ -39,19 +39,22 @@ import com.razorpay.PaymentResultWithDataListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Pattern;
+
 public class GQWebActivity extends AppCompatActivity implements PaymentResultWithDataListener, CFCheckoutResponseCallback {
 
     private static final String TAG = GQWebActivity.class.getSimpleName();
-    WebView webSdk;
+    WebView webSdk, webSecond;
     String jsonOp, jsonCon, jsonAuth, jsonCustomization, jsonPPConfig, jsonFeeHeader;
-    JSONObject optionsJSON, configJSON, authJSON, customizationJSON, ppConfigJSON, feeHeaderJSON;
+    JSONObject optionsJSON, configJSON, authJSON, customizationJSON, ppConfigJSON, feeHeaderJSON, udfDetailsJSON, feeHeaderSplitJSON;
 
     //    String url = "https://erp-sdk.graydev.tech/instant-eligibility?gapik=YOUR_GQ_API_KEY_HERE&abase=YOUR_BASE64_ENCODED_AUTH_HERE&cid=23960&ccode=YOUR_UUID_PARAMETER_HERE&sid=Studnet_51w121&pc=734858&fedit=true&famt=&pamt=&s=erp&user=existing";
 //    String url = "https://erp-sdk.graydev.tech/instant-eligibility?m=7794653261&gapik=YOUR_GQ_API_KEY_HERE&abase=YOUR_BASE64_ENCODED_AUTH_HERE&cid=23960&ccode=YOUR_UUID_PARAMETER_HERE&sid=Studnet_51w121&pc=734858&fedit=true&famt=&pamt=&s=erp&user=existing";
     String loadURL;
     StringBuilder urlLoad;
     String clientId, secretKey, name;
-    String gapik, abase, sid, m, famt, pamt, env, ccode, pc, s = "asdk", user, callback_url, _gqfc;
+    String gapik, abase, sid, m, famt, pamt, env, ccode, pc, s = "asdk", user, callback_url, _gqfc,
+            reference_id, emi_plan_id, udf_details, payment_methods, fee_headers_split;
     int cid;
     boolean fedit, redirect;
 
@@ -65,6 +68,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
         setContentView(R.layout.activity_web);
 
         webSdk = (WebView) findViewById(R.id.web_sdk);
+        webSecond = (WebView) findViewById(R.id.web_second);
 //        urlLoad = new StringBuilder(API_Client.WEB_LOAD_URL + "instant-eligibility?");
 
         Checkout.preload(getApplicationContext());
@@ -78,6 +82,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
 //                    Log.e(TAG, "OptionsJSON: " + optionsJSON.toString());
                 }
                 jsonCon = getIntent().getStringExtra("config");
+                Log.e(TAG, "JSONCONFIG: "+jsonCon);
                 configJSON = new JSONObject(jsonCon);
 
                 jsonAuth = configJSON.getString("auth");
@@ -98,6 +103,9 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
                 gapik = authJSON.getString("gq_api_key");
 //                urlLoad.append("gapik=").append(gapik);
                 sid = configJSON.getString("student_id");
+//                reference_id = configJSON.getString("reference_id");
+//                emi_plan_id = configJSON.getString("emi_plan_id");
+//                udf_details = configJSON.getString("udf_details");
                 if (configJSON.has("customer_number")) {
                     m = configJSON.getString("customer_number");
                 } else {
@@ -141,6 +149,28 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
                     jsonFeeHeader = configJSON.getString("fee_headers");
                     feeHeaderJSON = new JSONObject(jsonFeeHeader);
                 }
+
+                if(configJSON.has("udf_details")){
+                    udf_details = configJSON.getString("udf_details");
+                    udfDetailsJSON = new JSONObject(udf_details);
+                }
+
+                if (configJSON.has("emi_plan_id")){
+                    emi_plan_id = configJSON.getString("emi_plan_id");
+                }
+
+                if (configJSON.has("reference_id")){
+                    reference_id = configJSON.getString("reference_id");
+                }
+
+                if (configJSON.has("payment_methods")){
+                    payment_methods = configJSON.getString("payment_methods");
+                }
+
+                if (configJSON.has("fee_headers_split")){
+                    fee_headers_split = configJSON.getString("fee_headers_split");
+                    feeHeaderSplitJSON = new JSONObject(fee_headers_split);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -165,6 +195,14 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
 
             urlLoad = new StringBuilder(Environment.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&env=" + env + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user);
 
+            if(reference_id!=null && !reference_id.isEmpty()){
+                urlLoad.append("&reference_id=").append(reference_id);
+            }
+
+            if(emi_plan_id!=null && !emi_plan_id.isEmpty()){
+                urlLoad.append("&emi_plan_id=").append(emi_plan_id);
+            }
+
             if (optionsJSON != null && optionsJSON.length() != 0) {
 //                Log.e(TAG, "optional: " + optionsJSON.toString());
 //                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user + "&optional=" + optionsJSON.toString();
@@ -181,11 +219,24 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
             if (feeHeaderJSON !=null && feeHeaderJSON.length() != 0){
                 urlLoad.append("&_fee_headers=").append(feeHeaderJSON.toString());
             }
+
+            if(udfDetailsJSON != null && udfDetailsJSON.length()>0){
+                urlLoad.append("&udf_details=").append(udfDetailsJSON.toString());
+            }
+            Log.e(TAG, "Payment_methods: "+payment_methods);
+            if (payment_methods!=null && !payment_methods.isEmpty()){
+                urlLoad.append("&payment_methods=").append(payment_methods);
+            }
+
+            if (feeHeaderSplitJSON != null && feeHeaderSplitJSON.length() != 0){
+                urlLoad.append("&fee_headers_split=").append(feeHeaderSplitJSON.toString());
+            }
+
             urlLoad.append("&_v=").append(Environment.VERSION);
 //            else {
 //                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user;
 //            }
-//            Log.e(TAG, "LoadURL: " + urlLoad);
+            Log.e(TAG, "LoadURL: " + urlLoad);
         }
 
 //        GQPaymentSDK.showProgress();
@@ -233,6 +284,40 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
                 }
             }
         });
+    }
+
+    private boolean isValidArrayFormat(String payment_methods){
+        Pattern arrayPattern = Pattern.compile("^\\['([a-zA-Z0-9_]+',\\s*)*([a-zA-Z0-9_]+')\\]$");
+
+        return arrayPattern.matcher(payment_methods).matches();
+    }
+
+    private void setupWebView2() {
+        webSecond.getSettings().setJavaScriptEnabled(true);
+        webSecond.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.d("WebView2", "URL Changed: " + url);
+                // Add custom behavior if needed
+                return false; // Allow the WebView to load the URL
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                Log.d("WebView2", "Page Started Loading: " + url);
+                // You can handle URL changes here as well
+            }
+        });
+    }
+
+    private void openInWebView2(String url) {
+        // Load the new URL in WebView2
+        webSecond.loadUrl(url);
+
+        // Show WebView2 and close button
+        webSdk.setVisibility(View.VISIBLE); // Keep WebView1 active in the background
+        webSecond.setVisibility(View.VISIBLE);
     }
 
 //    @Override
@@ -392,7 +477,6 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(paymentData.getData().toString());
-
 //            Log.e(TAG, "JSONObject: " + jsonObject.toString());
             if (name != null && name.equals("UNIPG")) {
 //                Log.e(TAG, "UNIPG Success: "+jsonObject.toString());
@@ -441,29 +525,44 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
 //        pweActivityResultLauncher.launch(intentProceed);
 
         try {
+            Log.e(TAG, "PGOptions: "+jsonObject);
             JSONObject pgOptionsObject = new JSONObject(jsonObject);
 
-            name = pgOptionsObject.getString("name");
-//            Log.e(TAG, "Name: " + name);
+            if (pgOptionsObject.has("name")) {
+                name = pgOptionsObject.getString("name");
+            }
+            Log.e(TAG, "Name: " + name);
             String pgOption = pgOptionsObject.getString("pgOptions");
             JSONObject pgDetailsObject = new JSONObject(pgOption);
-            if (name.equals("CASHFREE")) {
+            if (name != null && name.equals("CASHFREE")) {
                 String order_code = pgDetailsObject.getString("order_code");
                 String payment_session_id = pgDetailsObject.getString("payment_session_id");
 
 //                Log.e(TAG, "order_code: " + order_code);
 //                Log.e(TAG, "payment_session_id: " + payment_session_id);
-
                 doDropCheckoutPayment(payment_session_id, order_code);
-            } else if (name.equals("UNIPG")) {
+            } else if (name != null && name.equals("UNIPG")) {
                 ADOptions(pgOption);
-            }else if (name.equals("EASEBUZZ")){
+            }else if (name != null && name.equals("EASEBUZZ")){
                 String access_key = pgDetailsObject.getString("access_key");
                 Log.e(TAG, "access_key: "+access_key);
                 ezPGCheckout(access_key);
+            }else {
+                String paymentLink = pgDetailsObject.getString("payment_link_web");
+                Log.e(TAG, "payment_link_web: "+paymentLink);
+
+                Intent intent = new Intent(GQWebActivity.this, GQWebActivity_Sec.class);
+//                intent.putExtra("urlload", "https://smartgateway.hdfcbank.com/payment-page/order/ordeh_228621e168ee4139b27958f95ec5728f");
+                intent.putExtra("urlload", paymentLink);
+                startActivity(intent);
+
+//                Intent i = new Intent(Intent.ACTION_VIEW);
+//                i.setData(Uri.parse(paymentLink));
+//                startActivity(i);
             }
 
         } catch (JSONException e) {
+            Log.e(TAG, "JSON ERROR: "+e.getMessage());
             e.printStackTrace();
         }
 
@@ -477,7 +576,6 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
     public void doDropCheckoutPayment(String payment_session_id, String order_id) {
         try {
 //            Log.e(TAG, "CashFeeEnvironment: " + Environment.cashFreeEnvironment());
-
             CFSession cfSession = new CFSession.CFSessionBuilder()
                     .setEnvironment(Environment.cashFreeEnvironment())
                     .setPaymentSessionID(payment_session_id)
@@ -614,7 +712,6 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
 
     public void getADPaymentResponse(String data) {
         Log.e(TAG, "ResponseData: " + data);
-
     }
 
     class MyWebViewClient extends WebViewClient {

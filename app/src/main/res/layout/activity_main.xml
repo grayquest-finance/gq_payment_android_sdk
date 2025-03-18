@@ -156,6 +156,22 @@
                 android:maxLength="10"
                 android:textSize="16sp" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Reference ID"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/edt_reference_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_field_background"
+                android:padding="10dp"
+                android:textSize="16sp" />
+
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_pp"
                 android:layout_width="match_parent"
@@ -179,6 +195,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/edt_pp_config"
+                android:background="@drawable/input_field_background"
+                android:padding="10dp"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Payment modes"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_payment_modes"
                 android:background="@drawable/input_field_background"
                 android:padding="10dp"
                 android:textSize="16sp"/>
@@ -237,6 +269,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/edt_fee_header_obj"
+                android:background="@drawable/input_field_background"
+                android:padding="10dp"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Fee Headers Split"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_fee_headers_split"
                 android:background="@drawable/input_field_background"
                 android:padding="10dp"
                 android:textSize="16sp"/>
@@ -306,6 +354,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/edt_customisation"
+                android:background="@drawable/input_field_background"
+                android:padding="10dp"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="EMI Plan Id"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_emi_plan"
+                android:background="@drawable/input_field_background"
+                android:padding="10dp"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="UDF Details"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edt_udf_details"
                 android:background="@drawable/input_field_background"
                 android:padding="10dp"
                 android:textSize="16sp"/>
