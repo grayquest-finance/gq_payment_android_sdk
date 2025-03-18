@@ -34,12 +34,11 @@ public class Environment {
     }
 
     public static CFSession.Environment cashFreeEnvironment() {
-        if (isProduction) {
+        if (environment.equals("live")) {
             CASH_FREE_ENVIRONMENT = CFSession.Environment.PRODUCTION;// CashFee Production
         } else {
             CASH_FREE_ENVIRONMENT = CFSession.Environment.SANDBOX;// CashFee UAT
         }
-
         return CASH_FREE_ENVIRONMENT;
     }
 
