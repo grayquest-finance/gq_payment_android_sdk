@@ -82,7 +82,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
 //                    Log.e(TAG, "OptionsJSON: " + optionsJSON.toString());
                 }
                 jsonCon = getIntent().getStringExtra("config");
-                Log.e(TAG, "JSONCONFIG: "+jsonCon);
+//                Log.e(TAG, "JSONCONFIG: "+jsonCon);
                 configJSON = new JSONObject(jsonCon);
 
                 jsonAuth = configJSON.getString("auth");
@@ -223,7 +223,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
             if(udfDetailsJSON != null && udfDetailsJSON.length()>0){
                 urlLoad.append("&udf_details=").append(udfDetailsJSON.toString());
             }
-            Log.e(TAG, "Payment_methods: "+payment_methods);
+//            Log.e(TAG, "Payment_methods: "+payment_methods);
             if (payment_methods!=null && !payment_methods.isEmpty()){
                 urlLoad.append("&payment_methods=").append(payment_methods);
             }
@@ -236,7 +236,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
 //            else {
 //                loadURL = API_Client.WEB_LOAD_URL + "instant-eligibility?gapik=" + gapik + "&abase=" + abase + "&sid=" + sid + "&m=" + m + "&famt=" + famt + "&pamt=" + pamt + "&env=" + env + "&fedit=" + fedit + "&cid=" + cid + "&ccode=" + ccode + "&pc=" + pc + "&s=" + s + "&user=" + user;
 //            }
-            Log.e(TAG, "LoadURL: " + urlLoad);
+//            Log.e(TAG, "LoadURL: " + urlLoad);
         }
 
 //        GQPaymentSDK.showProgress();
@@ -297,7 +297,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
         webSecond.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.d("WebView2", "URL Changed: " + url);
+//                Log.d("WebView2", "URL Changed: " + url);
                 // Add custom behavior if needed
                 return false; // Allow the WebView to load the URL
             }
@@ -305,7 +305,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
             @Override
             public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                Log.d("WebView2", "Page Started Loading: " + url);
+//                Log.d("WebView2", "Page Started Loading: " + url);
                 // You can handle URL changes here as well
             }
         });
@@ -525,13 +525,13 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
 //        pweActivityResultLauncher.launch(intentProceed);
 
         try {
-            Log.e(TAG, "PGOptions: "+jsonObject);
+//            Log.e(TAG, "PGOptions: "+jsonObject);
             JSONObject pgOptionsObject = new JSONObject(jsonObject);
 
             if (pgOptionsObject.has("name")) {
                 name = pgOptionsObject.getString("name");
             }
-            Log.e(TAG, "Name: " + name);
+//            Log.e(TAG, "Name: " + name);
             String pgOption = pgOptionsObject.getString("pgOptions");
             JSONObject pgDetailsObject = new JSONObject(pgOption);
             if (name != null && name.equals("CASHFREE")) {
@@ -545,11 +545,11 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
                 ADOptions(pgOption);
             }else if (name != null && name.equals("EASEBUZZ")){
                 String access_key = pgDetailsObject.getString("access_key");
-                Log.e(TAG, "access_key: "+access_key);
+//                Log.e(TAG, "access_key: "+access_key);
                 ezPGCheckout(access_key);
             }else {
                 String paymentLink = pgDetailsObject.getString("payment_link_web");
-                Log.e(TAG, "payment_link_web: "+paymentLink);
+//                Log.e(TAG, "payment_link_web: "+paymentLink);
 
                 Intent intent = new Intent(GQWebActivity.this, GQWebActivity_Sec.class);
 //                intent.putExtra("urlload", "https://smartgateway.hdfcbank.com/payment-page/order/ordeh_228621e168ee4139b27958f95ec5728f");
