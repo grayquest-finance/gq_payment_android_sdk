@@ -35,7 +35,7 @@ public class GQWebActivity_New extends AppCompatActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                Log.d(TAG, "URL Loadinggggg: " + url);
+//                Log.d(TAG, "URL Loadinggggg: " + url);
 
 //                if (isNewTabRequest(url)) {
 //                    // Handle new tab request
@@ -55,7 +55,7 @@ public class GQWebActivity_New extends AppCompatActivity {
             @Override
             public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                Log.d(TAG, "Page Started Loading: " + url);
+//                Log.d(TAG, "Page Started Loading: " + url);
 //                if (url.contains("svc-dp.graydev.tech")){
 //                    finish();
 //                }
@@ -64,12 +64,12 @@ public class GQWebActivity_New extends AppCompatActivity {
             public void onPageFinished(WebView view, String url) {
                 // do your stuff here
 //                GQPaymentSDK.hideProgress();
-                Log.e(TAG, "LoadedUrl: "+url);
+//                Log.e(TAG, "LoadedUrl: "+url);
                 if (url.contains("cf-redirect")){
                     finish();
                 }
                 if (url.contains(Environment.REDIRECTION_URL)){
-                    Log.e(TAG, "true");
+//                    Log.e(TAG, "true");
                     finish();
                 }
             }
@@ -78,7 +78,7 @@ public class GQWebActivity_New extends AppCompatActivity {
         webLoadNew.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, android.os.Message resultMsg) {
-                Log.d(TAG, "New tab request detected");
+//                Log.d(TAG, "New tab request detected");
 
                 // Handle the new tab request: Use the existing WebView2
                 WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
