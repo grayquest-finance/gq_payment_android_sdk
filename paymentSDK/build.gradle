@@ -10,7 +10,7 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 34
-        versionName "1.9.6"
+        versionName "1.9.7"
 
         multiDexEnabled = true;
 
@@ -65,7 +65,7 @@ afterEvaluate {
             release(MavenPublication) {
                 groupId = 'com.grayquest.android'
                 artifactId = 'payment-sdk'
-                version = '1.0.23'
+                version = '1.0.24'
 
                 // Explicitly depend on the bundle task
                 def aarTask = tasks.named("bundleReleaseAar")
