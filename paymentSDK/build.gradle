@@ -10,7 +10,7 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 34
-        versionName "1.9.12"
+        versionName "1.9.13"
 
         multiDexEnabled = true;
 
@@ -66,7 +66,7 @@ afterEvaluate {
             release(MavenPublication) {
                 groupId = 'com.grayquest.android'
                 artifactId = 'payment-sdk'
-                version = '1.0.29'
+                version = '1.0.30'
 
                 // Explicitly depend on the bundle task
                 def aarTask = tasks.named("bundleReleaseAar")
@@ -114,6 +114,27 @@ afterEvaluate {
                         retrofitConvertGson.appendNode('artifactId', 'converter-gson')
                         retrofitConvertGson.appendNode('version', '2.9.0')
                         retrofitConvertGson.appendNode('scope', 'compile')
+
+                        // Razorpay
+                        def razorpay = dependenciesNode.appendNode('dependency')
+                        razorpay.appendNode('groupId', 'com.razorpay')
+                        razorpay.appendNode('artifactId', 'checkout')
+                        razorpay.appendNode('version', '1.6.41')
+                        razorpay.appendNode('scope', 'compile')
+
+                        // easebuzz
+                        def easebuzz = dependenciesNode.appendNode('dependency')
+                        easebuzz.appendNode('groupId', 'in.easebuzz')
+                        easebuzz.appendNode('artifactId', 'android-v1')
+                        easebuzz.appendNode('version', '1.0.0')
+                        easebuzz.appendNode('scope', 'compile')
+
+                        // cashfree
+                        def cashfree = dependenciesNode.appendNode('dependency')
+                        cashfree.appendNode('groupId', 'com.cashfree')
+                        cashfree.appendNode('artifactId', 'pg')
+                        cashfree.appendNode('version', '2.1.27')
+                        cashfree.appendNode('scope', 'compile')
 
                         // Add other dependencies similarly if needed
                     }
