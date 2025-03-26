@@ -54,15 +54,14 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }
 
-//afterEvaluate {
-//    publishing{
-//        publications{
-//            release(MavenPublication){
-//                from components.release
-//                groupId = 'com.grayquest.android'
-//                artifactId = 'payment-sdk'
-//                version = '1.0'
-//            }
-//        }
-//    }
-//}
+afterEvaluate {
+    publishing{
+        publications{
+            release(MavenPublication){
+                groupId = 'com.grayquest.android'
+                artifactId = 'payment-sdk'
+                version = '1.0'
+            }
+        }
+    }
+}
