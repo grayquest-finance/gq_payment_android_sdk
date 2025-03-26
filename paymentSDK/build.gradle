@@ -10,7 +10,7 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 34
-        versionName "1.9.9"
+        versionName "1.9.10"
 
         multiDexEnabled = true;
 
@@ -66,7 +66,7 @@ afterEvaluate {
             release(MavenPublication) {
                 groupId = 'com.grayquest.android'
                 artifactId = 'payment-sdk'
-                version = '1.0.26'
+                version = '1.0.27'
 
                 // Explicitly depend on the bundle task
                 def aarTask = tasks.named("bundleReleaseAar")
@@ -77,6 +77,25 @@ afterEvaluate {
                 pom {
                     name = 'Payment SDK'
                     description = 'GrayQuest Payment SDK for Android'
+                    withXml {
+                        def dependenciesNode = asNode().appendNode('dependencies')
+
+                        // Gson
+                        def gsonDep = dependenciesNode.appendNode('dependency')
+                        gsonDep.appendNode('groupId', 'com.google.code.gson')
+                        gsonDep.appendNode('artifactId', 'gson')
+                        gsonDep.appendNode('version', '2.10.1')
+                        gsonDep.appendNode('scope', 'compile')
+
+                        // Retrofit
+                        def retrofitDep = dependenciesNode.appendNode('dependency')
+                        retrofitDep.appendNode('groupId', 'com.squareup.retrofit2')
+                        retrofitDep.appendNode('artifactId', 'retrofit')
+                        retrofitDep.appendNode('version', '2.9.0')
+                        retrofitDep.appendNode('scope', 'compile')
+
+                        // Add other dependencies similarly if needed
+                    }
                 }
             }
         }
