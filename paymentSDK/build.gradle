@@ -10,7 +10,7 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 34
-        versionName "1.9.11"
+        versionName "1.9.12"
 
         multiDexEnabled = true;
 
@@ -66,7 +66,7 @@ afterEvaluate {
             release(MavenPublication) {
                 groupId = 'com.grayquest.android'
                 artifactId = 'payment-sdk'
-                version = '1.0.28'
+                version = '1.0.29'
 
                 // Explicitly depend on the bundle task
                 def aarTask = tasks.named("bundleReleaseAar")
@@ -87,12 +87,33 @@ afterEvaluate {
                         gsonDep.appendNode('version', '2.10.1')
                         gsonDep.appendNode('scope', 'compile')
 
+                        // okhttp3 logging
+                        def okhttp3logging = dependenciesNode.appendNode('dependency')
+                        okhttp3logging.appendNode('groupId', 'com.squareup.okhttp3')
+                        okhttp3logging.appendNode('artifactId', 'logging-interceptor')
+                        okhttp3logging.appendNode('version', '4.9.0')
+                        okhttp3logging.appendNode('scope', 'compile')
+
+                        // Square okhttp3
+                        def squareOkhttp3 = dependenciesNode.appendNode('dependency')
+                        squareOkhttp3.appendNode('groupId', 'com.squareup.okhttp3')
+                        squareOkhttp3.appendNode('artifactId', 'okhttp')
+                        squareOkhttp3.appendNode('version', '4.9.2')
+                        squareOkhttp3.appendNode('scope', 'compile')
+
                         // Retrofit
                         def retrofitDep = dependenciesNode.appendNode('dependency')
                         retrofitDep.appendNode('groupId', 'com.squareup.retrofit2')
                         retrofitDep.appendNode('artifactId', 'retrofit')
                         retrofitDep.appendNode('version', '2.9.0')
                         retrofitDep.appendNode('scope', 'compile')
+
+                        // Retrofit convert gson
+                        def retrofitConvertGson = dependenciesNode.appendNode('dependency')
+                        retrofitConvertGson.appendNode('groupId', 'com.squareup.retrofit2')
+                        retrofitConvertGson.appendNode('artifactId', 'converter-gson')
+                        retrofitConvertGson.appendNode('version', '2.9.0')
+                        retrofitConvertGson.appendNode('scope', 'compile')
 
                         // Add other dependencies similarly if needed
                     }
