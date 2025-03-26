@@ -10,7 +10,7 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 34
-        versionName "1.9.4"
+        versionName "1.9.5"
 
         multiDexEnabled = true;
 
@@ -65,7 +65,7 @@ afterEvaluate {
             release(MavenPublication) {
                 groupId = 'com.grayquest.android'
                 artifactId = 'payment-sdk'
-                version = '1.0.21'
+                version = '1.0.22'
 
                 // This will publish the AAR manually
                 artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
