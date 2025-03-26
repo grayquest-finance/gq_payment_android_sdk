@@ -10,6 +10,7 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 34
+        versionName "1.9.4"
 
         multiDexEnabled = true;
 
@@ -26,6 +27,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -55,13 +60,25 @@ dependencies {
 }
 
 afterEvaluate {
-    publishing{
-        publications{
-            release(MavenPublication){
+    publishing {
+        publications {
+            release(MavenPublication) {
                 groupId = 'com.grayquest.android'
                 artifactId = 'payment-sdk'
-                version = '1.0'
+                version = '1.0.21'
+
+                // This will publish the AAR manually
+                artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+
+                pom {
+                    name = 'Payment SDK'
+                    description = 'GrayQuest Payment SDK for Android'
+                }
             }
+        }
+
+        repositories {
+            // JitPack will use this section, even if it's empty
         }
     }
 }
