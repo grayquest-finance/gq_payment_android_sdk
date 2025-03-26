@@ -29,6 +29,8 @@ import com.cashfree.pg.core.api.CFTheme;
 import com.cashfree.pg.core.api.callback.CFCheckoutResponseCallback;
 import com.cashfree.pg.core.api.exception.CFException;
 import com.cashfree.pg.core.api.utils.CFErrorResponse;
+import com.cashfree.pg.core.api.webcheckout.CFWebCheckoutPayment;
+import com.cashfree.pg.core.api.webcheckout.CFWebCheckoutTheme;
 import com.cashfree.pg.ui.api.CFDropCheckoutPayment;
 import com.cashfree.pg.ui.api.CFPaymentComponent;
 import com.easebuzz.payment.kit.PWECouponsActivity;
@@ -589,19 +591,22 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
                     .add(CFPaymentComponent.CFPaymentModes.WALLET)
                     .build();
 
-            CFTheme cfTheme = new CFTheme.CFThemeBuilder()
+//            CFTheme cfTheme = new CFTheme.CFThemeBuilder()
+//                    .setNavigationBarBackgroundColor("#4563cb")
+//                    .setNavigationBarTextColor("#FFFFFF")
+//                    .setButtonBackgroundColor("#4563cb")
+//                    .setButtonTextColor("#FFFFFF")
+//                    .setPrimaryTextColor("#000000")
+//                    .setSecondaryTextColor("#000000")
+//                    .build();
+
+            CFWebCheckoutTheme cfTheme = new CFWebCheckoutTheme.CFWebCheckoutThemeBuilder()
                     .setNavigationBarBackgroundColor("#4563cb")
-                    .setNavigationBarTextColor("#FFFFFF")
-                    .setButtonBackgroundColor("#4563cb")
-                    .setButtonTextColor("#FFFFFF")
-                    .setPrimaryTextColor("#000000")
-                    .setSecondaryTextColor("#000000")
+                    .setNavigationBarTextColor("#ffffff")
                     .build();
 
-            CFDropCheckoutPayment cfDropCheckoutPayment = new CFDropCheckoutPayment.CFDropCheckoutPaymentBuilder()
+            CFWebCheckoutPayment cfDropCheckoutPayment = new CFWebCheckoutPayment.CFWebCheckoutPaymentBuilder()
                     .setSession(cfSession)
-                    .setCFUIPaymentModes(cfPaymentComponent)
-                    .setCFNativeCheckoutUITheme(cfTheme)
                     .build();
             CFPaymentGatewayService gatewayService = CFPaymentGatewayService.getInstance();
             gatewayService.doPayment(GQWebActivity.this, cfDropCheckoutPayment);
@@ -617,7 +622,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
         try {
             paymentVerify.put("status", "SUCCESS");
             paymentVerify.put("order_code", s);
-//            Log.e(TAG, "PaymentFailure: " + paymentVerify.toString());
+            Log.e(TAG, "PaymentVerify: " + paymentVerify.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -634,7 +639,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
             paymentFailure.put("message", cfErrorResponse.getMessage());
             paymentFailure.put("code", cfErrorResponse.getCode());
             paymentFailure.put("type", cfErrorResponse.getType());
-//            Log.e(TAG, "PaymentFailure: " + paymentFailure.toString());
+            Log.e(TAG, "PaymentFailure: " + paymentFailure.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
