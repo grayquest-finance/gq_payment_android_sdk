@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
     EditText edtClientId, edtSecretKey, edtGQApi, edtStudentID, edtCustomerNumber,
             edtTheme, edtOptional, edtPPSlug, edtPPCard, edtLogoUrl, edtFeeHelper, edtEnvironment,
     edtPPConfig, edtFeeHeaderObj, edtCustomisation, edtReferenceID, edtEmiPlanID, edtUdfDetails,
-    edtPaymentModes, edtFeeHeaderSplit;
+    edtPaymentModes, edtFeeHeaderSplit, edtToken;
     SwitchCompat switchPP, switchFeeHeader, switchCustomisation;
     RadioButton radioTest, radioLive, radioStage, radioPreProd;
     String clientId, secretKey, GQApi, studentId, env, customerNumber, themeColour,
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
     LinearLayout llPPConfig, llFeeHeaders, llFeeLayout, llCustomisation;
     LinearLayout btnAddFee;
 
-    Button btn_open, btnPrefill;
+    Button btn_open, btnPrefill, btnTokenOpen;
 
     JSONObject ppConfig;
     JSONObject feeHeaderObject;
@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
         edtCustomerNumber = (EditText) findViewById(R.id.edt_customer_number);
         edtEmiPlanID = (EditText) findViewById(R.id.edt_emi_plan);
         edtUdfDetails = (EditText) findViewById(R.id.edt_udf_details);
+        edtToken = (EditText) findViewById(R.id.edt_token);
 
         edtPPConfig = (EditText)findViewById(R.id.edt_pp_config);
         edtFeeHeaderObj = (EditText)findViewById(R.id.edt_fee_header_obj);
@@ -203,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
 
         btn_open = (Button) findViewById(R.id.btn_open);
         btnPrefill = (Button) findViewById(R.id.btn_prefill);
+        btnTokenOpen = (Button) findViewById(R.id.btn_open_token);
 
         btnOptionPrefill.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -362,6 +364,15 @@ public class MainActivity extends AppCompatActivity implements GQPaymentSDKListe
                 btnOptionPrefill.setVisibility(View.VISIBLE);
                 edtOptional.setText("");
                 optional = "";
+            }
+        });
+
+        btnTokenOpen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if(!edtToken.getText().toString().isEmpty()){
+                    GQPaymentSDK.tokenCheckout(MainActivity.this, edtToken.getText().toString(), env);
+//                }
             }
         });
 
