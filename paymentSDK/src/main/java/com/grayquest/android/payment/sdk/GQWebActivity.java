@@ -76,7 +76,13 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
         Checkout.preload(getApplicationContext());
         onResultPG();
 
-        if (getIntent() != null) {
+        if (getIntent() != null && getIntent().hasExtra("session_code") ) {
+
+            urlLoad = new StringBuilder(Environment.WEB_LOAD_URL + "instant-eligibility?_code="+getIntent().getStringExtra("session_code"));
+
+            Log.e(TAG, "LoadURl: "+urlLoad);
+
+        }else if (getIntent() != null){
             try {
                 if (getIntent().hasExtra("options") && getIntent().getStringExtra("options") != null) {
                     jsonOp = getIntent().getStringExtra("options");
