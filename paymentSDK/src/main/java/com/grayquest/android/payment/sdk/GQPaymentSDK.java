@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -24,6 +25,7 @@ import retrofit2.Response;
 
 public class GQPaymentSDK {
 
+    private static final String TAG = GQPaymentSDK.class.getSimpleName();
     private static String user;
     private static int customer_id;
     private static String customer_code;
@@ -153,6 +155,41 @@ public class GQPaymentSDK {
         }
     }
 
+    public static void tokenCheckout(Context context, String token, String environment){
+        GQPaymentSDK.context = context;
+        gqPaymentSDKListener = (GQPaymentSDKListener) context;
+        boolean isInValid = false;
+        StringWriter errorMessage = new StringWriter();
+
+        if (environment!=null && !environment.isEmpty()){
+            Environment.env(environment);
+
+        }else {
+            errorMessage.append("Environment required");
+            isInValid = true;
+        }
+
+        if (token!= null && !token.isEmpty()){
+//            isInValid = false;
+        }else {
+            errorMessage.append(", Token required");
+            isInValid = true;
+        }
+
+        if (isInValid){
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("error", errorMessage);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+            gqPaymentSDKListener.onFailed(jsonObject);
+        }else {
+            showProgress();
+            sessionCode(token, environment);
+        }
+    }
+
 //    private static ProgressDialog progress = null;
     private static AlertDialog progressDialog = null;
 
@@ -184,6 +221,83 @@ public class GQPaymentSDK {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+    }
+
+    private static void sessionCode(String token, String env){
+        ApiInterface apiInterface = API_Client.getRetrofit().create(ApiInterface.class);
+        Call<PaymentSDk_Contributor> getSessionCode = apiInterface.sessionCode("Bearer "+token);
+
+        getSessionCode.enqueue(new Callback<PaymentSDk_Contributor>() {
+            @Override
+            public void onResponse(Call<PaymentSDk_Contributor> call, Response<PaymentSDk_Contributor> response) {
+                try{
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        /*Success Response*/
+                        hideProgress();
+                        boolean success = response.body().success;
+                        int status_code = response.body().getStatus_code();
+                        String message = response.body().getMessage();
+                        if (success) {
+                            ResponseData responseData = new ResponseData();
+
+                            responseData = response.body().getData();
+
+                            String session_code = responseData.getSession_code();
+
+                            Log.e(TAG, "SessionCode: "+session_code);
+
+                            Intent intent = new Intent(context, GQWebActivity.class);
+                            intent.putExtra("session_code", session_code);
+                            context.startActivity(intent);
+                        }
+                    } else if (response.errorBody() != null) {
+                        /*Error Response*/
+                        hideProgress();
+                        String result = response.errorBody().string();
+
+//                        Log.e(TAG, "Result: " + result);
+                        JSONObject errorResponse = new JSONObject(result);
+
+                        boolean success = errorResponse.getBoolean("success");
+                        String message = errorResponse.getString("message");
+
+//                        Log.e(TAG, "Success: " + success);
+//                        Log.e(TAG, "Message: " + message);
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("error", message);
+                        gqPaymentSDKListener.onFailed(jsonObject);
+//                        Log.e(TAG, "ErrorResponse: " + response.errorBody().string());
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    hideProgress();
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("error", "Oop's something went wrong contact support@grayquest.com");
+                    } catch (JSONException jsonException) {
+                        jsonException.printStackTrace();
+                    }
+                    gqPaymentSDKListener.onFailed(jsonObject);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PaymentSDk_Contributor> call, Throwable t) {
+                hideProgress();
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("error", "Oop's something went wrong contact support@grayquest.com");
+                } catch (JSONException jsonException) {
+                    jsonException.printStackTrace();
+                }
+                gqPaymentSDKListener.onFailed(jsonObject);
+//                Log.e(TAG, "Error1: " + t.getCause());
+//                Log.e(TAG, "Error1: " + t.getMessage());
+//                Log.e(TAG, "Error1: " + t.getLocalizedMessage());
+            }
+        });
     }
 
     private static void createCustomer(String customer_mobile, String gq_api_key, String abase) {
