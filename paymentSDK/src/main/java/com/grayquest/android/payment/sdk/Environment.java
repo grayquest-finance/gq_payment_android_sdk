@@ -61,9 +61,9 @@ public class Environment {
                 REDIRECTION_URL = "svc-dp.grayquest.com";// Redirecrtion URL for PRODUCTION Environment
                 return environment = "live";
             default:
-                BASE_URL = "https://erp-api.graydev.tech/";// Base URL for UAT Environment
-                WEB_LOAD_URL = "https://erp-sdk.graydev.tech/";// Base Web URL for UAT Environment
-                REDIRECTION_URL = "svc-dp.graydev.tech";// Redirection URL for UAT Environment
+                BASE_URL = "https://erp-api.uat.graydev.in/";// Base URL for UAT Environment
+                WEB_LOAD_URL = "https://erp-sdk.uat.graydev.in/";// Base Web URL for UAT Environment
+                REDIRECTION_URL = "svc-dp.uat.graydev.in/";// Redirection URL for UAT Environment
                 return environment = "test";
         }
     }
