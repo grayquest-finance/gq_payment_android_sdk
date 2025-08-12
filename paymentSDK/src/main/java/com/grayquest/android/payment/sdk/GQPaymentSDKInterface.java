@@ -1,6 +1,7 @@
 package com.grayquest.android.payment.sdk;
 
 import android.content.Context;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 
 import org.json.JSONException;
@@ -91,7 +92,7 @@ public class GQPaymentSDKInterface {
 
     @JavascriptInterface
     public void sendPGOptions(String data){
-//        Log.e(TAG, "Data: "+data);
+        Log.e(TAG, "Data: "+data);
         if (data!=null){
             ((GQWebActivity)mContext).PGOptions(data);
         }
