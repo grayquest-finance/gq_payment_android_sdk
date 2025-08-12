@@ -37,7 +37,7 @@ public class GQWebActivity_Sec extends AppCompatActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-//                Log.d(TAG, "URL Loadinggggg: " + url);
+                Log.d(TAG, "URL Loadinggggg: " + url);
 
                 if (isNewTabRequest(url)) {
                     // Handle new tab request
@@ -74,7 +74,7 @@ public class GQWebActivity_Sec extends AppCompatActivity {
             @Override
             public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-//                Log.d(TAG, "Page Started Loading: " + url);
+                Log.d(TAG, "Page Started Loading: " + url);
 //                if (url.contains("svc-dp.graydev.tech")){
 //                    finish();
 //                }
@@ -118,7 +118,7 @@ public class GQWebActivity_Sec extends AppCompatActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-//                Log.d(TAG, "URL Loadinggggg: " + url);
+                Log.d(TAG, "URL Loadinggggg: " + url);
 
                 // Detect UPI URL and open in UPI app
                 if (url.startsWith("upi://") || url.startsWith("tez://upi/")) {
@@ -135,7 +135,7 @@ public class GQWebActivity_Sec extends AppCompatActivity {
             @Override
             public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-//                Log.d(TAG, "Page Started Loading: " + url);
+                Log.d(TAG, "Page Started Loading: " + url);
 //                if (url.contains("svc-dp.graydev.tech")){
 //                    finish();
 //                }
@@ -144,7 +144,7 @@ public class GQWebActivity_Sec extends AppCompatActivity {
             public void onPageFinished(WebView view, String url) {
                 // do your stuff here
 //                GQPaymentSDK.hideProgress();
-//                Log.e(TAG, "LoadedUrl: "+url);
+                Log.e(TAG, "LoadedUrl: "+url);
                 if (url.contains("cf-redirect")){
                     finish();
                 }

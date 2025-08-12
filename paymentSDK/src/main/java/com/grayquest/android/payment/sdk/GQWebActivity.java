@@ -524,7 +524,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
     }
 
     public void PGOptions(String jsonObject) {
-//        Log.e(TAG, "PGOptions: " + jsonObject);
+        Log.e(TAG, "PGOptions: " + jsonObject);
 
 //        Intent intentProceed = new Intent(WebActivity.this, PWECouponsActivity.class);
 //        intentProceed.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // This is mandatory flag
