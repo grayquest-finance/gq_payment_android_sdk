@@ -78,7 +78,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
 
         if (getIntent() != null && getIntent().hasExtra("session_code") ) {
 
-            urlLoad = new StringBuilder(Environment.WEB_LOAD_URL + "instant-eligibility?_code="+getIntent().getStringExtra("session_code"));
+            urlLoad = new StringBuilder(Environment.WEB_LOAD_URL + "instant-eligibility?_code="+getIntent().getStringExtra("session_code")+"&s="+s+"&_v="+Environment.VERSION);
 
             Log.e(TAG, "LoadURl: "+urlLoad);
 
@@ -524,7 +524,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
     }
 
     public void PGOptions(String jsonObject) {
-//        Log.e(TAG, "PGOptions: " + jsonObject);
+        Log.e(TAG, "PGOptions: " + jsonObject);
 
 //        Intent intentProceed = new Intent(WebActivity.this, PWECouponsActivity.class);
 //        intentProceed.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // This is mandatory flag
