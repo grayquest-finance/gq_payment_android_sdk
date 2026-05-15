@@ -509,13 +509,13 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
     @Override
     public void onPaymentError(int i, String s, PaymentData paymentData) {
 
-//        Log.e(TAG, "PaymentError: " + s.toString());
+    //        Log.e(TAG, "PaymentError: " + s.toString());
 //        Log.e(TAG, "PaymentError: " + paymentData.getData().toString());
-        if (name.equals("UNIPG")) {
-            webSdk.evaluateJavascript("javascript:sendPGPaymentResponse('" + paymentData.getData().toString() + "');", null);
-        } else {
-            webSdk.evaluateJavascript("javascript:sendADPaymentResponse('" + callback_url + "," + paymentData.getData().toString() + "');", null);
-        }
+    if (name.equals("UNIPG")) {
+        webSdk.evaluateJavascript("javascript:sendPGPaymentResponse(" + paymentData.getData().toString() + ");", null);
+    } else {
+        webSdk.evaluateJavascript("javascript:sendADPaymentResponse('" + callback_url + "," + paymentData.getData().toString() + "');", null);
+    }
 
 //        Intent intent = new Intent();
 //        intent.putExtra("payment_data", paymentData.getData().toString());
