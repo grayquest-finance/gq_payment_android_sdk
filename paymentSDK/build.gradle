@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace "com.grayquest.android.payment.sdk"
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdk 23
-        targetSdk 34
+        targetSdk 35
         versionName "1.9.14"
 
         multiDexEnabled = true;
