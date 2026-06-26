@@ -48,7 +48,7 @@ dependencies {
 
     api 'com.razorpay:checkout:1.6.41'
 
-    api 'in.easebuzz:android-v1:1.0.0'// easebuz SDK
+    api 'in.easebuzz:android-v2:1.0.6' // easebuzz SDK
 
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -125,8 +125,8 @@ afterEvaluate {
                         // easebuzz
                         def easebuzz = dependenciesNode.appendNode('dependency')
                         easebuzz.appendNode('groupId', 'in.easebuzz')
-                        easebuzz.appendNode('artifactId', 'android-v1')
-                        easebuzz.appendNode('version', '1.0.0')
+                        easebuzz.appendNode('artifactId', 'android-v2')
+                        easebuzz.appendNode('version', '1.0.6')
                         easebuzz.appendNode('scope', 'compile')
 
                         // cashfree
