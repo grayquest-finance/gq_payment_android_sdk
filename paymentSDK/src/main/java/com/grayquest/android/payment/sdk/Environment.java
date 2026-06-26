@@ -8,6 +8,7 @@ public class Environment {
 //    public static final boolean isProduction = true; // Live
 
     public static String environment;
+    //sldskjskjskjdf
 
     public static String BASE_URL;
     public static String WEB_LOAD_URL;
@@ -51,9 +52,9 @@ public class Environment {
                 REDIRECTION_URL = "svc-dp-stage.graydev.tech";// Redirection URL for STAGE Environment
                 return environment = "stage";
             case "preprod":
-                BASE_URL = "https://erp-api-preprod.graydev.tech/";// Base URL for PREPROD Environment
-                WEB_LOAD_URL = "https://erp-sdk-preprod.graydev.tech/";// Base Web URL for PREPROD Environment
-                REDIRECTION_URL = "svc-dp-preprod.graydev.tech";// Redirection URL for PREPROD Environment
+                BASE_URL = "https://erp-api.ppd.graydev.in/";// Base URL for PREPROD Environment
+                WEB_LOAD_URL = "https://erp-sdk.ppd.graydev.in/";// Base Web URL for PREPROD Environment
+                REDIRECTION_URL = "svc-dp.ppd.graydev.in";// Redirection URL for PREPROD Environment
                 return environment = "preprod";
             case "live":
                 BASE_URL = "https://erp-api.grayquest.com/";// Base URL for PRODUCTION Environment
@@ -61,9 +62,9 @@ public class Environment {
                 REDIRECTION_URL = "svc-dp.grayquest.com";// Redirecrtion URL for PRODUCTION Environment
                 return environment = "live";
             default:
-                BASE_URL = "https://erp-api.graydev.tech/";// Base URL for UAT Environment
-                WEB_LOAD_URL = "https://erp-sdk.graydev.tech/";// Base Web URL for UAT Environment
-                REDIRECTION_URL = "svc-dp.graydev.tech";// Redirection URL for UAT Environment
+                BASE_URL = "https://erp-api.uat.graydev.in/";// Base URL for UAT Environment
+                WEB_LOAD_URL = "https://erp-sdk.uat.graydev.in/";// Base Web URL for UAT Environment
+                REDIRECTION_URL = "svc-dp.uat.graydev.in";// Redirection URL for UAT Environment
                 return environment = "test";
         }
     }
