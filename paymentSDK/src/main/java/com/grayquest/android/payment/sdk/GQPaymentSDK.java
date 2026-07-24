@@ -275,7 +275,7 @@ public class GQPaymentSDK {
                     hideProgress();
                     JSONObject jsonObject = new JSONObject();
                     try {
-                        jsonObject.put("error", "Oop's something went wrong contact support@grayquest.com");
+                        jsonObject.put("error", "Oops! Something went wrong. Contact support@grayquest.com");
                     } catch (JSONException jsonException) {
                         jsonException.printStackTrace();
                     }
@@ -288,7 +288,7 @@ public class GQPaymentSDK {
                 hideProgress();
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("error", "Oop's something went wrong contact support@grayquest.com");
+                    jsonObject.put("error", "Oops! Something went wrong. Contact support@grayquest.com");
                 } catch (JSONException jsonException) {
                     jsonException.printStackTrace();
                 }
@@ -371,7 +371,7 @@ public class GQPaymentSDK {
                     hideProgress();
                     JSONObject jsonObject = new JSONObject();
                     try {
-                        jsonObject.put("error", "Oop's something went wrong contact support@grayquest.com");
+                        jsonObject.put("error", "Oops! Something went wrong. Contact support@grayquest.com");
                     } catch (JSONException jsonException) {
                         jsonException.printStackTrace();
                     }
@@ -387,7 +387,7 @@ public class GQPaymentSDK {
                 hideProgress();
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("error", "Oop's something went wrong contact support@grayquest.com");
+                    jsonObject.put("error", "Oops! Something went wrong. Contact support@grayquest.com");
                 } catch (JSONException jsonException) {
                     jsonException.printStackTrace();
                 }
