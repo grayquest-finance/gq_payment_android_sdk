@@ -55,7 +55,7 @@ public class ADPayment extends AppCompatActivity implements PaymentResultWithDat
         }
     }
 
-    public void startPayment(String key, String notes, String order_id, int recurring, boolean redirect, String customer_id) {
+    void startPayment(String key, String notes, String order_id, int recurring, boolean redirect, String customer_id) {
         /**
          * Instantiate Checkout
          */

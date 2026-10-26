@@ -156,7 +156,7 @@ public class GQPaymentSDK {
 //    private static ProgressDialog progress = null;
     private static AlertDialog progressDialog = null;
 
-    public static void showProgress() {
+    static void showProgress() {
 //        progress = new ProgressDialog(context);
 //        if (!progress.isShowing()) {
 //            progress.setCanceledOnTouchOutside(false);
@@ -174,7 +174,7 @@ public class GQPaymentSDK {
         }
     }
 
-    public static void hideProgress() {
+    static void hideProgress() {
 //        if (context != null) {
 //            if (progress.isShowing()) {
 //                progress.dismiss();
@@ -285,47 +285,47 @@ public class GQPaymentSDK {
         });
     }
 
-    public static String getUser() {
+    static String getUser() {
         return user;
     }
 
-    public static void setUser(String user) {
+    static void setUser(String user) {
         GQPaymentSDK.user = user;
     }
 
-    public static int getCustomer_id() {
+    static int getCustomer_id() {
         return customer_id;
     }
 
-    public static void setCustomer_id(int customer_id) {
+    static void setCustomer_id(int customer_id) {
         GQPaymentSDK.customer_id = customer_id;
     }
 
-    public Context getContext() {
+    Context getContext() {
         return context;
     }
 
-    public static String getCustomer_code() {
+    static String getCustomer_code() {
         return customer_code;
     }
 
-    public static void setCustomer_code(String customer_code) {
+    static void setCustomer_code(String customer_code) {
         GQPaymentSDK.customer_code = customer_code;
     }
 
-    public void setContext(Context context) {
+    void setContext(Context context) {
         GQPaymentSDK.context = context;
     }
 
-    public static void cancelSDK(JSONObject message) {
+    static void cancelSDK(JSONObject message) {
         gqPaymentSDKListener.onCancel(message);
     }
 
-    public static void successSDK(JSONObject jsonObject) {
+    static void successSDK(JSONObject jsonObject) {
         gqPaymentSDKListener.onSuccess(jsonObject);
     }
 
-    public static void failedSDK(JSONObject jsonObject) {
+    static void failedSDK(JSONObject jsonObject) {
         gqPaymentSDKListener.onFailed(jsonObject);
     }
 }

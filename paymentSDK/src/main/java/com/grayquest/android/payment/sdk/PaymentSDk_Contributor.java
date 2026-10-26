@@ -2,7 +2,7 @@ package com.grayquest.android.payment.sdk;
 
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentSDk_Contributor {
+class PaymentSDk_Contributor {
     @SerializedName("success")
     boolean success;
     @SerializedName("status_code")

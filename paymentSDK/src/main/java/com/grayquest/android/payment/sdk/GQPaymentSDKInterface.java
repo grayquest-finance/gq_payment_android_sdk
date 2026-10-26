@@ -10,7 +10,7 @@ public class GQPaymentSDKInterface {
     private static final String TAG = GQPaymentSDKInterface.class.getSimpleName();
     Context mContext;
 
-    public GQPaymentSDKInterface(Context ctx) {
+    GQPaymentSDKInterface(Context ctx) {
         this.mContext = ctx;
     }
 

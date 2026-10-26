@@ -2,7 +2,7 @@ package com.grayquest.android.payment.sdk;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ResponseData {
+class ResponseData {
     @SerializedName("customer_id")
     int customer_id;
     @SerializedName("customer_code")

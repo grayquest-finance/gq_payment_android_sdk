@@ -2,7 +2,7 @@ package com.grayquest.android.payment.sdk;
 
 import com.cashfree.pg.core.api.CFSession;
 
-public class Environment {
+class Environment {
 
     public static boolean isProduction = false; // Under UAT
 //    public static final boolean isProduction = true; // Live

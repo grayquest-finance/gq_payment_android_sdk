@@ -7,7 +7,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class API_Client {
+class API_Client {
 
 //    public static final String BASE_URL = "https://erp-api.graydev.tech/";// Test
 //    public static final String WEB_LOAD_URL = "https://erp-sdk.graydev.tech/";// Test

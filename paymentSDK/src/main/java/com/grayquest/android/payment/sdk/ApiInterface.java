@@ -8,7 +8,7 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
-public interface ApiInterface {
+interface ApiInterface {
 
     @POST("v1/customer/create-customer")
     Call<PaymentSDk_Contributor>createCustomer(

@@ -334,28 +334,28 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
 //        GQPaymentSDK.closeSDK(jsonObject);
 //    }
 
-    public void sdkSuccess(JSONObject jsonObject) {
+    void sdkSuccess(JSONObject jsonObject) {
 //        Log.e(TAG, "Success: " + jsonObject.toString());
 //        webSdk.clearCache(true);
         GQPaymentSDK.successSDK(jsonObject);
 //        WebActivity.this.finish();
     }
 
-    public void sdkFailed(JSONObject jsonObject) {
+    void sdkFailed(JSONObject jsonObject) {
 //        Log.e(TAG, "Failed: " + jsonObject.toString());
 //        webSdk.clearCache(true);
         GQPaymentSDK.failedSDK(jsonObject);
 //        WebActivity.this.finish();
     }
 
-    public void sdkCancel(JSONObject jsonObject) {
+    void sdkCancel(JSONObject jsonObject) {
 //        Log.e(TAG, "Cancel: " + jsonObject.toString());
 //        webSdk.clearCache(true);
         GQPaymentSDK.cancelSDK(jsonObject);
         GQWebActivity.this.finish();
     }
 
-    public void ADOptions(String jsonObject) {
+    void ADOptions(String jsonObject) {
 //        Log.e(TAG, "ADOptions: " + jsonObject);
 
         JSONObject ADOptionsObject = null;
@@ -403,7 +403,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
         }
     }
 
-    public void startPayment(String key, String notes, String order_id, int recurring, boolean redirect, String customer_id, JSONObject prefill) {
+    void startPayment(String key, String notes, String order_id, int recurring, boolean redirect, String customer_id, JSONObject prefill) {
         /**
          * Instantiate Checkout
          */
@@ -517,7 +517,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
 //        finish();
     }
 
-    public void PGOptions(String jsonObject) {
+    void PGOptions(String jsonObject) {
 //        Log.e(TAG, "PGOptions: " + jsonObject);
 
 //        Intent intentProceed = new Intent(WebActivity.this, PWECouponsActivity.class);
@@ -575,7 +575,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
         }
     }
 
-    public void doDropCheckoutPayment(String payment_session_id, String order_id) {
+    void doDropCheckoutPayment(String payment_session_id, String order_id) {
         try {
 //            Log.e(TAG, "CashFeeEnvironment: " + Environment.cashFreeEnvironment());
             CFSession cfSession = new CFSession.CFSessionBuilder()
@@ -715,7 +715,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
         });
     }
 
-    public void getADPaymentResponse(String data) {
+    void getADPaymentResponse(String data) {
         Log.e(TAG, "ResponseData: " + data);
     }
 
