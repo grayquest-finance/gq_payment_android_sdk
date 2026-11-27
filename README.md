@@ -17,14 +17,14 @@ Add the following code to the apps build.gradle file:
 
     android{
 	    defaultConfig {
-        	minSdk 21
-	        targetSdk 32
+        	minSdk 23
+	        targetSdk 35
     	}
     }
     
     dependencies {
     
-		  Implementation 'com.github.grayquest-finance:gq_payment_android_sdk:1.0.7
+		  Implementation 'com.github.grayquest-finance:gq_payment_android_sdk:1.0.32
       
 	  }
 
