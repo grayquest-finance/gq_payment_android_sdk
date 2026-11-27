@@ -80,7 +80,7 @@ public class GQWebActivity extends AppCompatActivity implements PaymentResultWit
 
             urlLoad = new StringBuilder(Environment.WEB_LOAD_URL + "instant-eligibility?_code="+getIntent().getStringExtra("session_code")+"&s="+s+"&_v="+Environment.VERSION);
 
-            Log.e(TAG, "LoadURl: "+urlLoad);
+//            Log.e(TAG, "LoadURl: "+urlLoad);
 
         }else if (getIntent() != null){
             try {
