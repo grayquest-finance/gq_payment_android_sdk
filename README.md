@@ -24,7 +24,7 @@ Add the following code to the apps build.gradle file:
     
     dependencies {
     
-		  Implementation 'com.github.grayquest-finance:gq_payment_android_sdk:1.0.32
+		  Implementation 'com.github.grayquest-finance:gq_payment_android_sdk:2.0.0
       
 	  }
 
@@ -33,6 +33,45 @@ Add the following code to the apps build.gradle file:
     GQPaymentSDK.initiate(MainActivity.this, config, prefill);
     
     
+# Token Checkout
+
+When a checkout token has already been generated, the checkout can be opened with that token instead of passing `config` and `prefill`:
+
+    GQPaymentSDK.tokenCheckout(MainActivity.this, token, env);
+
+|Sr. No.| Parameter | Description | Mandatory |
+|--|--|--|--|
+|1|context|The calling Activity. It must implement `GQPaymentSDKListener` (see the callback section below).|Yes|
+|2|token|Checkout token generated for the checkout session. The SDK sends it as a Bearer token to fetch the session and then opens the checkout.|Yes|
+|3|env|Environment the token was generated for.|Yes|
+|||**Values:** stage or live|
+|||**Note:** The token must belong to the same environment that is passed here.|
+
+**Flow:**
+
+1.  The SDK validates that `token` and `env` are provided.
+2.  It shows a progress dialog and fetches the session for the token.
+3.  On success, it opens the GrayQuest checkout screen. The result is returned through the same `onSuccess`, `onFailed` and `onCancel` callbacks as `initiate`.
+
+| Scenario | `error` value |
+|--|--|
+| `env` is empty | Environment required |
+| `token` is empty | Token required |
+| Token is invalid or expired | Error message returned |
+| Unexpected failure | Oops! Something went wrong. Contact support@grayquest.com |
+
+**Example:**
+
+    public class MainActivity extends AppCompatActivity implements GQPaymentSDKListener {
+
+        private void openCheckout(String token) {
+            GQPaymentSDK.tokenCheckout(MainActivity.this, token, "stage");
+        }
+
+        // onSuccess / onFailed / onCancel as shown below
+    }
+
+
 # Add the following code to callback:
 
     public class MainActivity extends AppCompatActivity implements GQPaymentSDKListener {
@@ -69,10 +108,10 @@ Must Have
 
 |Sr. No.| Option | Description | Mandatory |
 |--|--|--|--|
-| 1 | env | **Values:** test or live | Yes
+| 1 | env | **Values:** stage or live | Yes
 |||**Possible Scenarios:**
-|||1.  If value is test then SDK will connect with Testing environment | 
-||| 2. 1.  If value is live then SDK will connect with Live/Production environment|
+|||1.  If value is stage then SDK will connect with Stage environment | 
+|||2.  If value is live then SDK will connect with Live/Production environment|
 |2|client_id|Authentication credential|Yes
 |3|client_secret_key|Authentication credential|Yes
 |4|gq_api_key|Authentication credential|Yes
