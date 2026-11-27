@@ -245,7 +245,7 @@ public class GQPaymentSDK {
 
                             String session_code = responseData.getSession_code();
 
-                            Log.e(TAG, "SessionCode: "+session_code);
+//                            Log.e(TAG, "SessionCode: "+session_code);
 
                             Intent intent = new Intent(context, GQWebActivity.class);
                             intent.putExtra("session_code", session_code);
