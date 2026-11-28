@@ -13,3 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+SECURITY_AUDIT_REPORT.md
